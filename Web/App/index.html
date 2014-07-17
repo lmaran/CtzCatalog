@@ -1,0 +1,40 @@
+﻿<!doctype html>
+<html ng-app=ctzCatalog>
+<head>
+    <meta charset="utf-8">
+    <base href="/" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Cortizo Catalog</title>
+    <meta name=description content="Cortizo Catalog">
+    <meta name=author content="Lucian Maran">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" />-->
+    <link rel="stylesheet" href="Content/style.css" />
+
+</head>
+<body>
+
+    <!--[if lt IE 9]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div id="wrapper" ng-class="wrapperClass">
+
+        <!-- Sidebar -->
+        <nav id="sidebar-wrapper" ng-include="'App/views/navbar.html'" ng-controller="navbarController"></nav>
+
+        <!-- Page content -->
+        <div id="page-content-wrapper" class="container" ng-view=""></div>
+
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular-route.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
+    <script src="App/bundle-app.min.js"></script>
+</body>
+</html>

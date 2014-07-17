@@ -1,0 +1,154 @@
+﻿
+  /*body {
+    animation-duration: 0.001s;
+    -o-animation-duration: 0.001s;
+    -ms-animation-duration: 0.001s;
+    -moz-animation-duration: 0.001s;
+    -webkit-animation-duration: 0.001s;
+  }
+  @media screen and (min-width: 700px) {
+    body {
+      color: #09187a;
+      animation-name: min-width-700px;
+      -o-animation-name: min-width-700px;
+      -ms-animation-name: min-width-700px;
+      -moz-animation-name: min-width-700px;
+      -webkit-animation-name: min-width-700px;
+    }
+  }
+  @media screen and (min-width: 1000px) {
+    body {
+      color: #38c40a;
+      animation-name: min-width-1000px;
+      -o-animation-name: min-width-1000px;
+      -ms-animation-name: min-width-1000px;
+      -moz-animation-name: min-width-1000px;
+      -webkit-animation-name: min-width-1000px;
+    }
+  }
+
+  @keyframes min-width-700px {
+    from {
+      clip: rect(1px, auto, auto, auto);
+    }
+
+    to {
+      clip: rect(0px, auto, auto, auto);
+    }
+  }
+  @-moz-keyframes min-width-700px {
+    from {
+      clip: rect(1px, auto, auto, auto);
+    }
+
+    to {
+      clip: rect(0px, auto, auto, auto);
+    }
+  }
+  @-webkit-keyframes min-width-700px {
+    from {
+      clip: rect(1px, auto, auto, auto);
+    }
+
+    to {
+      clip: rect(0px, auto, auto, auto);
+    }
+  }
+  @-ms-keyframes min-width-700px {
+    from {
+      clip: rect(1px, auto, auto, auto);
+    }
+
+    to {
+      clip: rect(0px, auto, auto, auto);
+    }
+  }
+  @-o-keyframes min-width-700px {
+    from {
+      clip: rect(1px, auto, auto, auto);
+    }
+
+    to {
+      clip: rect(0px, auto, auto, auto);
+    }
+  }
+  @keyframes min-width-1000px {
+    from {
+      clip: rect(1px, auto, auto, auto);
+    }
+
+    to {
+      clip: rect(0px, auto, auto, auto);
+    }
+  }
+  @-moz-keyframes min-width-1000px {
+    from {
+      clip: rect(1px, auto, auto, auto);
+    }
+
+    to {
+      clip: rect(0px, auto, auto, auto);
+    }
+  }
+  @-webkit-keyframes min-width-1000px {
+    from {
+      clip: rect(1px, auto, auto, auto);
+    }
+
+    to {
+      clip: rect(0px, auto, auto, auto);
+    }
+  }
+  @-ms-keyframes min-width-1000px {
+    from {
+      clip: rect(1px, auto, auto, auto);
+    }
+
+    to {
+      clip: rect(0px, auto, auto, auto);
+    }
+  }
+  @-o-keyframes min-width-1000px {
+    from {
+      clip: rect(1px, auto, auto, auto);
+    }
+
+    to {
+      clip: rect(0px, auto, auto, auto);
+    }
+  }*/
+
+
+
+
+
+
+
+body {
+    padding:10px;
+    font-family:"Segoe UI";
+  }
+  div {
+    width:250px; 
+    background-color:lime;
+    padding:10px;
+    font-weight:bold;
+    font-size:20pt;
+  }
+@media screen and (min-width: 700px) {
+    div {
+        background-color:gray;
+        animation-delay: 0s;
+        animation-duration: 1s;
+        animation-name: demo;
+    }
+}
+  @keyframes demo {
+    from {
+        background-color: red;
+    }
+
+    to {
+      background-color: blue;
+    }
+  }

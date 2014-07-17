@@ -1,0 +1,14 @@
+﻿<!--toggle sidebar button (position:fixed) -->
+<a id="toggle-sidebar-btn" class="btn btn-default" ng-click="toggleSidebar()" ng-class="toggleSidebarBtnClass">
+    <i class="glyphicon glyphicon-chevron-left"></i>
+</a>
+
+<div id="sidebar-brand">
+    <a href="#">Cortizo Catalog</a>
+</div>
+
+<ul class="sidebar-nav">
+    <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
+        <a ng-href=" {{item.link}}">{{'Menu.' + item.title}}</a>
+    </li>
+</ul>
