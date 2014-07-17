@@ -141,6 +141,7 @@
     <Content Include="App\bundle-app.js.bundle" />
     <Content Include="App\bundle-app.min.js.map" />
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\Azure-WebFarmLM1.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
