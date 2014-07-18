@@ -23,6 +23,11 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
             templateUrl: 'App/views/products.html',
             title: 'Products'
         })
+        .when('/products/create', {
+            controller: 'productController',
+            templateUrl: 'App/views/productCreate.html',
+            title: 'ProductCreate'
+        })
         .when('/customers', {
             controller: 'customersController',
             templateUrl: 'App/views/customers.html',

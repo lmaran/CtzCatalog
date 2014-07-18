@@ -37,6 +37,22 @@ namespace Web.Repositories
             return entitiesVM;
         }
 
+
+        public void Add(ProductNew product)
+        {
+            var entity = new DynamicTableEntity();
+
+            entity.Properties["Name"] = new EntityProperty(product.Name);
+            entity.Properties["Description"] = new EntityProperty(product.Description);
+            entity.PartitionKey = "p";
+            entity.RowKey = Guid.NewGuid().ToString();
+
+            // entity.ETag = "*"; // mandatory for <merge>
+            // var operation = TableOperation.Merge(entity);
+            var operation = TableOperation.Insert(entity);
+            Table.Execute(operation);
+        }
+
         //public SpeakerViewModel GetByKeys(String pk, String rk) //pk=EventId; rk=SessionId
         //{
 
@@ -61,6 +77,7 @@ namespace Web.Repositories
     public interface IProductRepository : ITableStorage<ProductEntry>
     {
         IEnumerable<ProductViewModel> GetByPk();
+        void Add(ProductNew product);
         //ProductViewModel GetByKeys(String pk, String rk);
     }
 }

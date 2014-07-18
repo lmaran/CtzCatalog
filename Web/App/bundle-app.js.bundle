@@ -14,7 +14,10 @@
       <file>/App/controllers/homeController.js</file>
       <file>/App/controllers/navbarController.js</file>
       <file>/App/controllers/pickOrdersController.js</file>
+      <file>/App/controllers/productController.js</file>
       <file>/App/controllers/productsController.js</file>
       <file>/App/controllers/customersController.js</file>
+
+      <file>/App/services/productService.js</file>
   </files>
 </bundle>

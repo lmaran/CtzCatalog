@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Web.Models;
 using Web.Repositories;
 using Web.ViewModels;
 
@@ -29,5 +30,18 @@ namespace Web.Controllers
         {
             return _productRepository.GetByPk();
         }
+
+        [HttpPost]
+        [Route("api/products")]
+        public void Post(ProductNew product)
+        {
+            _productRepository.Add(product);
+        }
+
+    }
+
+    public class ProductTmp
+    {
+        public string SessionId { get; set; }
     }
 }
