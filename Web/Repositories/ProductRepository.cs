@@ -53,23 +53,14 @@ namespace Web.Repositories
             Table.Execute(operation);
         }
 
-        //public SpeakerViewModel GetByKeys(String pk, String rk) //pk=EventId; rk=SessionId
-        //{
+        public void Delete(string productId)
+        {
+            var item = new ProductEntry();
+            item.PartitionKey = "p";
+            item.RowKey = productId;
+            this.Delete(item);
 
-        //    var i = this.Retrieve(pk, rk);
-        //    if (i == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-
-        //    // automapper: copy "entitiesTable" to "entitiesVM"
-        //    Mapper.CreateMap<SpeakerEntry, SpeakerViewModel>()
-        //        .ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.PartitionKey))
-        //        .ForMember(dest => dest.SpeakerId, opt => opt.MapFrom(src => src.RowKey));
-
-        //    var entityVM = Mapper.Map<SpeakerEntry, SpeakerViewModel>(i);
-
-        //    return entityVM;
-        //}
-
+        }
 
     }
 
@@ -78,6 +69,7 @@ namespace Web.Repositories
     {
         IEnumerable<ProductViewModel> GetByPk();
         void Add(ProductNew product);
+        void Delete(string productId);
         //ProductViewModel GetByKeys(String pk, String rk);
     }
 }

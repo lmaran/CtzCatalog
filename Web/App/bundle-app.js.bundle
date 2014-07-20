@@ -32,6 +32,7 @@
         
 
         <file>/App/app.js</file>
+        <file>/App/controllers/confirmController.js</file>
         <file>/App/controllers/homeController.js</file>
         <file>/App/controllers/navbarController.js</file>
         <file>/App/controllers/pickOrdersController.js</file>
@@ -40,5 +41,6 @@
         <file>/App/controllers/customersController.js</file>
 
         <file>/App/services/productService.js</file>
+        <file>/App/services/dialogService.js</file>
     </files>
 </bundle>

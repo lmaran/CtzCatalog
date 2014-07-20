@@ -137,9 +137,15 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App\bundle-app.min.js.map" />
+    <Content Include="App\controllers\alertController.js" />
+    <Content Include="App\controllers\confirmController.js" />
     <Content Include="App\controllers\productController.js" />
+    <Content Include="App\services\dialogService.js" />
     <Content Include="App\services\productService.js" />
+    <Content Include="App\views\alert.html" />
+    <Content Include="App\views\confirm.html" />
     <Content Include="App\views\productCreate.html" />
+    <Content Include="Content\translates\Flags\blank.gif" />
     <Content Include="Content\translates\Flags\flags.css" />
     <Content Include="Content\translates\Flags\flags.png" />
     <Content Include="packages.config">

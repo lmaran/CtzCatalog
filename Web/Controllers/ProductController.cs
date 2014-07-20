@@ -38,10 +38,13 @@ namespace Web.Controllers
             _productRepository.Add(product);
         }
 
+        [HttpDelete]
+        [Route("api/products/{productId}")]
+        public void Delete(string productId)
+        {
+            _productRepository.Delete(productId);
+        }
+
     }
 
-    public class ProductTmp
-    {
-        public string SessionId { get; set; }
-    }
 }

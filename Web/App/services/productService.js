@@ -8,9 +8,9 @@
         });
     };
 
-    //factory.delete = function (eventId, email) {
-    //    return $http.delete('/api/' + eventId + '/whiteList/' + encodeURIComponent(email) + '/');
-    //};
+    factory.delete = function (productId) {
+        return $http.delete('/api/products/' + encodeURIComponent(productId) + '/');
+    };
 
     factory.add = function (product) {
         return $http.post('/api/products/', product);

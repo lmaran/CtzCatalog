@@ -2111,6 +2111,20 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
 //app.config(['$httpProvider', function ($httpProvider) {
 //    $httpProvider.interceptors.push('authInterceptor');
 //}]);
+///#source 1 1 /App/controllers/confirmController.js
+// http://blog.rivermoss.com/20140105/confirmation-dialog-using-angular-and-angular-ui-for-bootstrap-part-2/
+app.controller('confirmController', ['$scope', '$modalInstance', 'data', function ($scope, $modalInstance, data) {
+
+    $scope.data = data;
+
+    $scope.ok = function () {
+        $modalInstance.close();
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss();
+    };
+}]);
 ///#source 1 1 /App/controllers/homeController.js
 app.controller('homeController', ['$scope', function ($scope) {
     //alert(22);
@@ -2222,35 +2236,34 @@ app.controller('productController', ['$scope', 'productService', '$location', fu
 
 }]);
 ///#source 1 1 /App/controllers/productsController.js
-app.controller('productsController', ['$scope', '$location', 'productService', function ($scope, $location,productService) {
+app.controller('productsController', ['$scope', '$location', 'productService', 'dialogService', function ($scope, $location, productService, dialogService) {
     $scope.products = [];
     $scope.errors = {};
 
     init();
 
-    //$scope.delete = function (email) {
-    //    eventId = "itcongress2014";
-    //    dialogService.confirm('Click ok to delete ' + email + ', otherwise click cancel.', 'Delete Email')
-    //        .then(function () {
+    $scope.delete = function (product) {
+        dialogService.confirm('Click ok to delete ' + product.name + ', otherwise click cancel.', 'Delete Product')
+            .then(function () {
 
-    //            // get the index for selected item
-    //            var i = 0;
-    //            for (i in $scope.whiteList) {
-    //                if ($scope.whiteList[i] == email) break;
-    //            };
+                // get the index for selected item
+                var i = 0;
+                for (i in $scope.products) {
+                    if ($scope.products[i].productId == product.productId) break;
+                };
+                
+                productService.delete(product.productId).then(function () {
+                    $scope.products.splice(i, 1);
+                })
+                .catch(function (err) {
+                    $scope.errors = JSON.stringify(err.data, null, 4);
+                    alert($scope.errors);
+                });
 
-    //            whiteListService.delete(eventId, email).then(function () {
-    //                $scope.whiteList.splice(i, 1);
-    //            })
-    //            .catch(function (err) {
-    //                $scope.errors = JSON.stringify(err.data, null, 4);
-    //                alert($scope.errors);
-    //            });
-
-    //        }, function () {
-    //            //alert('cancelled');
-    //        });
-    //};
+            }, function () {
+                //alert('cancelled');
+            });
+    };
 
     $scope.add = function () {
         eventId = "itcongress2014";
@@ -2292,9 +2305,9 @@ app.factory('productService', ['$http', function ($http) {
         });
     };
 
-    //factory.delete = function (eventId, email) {
-    //    return $http.delete('/api/' + eventId + '/whiteList/' + encodeURIComponent(email) + '/');
-    //};
+    factory.delete = function (productId) {
+        return $http.delete('/api/products/' + encodeURIComponent(productId) + '/');
+    };
 
     factory.add = function (product) {
         return $http.post('/api/products/', product);
@@ -2307,4 +2320,50 @@ app.factory('productService', ['$http', function ($http) {
     //};
 
     return factory;
+}]);
+///#source 1 1 /App/services/dialogService.js
+// http://blog.rivermoss.com/20140105/confirmation-dialog-using-angular-and-angular-ui-for-bootstrap-part-2/
+app.factory('dialogService', ['$modal', function ($modal) {
+    function confirm(message, title) {
+        var modal = $modal.open({
+            templateUrl: '/app/views/confirm.html',
+            backdrop: 'static',
+            keyboard: false,
+            resolve: {
+                data: function () {
+                    return {
+                        title: title ? title : 'Confirm',
+                        message: message
+                    };
+                }
+            },
+            controller: 'confirmController'
+        });
+        return modal.result;
+    };
+
+
+    function alert(message, title) {
+        var modal = $modal.open({
+            templateUrl: '/app/views/alert.html',
+            backdrop: 'static',
+            keyboard: false,
+            resolve: {
+                data: function () {
+                    return {
+                        title: title ? title : '',
+                        message: message
+                    };
+                }
+            },
+            controller: 'alertController'
+        });
+        return modal.result;
+    }
+
+
+    return {
+        confirm: confirm,
+        alert: alert
+    };
 }]);
