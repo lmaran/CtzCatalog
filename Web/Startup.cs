@@ -7,7 +7,7 @@ namespace Web
     {
         public void Configuration(IAppBuilder app)
         {
-             app.UseStaticFiles(); //TODO: we need it for Helios
+            // app.UseStaticFiles(); //TODO: we need it for Helios
 
             // Configure database context
             // ConfigureDatabase(app);

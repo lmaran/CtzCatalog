@@ -18,8 +18,13 @@
 
 
         <!--<file>/Scripts/custom-version/angular-sanitize.js</file>-->
-        <file>/Scripts/custom-version/angular-cookies.js</file>
-        <file>/Scripts/custom-version/angular-route.js</file>
+        <!--<file>/Scripts/custom-version/angular-cookies.js</file>-->
+        
+	<file>/Scripts/bower_components/angular-cookies/angular-cookies.js</file>
+        <!--<file>/Scripts/custom-version/angular-route.js</file>-->
+        
+	<file>/Scripts/bower_components/angular-route/angular-route.js</file>
+        
         <file>/Scripts/angular-translate.js</file>
         <file>/Scripts/angular-translate-loader-static-files.js</file>
         <file>/Scripts/angular-translate-storage-cookie.js</file>

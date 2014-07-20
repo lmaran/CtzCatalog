@@ -154,5 +154,5 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
-Web/Web.config
+Web/HiddenConnectionStrings.config
 packages/
