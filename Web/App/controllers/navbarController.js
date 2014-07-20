@@ -1,4 +1,4 @@
-﻿app.controller('navbarController', ['$scope', '$rootScope', '$location', function ($scope, $rootScope, $location) {
+﻿app.controller('navbarController', ['$scope', '$rootScope', '$location', '$translate', function ($scope, $rootScope, $location, $translate) {
     $scope.menu = [{
         'title': 'Pick Orders',
         'link': '/pickOrders'

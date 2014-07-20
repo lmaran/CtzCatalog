@@ -1,23 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://vswebessentials.com/schemas/v1/bundle.xsd">
-  <settings>
+    <settings>
     <!--Determines if the bundle file should be automatically optimized after creation/update.-->
     <minify>true</minify>
     <!--Determin whether to generate/re-generate this bundle on building the solution.-->
     <runOnBuild>false</runOnBuild>
     <!--Specifies a custom subfolder to save files to. By default, compiled output will be placed in the same folder and nested under the original file.-->
     <outputDirectory />
-  </settings>
-  <!--The order of the <file> elements determines the order of the files in the bundle.-->
-  <files>
-      <file>/App/app.js</file>
-      <file>/App/controllers/homeController.js</file>
-      <file>/App/controllers/navbarController.js</file>
-      <file>/App/controllers/pickOrdersController.js</file>
-      <file>/App/controllers/productController.js</file>
-      <file>/App/controllers/productsController.js</file>
-      <file>/App/controllers/customersController.js</file>
+    </settings>
+    <!--The order of the <file> elements determines the order of the files in the bundle.-->
+    <files>
 
-      <file>/App/services/productService.js</file>
-  </files>
+        <!--<file>/Scripts/bower_components/angular-translate/angular-translate.js</file>
+        <file>/Scripts/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js</file>
+        <file>/Scripts/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js</file>    
+        <file>/Scripts/bower_components/angular-translate-storage-local/angular-translate-storage-local.js</file>-->
+
+
+        <!--<file>/Scripts/custom-version/angular-sanitize.js</file>-->
+        <file>/Scripts/custom-version/angular-cookies.js</file>
+        <file>/Scripts/custom-version/angular-route.js</file>
+        <file>/Scripts/angular-translate.js</file>
+        <file>/Scripts/angular-translate-loader-static-files.js</file>
+        <file>/Scripts/angular-translate-storage-cookie.js</file>
+        <file>/Scripts/angular-translate-storage-local.js</file>
+        
+
+        <file>/App/app.js</file>
+        <file>/App/controllers/homeController.js</file>
+        <file>/App/controllers/navbarController.js</file>
+        <file>/App/controllers/pickOrdersController.js</file>
+        <file>/App/controllers/productController.js</file>
+        <file>/App/controllers/productsController.js</file>
+        <file>/App/controllers/customersController.js</file>
+
+        <file>/App/services/productService.js</file>
+    </files>
 </bundle>

@@ -1,0 +1,24 @@
+﻿{
+    "Menu":
+    {
+        "Pick Orders": "Pick Orders",
+        "Products": "Products",
+        "Customers": "Customers"
+    },
+ 
+    "Navbar":
+    {
+        "Admin":"Admin",
+        "Admin.Users":"Registered Users",
+        "Admin.WhiteList":"Email \"WhiteList\"",
+        "Admin.ResetPasswords":"Reset Passwords",
+
+        "Register": "Register",
+        "Login": "Log in",
+        "Logout": "Log off",
+
+        "Language": "Language",
+        "Language.Romanian": "Romanian",
+        "Language.English": "English"
+    }  
+}

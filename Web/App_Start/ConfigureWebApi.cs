@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Serialization;
 using Owin;
 using System.Web.Http;
+using Microsoft.Owin.StaticFiles;
 
 namespace Web
 {

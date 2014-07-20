@@ -40,11 +40,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper">
-      <HintPath>..\packages\AutoMapper.3.3.0-ci1008\lib\net40\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=3.3.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.3.3.0-ci1009\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper.Net4">
-      <HintPath>..\packages\AutoMapper.3.3.0-ci1008\lib\net40\AutoMapper.Net4.dll</HintPath>
+    <Reference Include="AutoMapper.Net4, Version=3.3.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.3.3.0-ci1009\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Loader.IIS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -141,7 +143,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App\bundle-app.js.bundle" />
+    <Content Include="App\bundle-app.js.bundle">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App\bundle-app.min.js.map" />
     <Content Include="App\controllers\productController.js" />
     <Content Include="App\services\productService.js" />
@@ -149,7 +153,28 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Content\translates\en.json" />
     <None Include="Properties\PublishProfiles\Azure-WebFarmLM1.pubxml" />
+    <Content Include="Scripts\angular-translate-loader-static-files.js" />
+    <Content Include="Scripts\angular-translate-storage-cookie.js" />
+    <Content Include="Scripts\angular-translate-storage-local.js" />
+    <Content Include="Scripts\angular-translate.js" />
+    <Content Include="Scripts\bower_components\angular-translate-loader-static-files\.bower.json" />
+    <Content Include="Scripts\bower_components\angular-translate-loader-static-files\bower.json" />
+    <Content Include="Scripts\bower_components\angular-translate-loader-static-files\README.md" />
+    <Content Include="Scripts\bower_components\angular-translate-storage-cookie\angular-translate-storage-cookie.js" />
+    <Content Include="Scripts\bower_components\angular-translate-storage-cookie\angular-translate-storage-cookie.min.js" />
+    <Content Include="Scripts\bower_components\angular-translate-storage-local\angular-translate-storage-local.js" />
+    <Content Include="Scripts\bower_components\angular-translate-storage-local\angular-translate-storage-local.min.js" />
+    <Content Include="Scripts\bower_components\angular-translate\.bower.json" />
+    <Content Include="Scripts\bower_components\angular-translate\bower.json" />
+    <Content Include="Scripts\bower_components\angular-translate\README.md" />
+    <Content Include="Scripts\bower_components\angular-translate-storage-cookie\.bower.json" />
+    <Content Include="Scripts\bower_components\angular-translate-storage-cookie\bower.json" />
+    <Content Include="Scripts\bower_components\angular-translate-storage-cookie\README.md" />
+    <Content Include="Scripts\bower_components\angular-translate-storage-local\.bower.json" />
+    <Content Include="Scripts\bower_components\angular-translate-storage-local\bower.json" />
+    <Content Include="Scripts\bower_components\angular-translate-storage-local\README.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -175,6 +200,14 @@
     <Content Include="App\views\products.html" />
     <Content Include="Content\Site3.css" />
     <Content Include="Content\style.css" />
+    <Content Include="Scripts\bower_components\angular-translate-loader-static-files\angular-translate-loader-static-files.js" />
+    <Content Include="Scripts\bower_components\angular-translate-loader-static-files\angular-translate-loader-static-files.min.js" />
+    <Content Include="Scripts\bower_components\angular-translate\angular-translate.js" />
+    <Content Include="Scripts\bower_components\angular-translate\angular-translate.min.js" />
+    <Content Include="Scripts\custom-version\angular-cookies.js" />
+    <Content Include="Scripts\custom-version\angular-route.js" />
+    <Content Include="Scripts\custom-version\angular-sanitize.js" />
+    <Content Include="Scripts\custom-version\ui-bootstrap-tpls.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -196,7 +229,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App\filters\" />
-    <Folder Include="Scripts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -223,13 +255,13 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\packages\AutoMapper.3.3.0-ci1008\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.0-ci1008\tools\AutoMapper.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.AspNet.Loader.IIS.1.0.0-alpha1\build\net45\Microsoft.AspNet.Loader.IIS.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AspNet.Loader.IIS.1.0.0-alpha1\build\net45\Microsoft.AspNet.Loader.IIS.props'))" />
   </Target>
+  <Import Project="..\packages\AutoMapper.3.3.0-ci1009\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.0-ci1009\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

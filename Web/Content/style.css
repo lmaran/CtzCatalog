@@ -131,11 +131,11 @@
 /*     page content 
 ===============================*/
 #content-body {
-    padding: 70px 0 0 0;
-    z-index:5;
+    _padding: 70px 0 0 0;
+    _z-index:5;
 }
 
-#content-header {
+/*#content-header {
     position: fixed;
     left:250px;
     width:100%;
@@ -153,7 +153,43 @@
 
 #content-header.fullScreen {
     left: 0px;
+}*/
+
+
+/*temp*/
+#content-header {
+    padding: 0px 15px 1px 15px;
+
+    box-shadow: 0 1px 0 rgba(0,0,0,.07);
+    
+    transition: all 0.4s ease 0s;
+    _z-index:10;
 }
+
+#content-body > .toolbar{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+#content-body > .toolbar .btn{
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+#content-body > .toolbar .form-control{
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+#content-header.partialScreen {
+    _left: 250px;
+}
+
+#content-header.fullScreen {
+    _left: 0px;
+}
+/*end temp*/
+
 
 #content-header h1 {
     margin-top: 10px;
@@ -161,8 +197,7 @@
 }
 
 #content-header-icon{
-     margin-left:18px;
-     margin-right:8px;
+    margin-right:10px;
 }
 
 /*     used to detect screen size in Js

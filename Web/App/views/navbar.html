@@ -9,6 +9,6 @@
 
 <ul class="sidebar-nav">
     <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
-        <a ng-href=" {{item.link}}">{{'Menu.' + item.title}}</a>
+        <a ng-href=" {{item.link}}">{{'Menu.' + item.title | translate}}</a>
     </li>
 </ul>

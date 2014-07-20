@@ -1,6 +1,6 @@
-﻿var app = angular.module('ctzCatalog', ['ngRoute']);
+﻿var app = angular.module('ctzCatalog', ['ngRoute', 'pascalprecht.translate', 'ngCookies']);
 
-app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+app.config(['$routeProvider', '$locationProvider', '$translateProvider', function ($routeProvider, $locationProvider, $translateProvider) {
     
     $routeProvider
         .when('/',
@@ -59,17 +59,18 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
     $locationProvider.html5Mode(true);
 
 
-    //// Initialize the translate provider
-    //// Doc: http://angular-translate.github.io/docs/#/api
-    //$translateProvider
-    //    //.translations('en', translations)
-    //    .preferredLanguage('en')
-    //    .fallbackLanguage('en') // maybe there are some translation ids, that are available in an english translation table, but not in other (ro) translation table
-    //    .useLocalStorage() //to remember the chosen language; it use 'storage-cookie' as fallback; 'storage-cookie' depends on 'ngCookies'
-    //    .useStaticFilesLoader({
-    //        prefix: 'Content/translates/',
-    //        suffix: '.json'
-    //    });
+    // Initialize the translate provider
+    // Doc: http://angular-translate.github.io/docs/#/api
+    $translateProvider
+        //.translations('en', translations)
+        .preferredLanguage('en')
+        .fallbackLanguage('en') // maybe there are some translation ids, that are available in an english translation table, but not in other (ro) translation table
+        .useLocalStorage() //to remember the chosen language; it use 'storage-cookie' as fallback; 'storage-cookie' depends on 'ngCookies'
+        .useStaticFilesLoader({
+            prefix: 'Content/translates/',
+            //prefix:'lang-',
+            suffix: '.json'
+        });
 }]);
 
 
