@@ -2061,6 +2061,13 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             templateUrl: 'App/views/productCreate.html',
             title: 'ProductCreate'
         })
+
+        .when('/products/:id', {
+            controller: 'productController',
+            templateUrl: 'App/views/productEdit.html',
+            title: 'ProductEdit'
+        })
+
         .when('/customers', {
             controller: 'customersController',
             templateUrl: 'App/views/customers.html',
@@ -2207,14 +2214,50 @@ app.controller('pickOrdersController', ['$scope', function ($scope) {
 
 }]);
 ///#source 1 1 /App/controllers/productController.js
-app.controller('productController', ['$scope', 'productService', '$location', function ($scope, productService, $location) {
+app.controller('productController', ['$scope', '$window', '$route', 'productService', '$location', function ($scope, $window, $route, productService, $location) {
     $scope.product = {};
+
+    if ($route.current.title == "ProductEdit") {
+        init();
+    }
+
+    function init() {
+        getProduct();
+        //getModels();
+    }
+
+    function getProduct() {
+        productService.getById($route.current.params.id).then(function (data) {
+            $scope.product = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
+        });
+    }
 
     $scope.create = function (form) {
         $scope.submitted = true;
         if (form.$valid) {
             //alert(JSON.stringify($scope.product));
             productService.add($scope.product)
+                .then(function (data) {
+                    $location.path('/products');
+                    //Logger.info("Widget created successfully");
+                })
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+        }
+        else {
+            //alert('Invalid form');
+        }
+    };
+
+    $scope.update = function (form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            //alert(JSON.stringify($scope.product));
+            productService.update($scope.product)
                 .then(function (data) {
                     $location.path('/products');
                     //Logger.info("Widget created successfully");
@@ -2265,17 +2308,6 @@ app.controller('productsController', ['$scope', '$location', 'productService', '
             });
     };
 
-    $scope.add = function () {
-        eventId = "itcongress2014";
-        whiteListService.add(eventId, $scope.newEmail).then(function () {
-            $scope.whiteList.push($scope.newEmail);
-        })
-        .catch(function (err) {
-            $scope.errors = JSON.stringify(err.data, null, 4);
-            alert($scope.errors);
-        });
-    };
-
     $scope.createProduct = function () {
         $location.path('/products/create');
     }
@@ -2299,25 +2331,33 @@ app.factory('productService', ['$http', function ($http) {
 
     var factory = {};
 
+    factory.add = function (product) {
+        return $http.post('/api/products/', product);
+    };
+
     factory.getProducts = function () {
         return $http.get('/api/products').then(function (result) {
             return result.data;
         });
     };
 
+    factory.getById = function (productId) {
+        return $http.get('/api/products/' + encodeURIComponent(productId) + '/').then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.update = function (product) {
+        return $http.put('/api/products/', product);
+    };
+
     factory.delete = function (productId) {
         return $http.delete('/api/products/' + encodeURIComponent(productId) + '/');
     };
 
-    factory.add = function (product) {
-        return $http.post('/api/products/', product);
-    };
 
-    //factory.get = function (eventId, email) {
-    //    return $http.get('/api/' + eventId + '/whiteList/' + encodeURIComponent(email) + '/').then(function (result) {
-    //        return result.data;
-    //    });
-    //};
+
+
 
     return factory;
 }]);

@@ -1,14 +1,14 @@
 ﻿<header id="content-header" ng-class="contentHeaderClass">
     <h1>
         <i id="content-header-icon" class="glyphicon glyphicon-tags"></i>
-        Products / Add new product
+        Products / Edit product
     </h1>
     
 </header>
 
 <div id="content-body" class="container-fluid">
 
-    <form ng-submit="create(form)" name="form" class="form-horizontal max-width" role="form" novalidate>
+    <form ng-submit="update(form)" name="form" class="form-horizontal max-width" role="form" novalidate>
         <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
 
         <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
@@ -88,8 +88,8 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-sm-10">
-                <button type="submit"  class="btn btn-primary"> <span class="glyphicon glyphicon-floppy-disk"></span> Save </button>
-                <button type="button" class="btn" ng-click="cancel()"> <span class=" glyphicon glyphicon-remove"></span> Cancel </button>
+                <button type="submit" class="btn btn-primary"> <span class="glyphicon glyphicon-floppy-disk"></span> Save </button>
+                <button type="button" class="btn" ng-click="cancel()"> <span class="glyphicon glyphicon-remove"></span> Cancel </button>
             </div>
         </div>
 

@@ -25,17 +25,30 @@ namespace Web.Controllers
             this._productRepository = productRepository;
         }
 
+        [HttpPost]
+        [Route("api/products")]
+        public void Post(ProductNew product)
+        {
+            _productRepository.Add(product);
+        }
+
         [Route("api/products")]
         public IEnumerable<ProductViewModel> Get() //pk
         {
             return _productRepository.GetByPk();
         }
 
-        [HttpPost]
-        [Route("api/products")]
-        public void Post(ProductNew product)
+        [Route("api/products/{productId}")]
+        public ProductViewModel Get(string productId) //pk
         {
-            _productRepository.Add(product);
+            return _productRepository.GetById(productId);
+        }
+
+        [HttpPut]
+        [Route("api/products")]
+        public void Update(ProductViewModel product)
+        {
+            _productRepository.Update(product);
         }
 
         [HttpDelete]

@@ -27,17 +27,6 @@
             });
     };
 
-    $scope.add = function () {
-        eventId = "itcongress2014";
-        whiteListService.add(eventId, $scope.newEmail).then(function () {
-            $scope.whiteList.push($scope.newEmail);
-        })
-        .catch(function (err) {
-            $scope.errors = JSON.stringify(err.data, null, 4);
-            alert($scope.errors);
-        });
-    };
-
     $scope.createProduct = function () {
         $location.path('/products/create');
     }

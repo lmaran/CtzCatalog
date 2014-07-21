@@ -28,6 +28,13 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             templateUrl: 'App/views/productCreate.html',
             title: 'ProductCreate'
         })
+
+        .when('/products/:id', {
+            controller: 'productController',
+            templateUrl: 'App/views/productEdit.html',
+            title: 'ProductEdit'
+        })
+
         .when('/customers', {
             controller: 'customersController',
             templateUrl: 'App/views/customers.html',

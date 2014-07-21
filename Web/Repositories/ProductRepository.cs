@@ -20,6 +20,20 @@ namespace Web.Repositories
         {
         }
 
+        public void Add(ProductNew product)
+        {
+            var entity = new DynamicTableEntity();
+
+            entity.Properties["Name"] = new EntityProperty(product.Name);
+            entity.Properties["Description"] = new EntityProperty(product.Description);
+            entity.PartitionKey = "p";
+            entity.RowKey = Guid.NewGuid().ToString();
+
+            // entity.ETag = "*"; // mandatory for <merge>
+            // var operation = TableOperation.Merge(entity);
+            var operation = TableOperation.Insert(entity);
+            Table.Execute(operation);
+        }
 
         public IEnumerable<ProductViewModel> GetByPk()
         {
@@ -37,19 +51,26 @@ namespace Web.Repositories
             return entitiesVM;
         }
 
-
-        public void Add(ProductNew product)
+        public ProductViewModel GetById(string productId)
         {
-            var entity = new DynamicTableEntity();
+            var entry = this.Retrieve("p", productId);
 
-            entity.Properties["Name"] = new EntityProperty(product.Name);
-            entity.Properties["Description"] = new EntityProperty(product.Description);
-            entity.PartitionKey = "p";
-            entity.RowKey = Guid.NewGuid().ToString();
+            Mapper.CreateMap<ProductEntry, ProductViewModel>()
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.RowKey));
 
-            // entity.ETag = "*"; // mandatory for <merge>
-            // var operation = TableOperation.Merge(entity);
-            var operation = TableOperation.Insert(entity);
+            return Mapper.Map<ProductEntry, ProductViewModel>(entry);
+        }
+
+        public void Update(ProductViewModel product)
+        {
+            Mapper.CreateMap<ProductViewModel, ProductEntry>()
+                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.ProductId))
+                .ForMember(dest => dest.PartitionKey, opt=> opt.UseValue("p"));
+
+            var entity = Mapper.Map<ProductViewModel, ProductEntry>(product);
+
+            entity.ETag = "*"; // mandatory for <replace>
+            var operation = TableOperation.Replace(entity);
             Table.Execute(operation);
         }
 
@@ -59,7 +80,6 @@ namespace Web.Repositories
             item.PartitionKey = "p";
             item.RowKey = productId;
             this.Delete(item);
-
         }
 
     }
@@ -67,9 +87,10 @@ namespace Web.Repositories
 
     public interface IProductRepository : ITableStorage<ProductEntry>
     {
-        IEnumerable<ProductViewModel> GetByPk();
         void Add(ProductNew product);
+        IEnumerable<ProductViewModel> GetByPk();
+        ProductViewModel GetById(string productId);
+        void Update(ProductViewModel product);
         void Delete(string productId);
-        //ProductViewModel GetByKeys(String pk, String rk);
     }
 }

@@ -144,6 +144,7 @@
     <Content Include="App\services\productService.js" />
     <Content Include="App\views\alert.html" />
     <Content Include="App\views\confirm.html" />
+    <Content Include="App\views\productEdit.html" />
     <Content Include="App\views\productCreate.html" />
     <Content Include="Content\translates\Flags\blank.gif" />
     <Content Include="Content\translates\Flags\flags.css" />
