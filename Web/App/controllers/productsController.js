@@ -4,17 +4,17 @@
 
     init();
 
-    $scope.delete = function (product) {
-        dialogService.confirm('Click ok to delete ' + product.name + ', otherwise click cancel.', 'Delete Product')
+    $scope.delete = function (item) {
+        dialogService.confirm('Click ok to delete ' + item.name + ', otherwise click cancel.', 'Delete item')
             .then(function () {
 
                 // get the index for selected item
                 var i = 0;
                 for (i in $scope.products) {
-                    if ($scope.products[i].productId == product.productId) break;
+                    if ($scope.products[i].productId == item.productId) break;
                 };
                 
-                productService.delete(product.productId).then(function () {
+                productService.delete(item.productId).then(function () {
                     $scope.products.splice(i, 1);
                 })
                 .catch(function (err) {
@@ -27,7 +27,7 @@
             });
     };
 
-    $scope.createProduct = function () {
+    $scope.create = function () {
         $location.path('/products/create');
     }
 

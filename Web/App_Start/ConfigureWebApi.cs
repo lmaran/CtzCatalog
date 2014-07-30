@@ -3,6 +3,7 @@ using Newtonsoft.Json.Serialization;
 using Owin;
 using System.Web.Http;
 using Microsoft.Owin.StaticFiles;
+using Web.App_Start;
 
 namespace Web
 {
@@ -21,6 +22,8 @@ namespace Web
             // Convention-based routing
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
             config.Routes.MapHttpRoute("Home", "{*anything}", new { controller = "Home" });
+
+            DependencyConfig.Register(config);
 
             app.UseWebApi(config);
         }

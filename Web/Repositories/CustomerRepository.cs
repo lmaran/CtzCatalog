@@ -13,18 +13,20 @@ using System.Web.Http;
 
 namespace Web.Repositories
 {
-    public class ProductRepository : TableStorage<ProductEntry>, IProductRepository
+    public class CustomerRepository : TableStorage<CustomerEntry>, ICustomerRepository
     {
-        public ProductRepository()
-            : base(tableName: "Products")
+        public CustomerRepository()
+            : base(tableName: "Customers")
         {
         }
 
-        public void Add(ProductNew item)
+        public void Add(CustomerNew item)
         {
             var entity = new DynamicTableEntity();
 
             entity.Properties["Name"] = new EntityProperty(item.Name);
+            entity.Properties["Address"] = new EntityProperty(item.Address);
+            entity.Properties["Phone"] = new EntityProperty(item.Phone);
             entity.Properties["Description"] = new EntityProperty(item.Description);
             entity.PartitionKey = "p";
             entity.RowKey = Guid.NewGuid().ToString();
@@ -35,38 +37,38 @@ namespace Web.Repositories
             Table.Execute(operation);
         }
 
-        public IEnumerable<ProductViewModel> GetAll()
+        public IEnumerable<CustomerViewModel> GetAll()
         {
             var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "p");
             var entitiesTable = this.ExecuteQuery(filter);
 
             // automapper: copy "entitiesTable" to "entitiesVM"
-            Mapper.CreateMap<ProductEntry, ProductViewModel>()
-                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.RowKey));
+            Mapper.CreateMap<CustomerEntry, CustomerViewModel>()
+                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.RowKey));
 
 
-            var entitiesVM = Mapper.Map<List<ProductEntry>, List<ProductViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
+            var entitiesVM = Mapper.Map<List<CustomerEntry>, List<CustomerViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
 
             return entitiesVM;
         }
 
-        public ProductViewModel GetById(string itemId)
+        public CustomerViewModel GetById(string itemId)
         {
             var entry = this.Retrieve("p", itemId);
 
-            Mapper.CreateMap<ProductEntry, ProductViewModel>()
-                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.RowKey));
+            Mapper.CreateMap<CustomerEntry, CustomerViewModel>()
+                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.RowKey));
 
-            return Mapper.Map<ProductEntry, ProductViewModel>(entry);
+            return Mapper.Map<CustomerEntry, CustomerViewModel>(entry);
         }
 
-        public void Update(ProductViewModel item)
+        public void Update(CustomerViewModel item)
         {
-            Mapper.CreateMap<ProductViewModel, ProductEntry>()
-                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.ProductId))
+            Mapper.CreateMap<CustomerViewModel, CustomerEntry>()
+                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.CustomerId))
                 .ForMember(dest => dest.PartitionKey, opt=> opt.UseValue("p"));
 
-            var entity = Mapper.Map<ProductViewModel, ProductEntry>(item);
+            var entity = Mapper.Map<CustomerViewModel, CustomerEntry>(item);
 
             entity.ETag = "*"; // mandatory for <replace>
             var operation = TableOperation.Replace(entity);
@@ -75,7 +77,7 @@ namespace Web.Repositories
 
         public void Delete(string itemId)
         {
-            var item = new ProductEntry();
+            var item = new CustomerEntry();
             item.PartitionKey = "p";
             item.RowKey = itemId;
             this.Delete(item);
@@ -84,12 +86,12 @@ namespace Web.Repositories
     }
 
 
-    public interface IProductRepository : ITableStorage<ProductEntry>
+    public interface ICustomerRepository : ITableStorage<CustomerEntry>
     {
-        void Add(ProductNew item);
-        IEnumerable<ProductViewModel> GetAll();
-        ProductViewModel GetById(string itemId);
-        void Update(ProductViewModel item);
+        void Add(CustomerNew item);
+        IEnumerable<CustomerViewModel> GetAll();
+        CustomerViewModel GetById(string itemId);
+        void Update(CustomerViewModel item);
         void Delete(string itemId);
     }
 }

@@ -43,11 +43,21 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             title: 'ProductEdit'
         })
 
-        // *** products ***
+        // *** customers ***
         .when('/customers', {
             controller: 'customersController',
             templateUrl: 'App/views/customers.html',
             title: 'Customers'
+        })
+        .when('/customers/create', {
+            controller: 'customerController',
+            templateUrl: 'App/views/customerCreate.html',
+            title: 'CustomerCreate'
+        })
+        .when('/customers/:id', {
+            controller: 'customerController',
+            templateUrl: 'App/views/customerEdit.html',
+            title: 'CustomerEdit'
         })
 
         .otherwise({ redirectTo: '/' });

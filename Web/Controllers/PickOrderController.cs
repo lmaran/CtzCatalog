@@ -10,52 +10,48 @@ using Web.ViewModels;
 
 namespace Web.Controllers
 {
-    //[RoutePrefix("api/products")]
+    [RoutePrefix("api/pickOrders")]
     public class PickOrderController : ApiController
     {
-        private readonly IPickOrderRepository _pickOrderRepository;
+        private readonly IPickOrderRepository _repository;
 
-        public PickOrderController()
+        public PickOrderController(IPickOrderRepository repository)
         {
-            this._pickOrderRepository = new PickOrderRepository();
+            this._repository = repository;
         }
 
-        public PickOrderController(IPickOrderRepository pickOrderRepository)
-        {
-            this._pickOrderRepository = pickOrderRepository;
-        }
 
         [HttpPost]
-        [Route("api/pickOrders")]
+        [Route("")]
         public void Post(PickOrderNew item)
         {
-            _pickOrderRepository.Add(item);
+            _repository.Add(item);
         }
 
-        [Route("api/pickOrders")]
+        [Route("")]
         public IEnumerable<PickOrderViewModel> Get() //pk
         {
-            return _pickOrderRepository.GetAll();
+            return _repository.GetAll();
         }
 
-        [Route("api/pickOrders/{itemId}")]
+        [Route("{itemId}")]
         public PickOrderViewModel Get(string itemId) //pk
         {
-            return _pickOrderRepository.GetById(itemId);
+            return _repository.GetById(itemId);
         }
 
         [HttpPut]
-        [Route("api/pickOrders")]
+        [Route("")]
         public void Update(PickOrderViewModel item)
         {
-            _pickOrderRepository.Update(item);
+            _repository.Update(item);
         }
 
         [HttpDelete]
-        [Route("api/pickOrders/{itemId}")]
+        [Route("{itemId}")]
         public void Delete(string itemId)
         {
-            _pickOrderRepository.Delete(itemId);
+            _repository.Delete(itemId);
         }
 
     }

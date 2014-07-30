@@ -10,12 +10,12 @@ using Web.ViewModels;
 
 namespace Web.Controllers
 {
-    [RoutePrefix("api/products")]
-    public class ProductController : ApiController
+    [RoutePrefix("api/customers")]
+    public class CustomerController : ApiController
     {
-        private readonly IProductRepository _repository;
+        private readonly ICustomerRepository _repository;
 
-        public ProductController(IProductRepository repository)
+        public CustomerController(ICustomerRepository repository)
         {
             this._repository = repository;
         }
@@ -23,26 +23,26 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("")]
-        public void Post(ProductNew item)
+        public void Post(CustomerNew item)
         {
             _repository.Add(item);
         }
 
         [Route("")]
-        public IEnumerable<ProductViewModel> Get() //pk
+        public IEnumerable<CustomerViewModel> Get() //pk
         {
             return _repository.GetAll();
         }
 
         [Route("{itemId}")]
-        public ProductViewModel Get(string itemId) //pk
+        public CustomerViewModel Get(string itemId) //pk
         {
             return _repository.GetById(itemId);
         }
 
         [HttpPut]
         [Route("")]
-        public void Update(ProductViewModel item)
+        public void Update(CustomerViewModel item)
         {
             _repository.Update(item);
         }

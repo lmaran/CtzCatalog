@@ -2076,11 +2076,21 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             title: 'ProductEdit'
         })
 
-        // *** products ***
+        // *** customers ***
         .when('/customers', {
             controller: 'customersController',
             templateUrl: 'App/views/customers.html',
             title: 'Customers'
+        })
+        .when('/customers/create', {
+            controller: 'customerController',
+            templateUrl: 'App/views/customerCreate.html',
+            title: 'CustomerCreate'
+        })
+        .when('/customers/:id', {
+            controller: 'customerController',
+            templateUrl: 'App/views/customerEdit.html',
+            title: 'CustomerEdit'
         })
 
         .otherwise({ redirectTo: '/' });
@@ -2307,6 +2317,50 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
 
 
 }]);
+///#source 1 1 /App/controllers/productsController.js
+app.controller('productsController', ['$scope', '$location', 'productService', 'dialogService', function ($scope, $location, productService, dialogService) {
+    $scope.products = [];
+    $scope.errors = {};
+
+    init();
+
+    $scope.delete = function (item) {
+        dialogService.confirm('Click ok to delete ' + item.name + ', otherwise click cancel.', 'Delete item')
+            .then(function () {
+
+                // get the index for selected item
+                var i = 0;
+                for (i in $scope.products) {
+                    if ($scope.products[i].productId == item.productId) break;
+                };
+                
+                productService.delete(item.productId).then(function () {
+                    $scope.products.splice(i, 1);
+                })
+                .catch(function (err) {
+                    $scope.errors = JSON.stringify(err.data, null, 4);
+                    alert($scope.errors);
+                });
+
+            }, function () {
+                //alert('cancelled');
+            });
+    };
+
+    $scope.create = function () {
+        $location.path('/products/create');
+    }
+
+    $scope.refresh = function () {
+        init();
+    };
+
+    function init() {
+        productService.getAll().then(function (data) {
+            $scope.products = data;
+        });
+    };
+}]);
 ///#source 1 1 /App/controllers/productController.js
 app.controller('productController', ['$scope', '$window', '$route', 'productService', '$location', function ($scope, $window, $route, productService, $location) {
     $scope.product = {};
@@ -2372,25 +2426,25 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
 
 
 }]);
-///#source 1 1 /App/controllers/productsController.js
-app.controller('productsController', ['$scope', '$location', 'productService', 'dialogService', function ($scope, $location, productService, dialogService) {
-    $scope.products = [];
+///#source 1 1 /App/controllers/customersController.js
+app.controller('customersController', ['$scope', '$location', 'customerService', 'dialogService', function ($scope, $location, customerService, dialogService) {
+    $scope.customers = [];
     $scope.errors = {};
 
     init();
 
-    $scope.delete = function (product) {
-        dialogService.confirm('Click ok to delete ' + product.name + ', otherwise click cancel.', 'Delete Product')
+    $scope.delete = function (item) {
+        dialogService.confirm('Click ok to delete ' + item.name + ', otherwise click cancel.', 'Delete item')
             .then(function () {
 
                 // get the index for selected item
                 var i = 0;
-                for (i in $scope.products) {
-                    if ($scope.products[i].productId == product.productId) break;
+                for (i in $scope.customers) {
+                    if ($scope.customers[i].customerId == item.customerId) break;
                 };
-                
-                productService.delete(product.productId).then(function () {
-                    $scope.products.splice(i, 1);
+
+                customerService.delete(item.customerId).then(function () {
+                    $scope.customers.splice(i, 1);
                 })
                 .catch(function (err) {
                     $scope.errors = JSON.stringify(err.data, null, 4);
@@ -2402,8 +2456,8 @@ app.controller('productsController', ['$scope', '$location', 'productService', '
             });
     };
 
-    $scope.createProduct = function () {
-        $location.path('/products/create');
+    $scope.create = function () {
+        $location.path('/customers/create');
     }
 
     $scope.refresh = function () {
@@ -2411,14 +2465,75 @@ app.controller('productsController', ['$scope', '$location', 'productService', '
     };
 
     function init() {
-        productService.getAll().then(function (data) {
-            $scope.products = data;
+        customerService.getAll().then(function (data) {
+            $scope.customers = data;
         });
     };
 }]);
-///#source 1 1 /App/controllers/customersController.js
-app.controller('customersController', ['$scope', function ($scope) {
-    //alert(22);
+///#source 1 1 /App/controllers/customerController.js
+app.controller('customerController', ['$scope', '$window', '$route', 'customerService', '$location', function ($scope, $window, $route, customerService, $location) {
+    $scope.customer = {};
+
+    if ($route.current.title == "CustomerEdit") {
+        init();
+    }
+
+    function init() {
+        getCustomer();
+        //getModels();
+    }
+
+    function getCustomer() {
+        customerService.getById($route.current.params.id).then(function (data) {
+            $scope.customer = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
+        });
+    }
+
+    $scope.create = function (form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            //alert(JSON.stringify($scope.customer));
+            customerService.add($scope.customer)
+                .then(function (data) {
+                    $location.path('/customers');
+                    //Logger.info("Widget created successfully");
+                })
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+        }
+        else {
+            //alert('Invalid form');
+        }
+    };
+
+    $scope.update = function (form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            //alert(JSON.stringify($scope.customer));
+            customerService.update($scope.customer)
+                .then(function (data) {
+                    $location.path('/customers');
+                    //Logger.info("Widget created successfully");
+                })
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+        }
+        else {
+            //alert('Invalid form');
+        }
+    };
+
+    $scope.cancel = function () {
+        //$location.path('/widgets')
+        $window.history.back();
+    }
+
+
 }]);
 ///#source 1 1 /App/services/productService.js
 app.factory('productService', ['$http', function ($http) {
@@ -2458,6 +2573,39 @@ app.factory('pickOrderService', ['$http', function ($http) {
 
     var factory = {};
     var rootUrl = '/api/pickOrders/';
+
+    factory.add = function (item) {
+        return $http.post(rootUrl, item);
+    };
+
+    factory.getAll = function () {
+        return $http.get(rootUrl).then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.getById = function (itemId) {
+        return $http.get(rootUrl + encodeURIComponent(itemId)).then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.update = function (item) {
+        return $http.put(rootUrl, item);
+    };
+
+    factory.delete = function (itemId) {
+        return $http.delete(rootUrl + encodeURIComponent(itemId));
+    };
+
+
+    return factory;
+}]);
+///#source 1 1 /App/services/customerService.js
+app.factory('customerService', ['$http', function ($http) {
+
+    var factory = {};
+    var rootUrl = '/api/customers/';
 
     factory.add = function (item) {
         return $http.post(rootUrl, item);

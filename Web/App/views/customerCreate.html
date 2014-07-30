@@ -1,7 +1,7 @@
 ﻿<header id="content-header" ng-class="contentHeaderClass">
     <h1>
         <i id="content-header-icon" class="glyphicon glyphicon-tags"></i>
-        Products / Add new product
+        Customers / Add new customer
     </h1>
     
 </header>
@@ -14,7 +14,23 @@
         <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
             <label class="col-sm-2 control-label">Name</label>
             <div class="col-sm-4">
-                <input class="form-control" ng-model="product.name" type="text" name="name" required />
+                <input class="form-control" ng-model="customer.name" type="text" name="name" required />
+                <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
+            <label class="col-sm-2 control-label">Address</label>
+            <div class="col-sm-4">
+                <input class="form-control" ng-model="customer.address" type="text" name="address" required />
+                <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
+            <label class="col-sm-2 control-label">Phone</label>
+            <div class="col-sm-4">
+                <input class="form-control" ng-model="customer.phone" type="text" name="phone" required />
                 <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
             </div>
         </div>
@@ -22,7 +38,7 @@
         <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
             <label class="col-sm-2 control-label">Description</label>
             <div class="col-sm-4">
-                <input class="form-control" ng-model="product.description" type="text" name="description" required />
+                <input class="form-control" ng-model="customer.description" type="text" name="description" required />
                 <p ng-show="form.description.$invalid  && submitted" class="help-block">This field is required.</p>
             </div>
         </div>
