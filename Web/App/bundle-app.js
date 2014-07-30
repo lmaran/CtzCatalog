@@ -2041,16 +2041,25 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
                 controller: 'homeController',
                 templateUrl: 'App/views/home.html'
             })
-        //.when('/Admin',
-        //    {
-        //        controller: 'homeController',
-        //        templateUrl: 'App/views/admin.html'
-        //    })
+
+        // *** pickOrders ***
         .when('/pickOrders', {
             controller: 'pickOrdersController',
             templateUrl: 'App/views/pickOrders.html',
             title: 'Pick Orders'
         })
+        .when('/pickOrders/create', {
+            controller: 'pickOrderController',
+            templateUrl: 'App/views/pickOrderCreate.html',
+            title: 'PickOrderCreate'
+        })
+        .when('/pickOrders/:id', {
+            controller: 'pickOrderController',
+            templateUrl: 'App/views/pickOrderEdit.html',
+            title: 'PickOrderEdit'
+        })
+
+        // *** products ***
         .when('/products', {
             controller: 'productsController',
             templateUrl: 'App/views/products.html',
@@ -2061,38 +2070,19 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             templateUrl: 'App/views/productCreate.html',
             title: 'ProductCreate'
         })
-
         .when('/products/:id', {
             controller: 'productController',
             templateUrl: 'App/views/productEdit.html',
             title: 'ProductEdit'
         })
 
+        // *** products ***
         .when('/customers', {
             controller: 'customersController',
             templateUrl: 'App/views/customers.html',
             title: 'Customers'
         })
-        //.when('/Admin/WhiteList', {
-        //    controller: 'whiteListController',
-        //    templateUrl: 'App/views/whiteList.html',
-        //    title: 'WhiteList'
-        //})
-        //.when('/Admin/ResetPasswords', {
-        //    controller: 'resetPasswordsController',
-        //    templateUrl: 'App/views/resetPasswords.html',
-        //    title: 'WhiteList'
-        //})
-        //.when('/Speakers', {
-        //    controller: 'speakerController',
-        //    templateUrl: 'App/views/speakers.html',
-        //    title: 'Speakers'
-        //})
-        //.when('/Speakers/:speakerId', {
-        //    controller: 'speakerController',
-        //    templateUrl: 'App/views/speakers.html',
-        //    title: 'Speaker'
-        //})
+
         .otherwise({ redirectTo: '/' });
 
     // use the HTML5 History API - http://scotch.io/quick-tips/js/angular/pretty-urls-in-angularjs-removing-the-hashtag
@@ -2108,7 +2098,6 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .useLocalStorage() //to remember the chosen language; it use 'storage-cookie' as fallback; 'storage-cookie' depends on 'ngCookies'
         .useStaticFilesLoader({
             prefix: 'Content/translates/',
-            //prefix:'lang-',
             suffix: '.json'
         });
 }]);
@@ -2210,7 +2199,112 @@ app.controller('navbarController', ['$scope', '$rootScope', '$location', '$trans
 }]);
 
 ///#source 1 1 /App/controllers/pickOrdersController.js
-app.controller('pickOrdersController', ['$scope', function ($scope) {
+app.controller('pickOrdersController', ['$scope', '$location', 'pickOrderService', 'dialogService', function ($scope, $location, pickOrderService, dialogService) {
+    $scope.pickOrders = [];
+    $scope.errors = {};
+
+    init();
+
+    $scope.delete = function (pickOrder) {
+        dialogService.confirm('Click ok to delete ' + pickOrder.name + ', otherwise click cancel.', 'Delete PickOrder')
+            .then(function () {
+
+                // get the index for selected item
+                var i = 0;
+                for (i in $scope.pickOrders) {
+                    if ($scope.pickOrders[i].pickOrderId == pickOrder.pickOrderId) break;
+                };
+
+                pickOrderService.delete(pickOrder.pickOrderId).then(function () {
+                    $scope.pickOrders.splice(i, 1);
+                })
+                .catch(function (err) {
+                    $scope.errors = JSON.stringify(err.data, null, 4);
+                    alert($scope.errors);
+                });
+
+            }, function () {
+                //alert('cancelled');
+            });
+    };
+
+    $scope.create = function () {
+        $location.path('/pickOrders/create');
+    }
+
+    $scope.refresh = function () {
+        init();
+    };
+
+    function init() {
+        pickOrderService.getAll().then(function (data) {
+            $scope.pickOrders = data;
+        });
+    };
+}]);
+///#source 1 1 /App/controllers/pickOrderController.js
+app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrderService', '$location', function ($scope, $window, $route, pickOrderService, $location) {
+    $scope.pickOrder = {};
+    
+    if ($route.current.title == "PickOrderEdit") {
+        init();
+    }
+
+    function init() {
+        getPickOrder();
+        //getModels();
+    }
+
+    function getPickOrder() {
+        pickOrderService.getById($route.current.params.id).then(function (data) {
+            $scope.pickOrder = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
+        });
+    }
+
+    $scope.create = function (form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            //alert(JSON.stringify($scope.product));
+            pickOrderService.add($scope.pickOrder)
+                .then(function (data) {
+                    $location.path('/pickOrders');
+                    //Logger.info("Widget created successfully");
+                })
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+        }
+        else {
+            //alert('Invalid form');
+        }
+    };
+
+    $scope.update = function (form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            //alert(JSON.stringify($scope.pickOrder));
+            pickOrderService.update($scope.pickOrder)
+                .then(function (data) {
+                    $location.path('/pickOrders');
+                    //Logger.info("Widget created successfully");
+                })
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+        }
+        else {
+            //alert('Invalid form');
+        }
+    };
+
+    $scope.cancel = function () {
+        //$location.path('/widgets')
+        $window.history.back();
+    }
+
 
 }]);
 ///#source 1 1 /App/controllers/productController.js
@@ -2317,7 +2411,7 @@ app.controller('productsController', ['$scope', '$location', 'productService', '
     };
 
     function init() {
-        productService.getProducts().then(function (data) {
+        productService.getAll().then(function (data) {
             $scope.products = data;
         });
     };
@@ -2330,33 +2424,64 @@ app.controller('customersController', ['$scope', function ($scope) {
 app.factory('productService', ['$http', function ($http) {
 
     var factory = {};
+    var rootUrl = '/api/products/';
 
-    factory.add = function (product) {
-        return $http.post('/api/products/', product);
+    factory.add = function (item) {
+        return $http.post(rootUrl, item);
     };
 
-    factory.getProducts = function () {
-        return $http.get('/api/products').then(function (result) {
+    factory.getAll = function () {
+        return $http.get(rootUrl).then(function (result) {
             return result.data;
         });
     };
 
-    factory.getById = function (productId) {
-        return $http.get('/api/products/' + encodeURIComponent(productId) + '/').then(function (result) {
+    factory.getById = function (itemId) {
+        return $http.get(rootUrl + encodeURIComponent(itemId)).then(function (result) {
             return result.data;
         });
     };
 
-    factory.update = function (product) {
-        return $http.put('/api/products/', product);
+    factory.update = function (item) {
+        return $http.put(rootUrl, item);
     };
 
-    factory.delete = function (productId) {
-        return $http.delete('/api/products/' + encodeURIComponent(productId) + '/');
+    factory.delete = function (itemId) {
+        return $http.delete(rootUrl + encodeURIComponent(itemId));
     };
 
 
+    return factory;
+}]);
+///#source 1 1 /App/services/pickOrderService.js
+app.factory('pickOrderService', ['$http', function ($http) {
 
+    var factory = {};
+    var rootUrl = '/api/pickOrders/';
+
+    factory.add = function (item) {
+        return $http.post(rootUrl, item);
+    };
+
+    factory.getAll = function () {
+        return $http.get(rootUrl).then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.getById = function (itemId) {
+        return $http.get(rootUrl + encodeURIComponent(itemId)).then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.update = function (item) {
+        return $http.put(rootUrl, item);
+    };
+
+    factory.delete = function (itemId) {
+        return $http.delete(rootUrl + encodeURIComponent(itemId));
+    };
 
 
     return factory;

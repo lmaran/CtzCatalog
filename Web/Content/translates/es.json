@@ -1,0 +1,36 @@
+﻿{
+    "Menu":
+    {
+        "Pick Orders": "Ordenes",
+        "Products": "Productos",
+        "Customers": "Clientes"
+    },
+ 
+    "Navbar":
+    {
+        "Admin":"Admin",
+        "Admin.Users":"Registered Users",
+        "Admin.WhiteList":"Email \"WhiteList\"",
+        "Admin.ResetPasswords":"Reset Passwords",
+
+        "Register": "Register",
+        "Login": "Log in",
+        "Logout": "Log off",
+
+        "Language": "Idioma",
+        "Language.Romanian": "Rumana",
+        "Language.English": "Inglés",
+        "Language.Spanish": "Español"
+    },
+
+    "GlobalButtons":
+    {
+        "Add": "Añadir",
+        "Create": "Crear",
+        "Update": "Actualización",
+        "Delete": "Borrar",
+        "Save": "Guardar",
+        "Cancel": "Cancelar"
+    }
+
+}

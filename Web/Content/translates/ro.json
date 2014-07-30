@@ -21,5 +21,15 @@
         "Language.Romanian": "Romana",
         "Language.English": "Engleza",
         "Language.Spanish": "Spaniola"
-    }  
+    },
+
+    "GlobalButtons":
+    {
+        "Add": "Adauga",
+        "Create": "Creaza",
+        "Update": "Actualizeaza",
+        "Delete": "Sterge",
+        "Save": "Salveaza",
+        "Cancel": "Renunta"
+    }
 }

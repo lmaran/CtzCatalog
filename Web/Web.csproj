@@ -139,11 +139,16 @@
     <Content Include="App\bundle-app.min.js.map" />
     <Content Include="App\controllers\alertController.js" />
     <Content Include="App\controllers\confirmController.js" />
+    <Content Include="App\controllers\pickOrderController.js" />
     <Content Include="App\controllers\productController.js" />
+    <Content Include="App\controllers\ordersController.js" />
     <Content Include="App\services\dialogService.js" />
+    <Content Include="App\services\pickOrderService.js" />
     <Content Include="App\services\productService.js" />
     <Content Include="App\views\alert.html" />
     <Content Include="App\views\confirm.html" />
+    <Content Include="App\views\pickOrderEdit.html" />
+    <Content Include="App\views\pickOrderCreate.html" />
     <Content Include="App\views\productEdit.html" />
     <Content Include="App\views\productCreate.html" />
     <Content Include="Content\translates\Flags\blank.gif" />
@@ -157,6 +162,7 @@
     <Content Include="HiddenConnectionStrings.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Content\translates\es.json" />
     <None Include="Properties\PublishProfiles\Azure-WebFarmLM1.pubxml" />
     <Content Include="Scripts\angular-translate-loader-static-files.js" />
     <Content Include="Scripts\angular-translate-storage-cookie.js" />
@@ -238,15 +244,20 @@
     <Compile Include="App_Start\ConfigureWebApi.cs" />
     <Compile Include="App_Start\DependencyConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PickOrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Helpers\HeliosHostingEnvironment.cs" />
     <Compile Include="Helpers\HtmlActionResult.cs" />
+    <Compile Include="Models\PickOrderNew.cs" />
+    <Compile Include="Models\PickOrderEntry.cs" />
     <Compile Include="Models\ProductEntry.cs" />
     <Compile Include="Models\ProductNew.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\PickOrderRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\TableStorage.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\PickOrderViewModel.cs" />
     <Compile Include="ViewModels\ProductViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

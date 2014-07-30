@@ -1,7 +1,7 @@
-﻿app.factory('productService', ['$http', function ($http) {
+﻿app.factory('pickOrderService', ['$http', function ($http) {
 
     var factory = {};
-    var rootUrl = '/api/products/';
+    var rootUrl = '/api/pickOrders/';
 
     factory.add = function (item) {
         return $http.post(rootUrl, item);

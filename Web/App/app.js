@@ -8,16 +8,25 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
                 controller: 'homeController',
                 templateUrl: 'App/views/home.html'
             })
-        //.when('/Admin',
-        //    {
-        //        controller: 'homeController',
-        //        templateUrl: 'App/views/admin.html'
-        //    })
+
+        // *** pickOrders ***
         .when('/pickOrders', {
             controller: 'pickOrdersController',
             templateUrl: 'App/views/pickOrders.html',
             title: 'Pick Orders'
         })
+        .when('/pickOrders/create', {
+            controller: 'pickOrderController',
+            templateUrl: 'App/views/pickOrderCreate.html',
+            title: 'PickOrderCreate'
+        })
+        .when('/pickOrders/:id', {
+            controller: 'pickOrderController',
+            templateUrl: 'App/views/pickOrderEdit.html',
+            title: 'PickOrderEdit'
+        })
+
+        // *** products ***
         .when('/products', {
             controller: 'productsController',
             templateUrl: 'App/views/products.html',
@@ -28,38 +37,19 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             templateUrl: 'App/views/productCreate.html',
             title: 'ProductCreate'
         })
-
         .when('/products/:id', {
             controller: 'productController',
             templateUrl: 'App/views/productEdit.html',
             title: 'ProductEdit'
         })
 
+        // *** products ***
         .when('/customers', {
             controller: 'customersController',
             templateUrl: 'App/views/customers.html',
             title: 'Customers'
         })
-        //.when('/Admin/WhiteList', {
-        //    controller: 'whiteListController',
-        //    templateUrl: 'App/views/whiteList.html',
-        //    title: 'WhiteList'
-        //})
-        //.when('/Admin/ResetPasswords', {
-        //    controller: 'resetPasswordsController',
-        //    templateUrl: 'App/views/resetPasswords.html',
-        //    title: 'WhiteList'
-        //})
-        //.when('/Speakers', {
-        //    controller: 'speakerController',
-        //    templateUrl: 'App/views/speakers.html',
-        //    title: 'Speakers'
-        //})
-        //.when('/Speakers/:speakerId', {
-        //    controller: 'speakerController',
-        //    templateUrl: 'App/views/speakers.html',
-        //    title: 'Speaker'
-        //})
+
         .otherwise({ redirectTo: '/' });
 
     // use the HTML5 History API - http://scotch.io/quick-tips/js/angular/pretty-urls-in-angularjs-removing-the-hashtag
@@ -75,7 +65,6 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .useLocalStorage() //to remember the chosen language; it use 'storage-cookie' as fallback; 'storage-cookie' depends on 'ngCookies'
         .useStaticFilesLoader({
             prefix: 'Content/translates/',
-            //prefix:'lang-',
             suffix: '.json'
         });
 }]);

@@ -1,0 +1,56 @@
+﻿<header id="content-header" ng-class="contentHeaderClass">
+    <h1>
+        <i id="content-header-icon" class="glyphicon glyphicon-tags"></i>
+        Pick Orders / Add new pickOrder
+    </h1>
+    
+</header>
+
+<div id="content-body" class="container-fluid">
+
+    <form ng-submit="create(form)" name="form" class="form-horizontal max-width" role="form" novalidate>
+        <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+
+        <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
+            <label class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" ng-model="pickOrder.name" name="name" required />
+                <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
+            <label class="col-sm-2 control-label">CreatedOn</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" ng-model="pickOrder.createdOn" name="createdOn" required />
+                <p ng-show="form.createdOn.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
+            <label class="col-sm-2 control-label">CustomerId</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" ng-model="pickOrder.customerId" name="customerId" required />
+                <p ng-show="form.createdOn.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
+            <label class="col-sm-2 control-label">CustomerName</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" ng-model="pickOrder.customerName" name="customerId" required />
+                <p ng-show="form.createdOn.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-sm-10">
+                <button type="submit"  class="btn btn-primary"> <span class="glyphicon glyphicon-floppy-disk"></span> Save </button>
+                <button type="button" class="btn" ng-click="cancel()"> <span class=" glyphicon glyphicon-remove"></span> Cancel </button>
+            </div>
+        </div>
+
+    </form>
+
+</div>

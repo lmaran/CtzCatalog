@@ -36,7 +36,7 @@
     };
 
     function init() {
-        productService.getAll().then(function (data) {
+        productService.getProducts().then(function (data) {
             $scope.products = data;
         });
     };
