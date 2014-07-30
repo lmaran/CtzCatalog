@@ -12,34 +12,40 @@
         <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
 
         <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
-            <label class="col-sm-2 control-label">Name</label>
+            <label class="col-sm-2 control-label">Order Name</label>
             <div class="col-sm-4">
                 <input type="text" class="form-control" ng-model="pickOrder.name" name="name" required />
                 <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
             </div>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
+        <!--<div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
             <label class="col-sm-2 control-label">CreatedOn</label>
             <div class="col-sm-4">
                 <input type="text" class="form-control" ng-model="pickOrder.createdOn" name="createdOn" required />
                 <p ng-show="form.createdOn.$invalid  && submitted" class="help-block">This field is required.</p>
             </div>
-        </div>
+        </div>-->
 
-        <div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
+        <!--<div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
             <label class="col-sm-2 control-label">CustomerId</label>
             <div class="col-sm-4">
                 <input type="text" class="form-control" ng-model="pickOrder.customerId" name="customerId" required />
                 <p ng-show="form.createdOn.$invalid  && submitted" class="help-block">This field is required.</p>
             </div>
-        </div>
+        </div>-->
 
         <div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
             <label class="col-sm-2 control-label">CustomerName</label>
             <div class="col-sm-4">
-                <input type="text" class="form-control" ng-model="pickOrder.customerName" name="customerId" required />
-                <p ng-show="form.createdOn.$invalid  && submitted" class="help-block">This field is required.</p>
+                <!--<input type="text" class="form-control" ng-model="pickOrder.customerName" name="customerId" required />
+                <p ng-show="form.createdOn.$invalid  && submitted" class="help-block">This field is required.</p>-->
+
+                <select name="Model" class="form-control" ng-model="pickOrder.customer" ng-options="c as c.name for c in customers  track by c.customerId" required>
+                    <option value=""></option>
+                </select>
+                <p ng-show="form.Model.$invalid  && submitted" class="help-block">This field is required.</p>
+
             </div>
         </div>
 

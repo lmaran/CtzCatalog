@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
+        <!--<div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
             <label class="col-sm-2 control-label">CustomerId</label>
             <div class="col-sm-4">
                 <input class="form-control" ng-model="pickOrder.customerId" type="text" required />
@@ -40,6 +40,17 @@
             <div class="col-sm-4">
                 <input class="form-control" ng-model="pickOrder.customerName" type="text" required />
                 <p ng-show="form.createdOn.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>-->
+
+        <div class="form-group" ng-class="{ 'has-error' : form.createdOn.$invalid && submitted }">
+            <label class="col-sm-2 control-label">CustomerName</label>
+            <div class="col-sm-4">
+                <select name="Model" class="form-control" ng-model="pickOrder.customer" ng-options="c as c.name for c in customers  track by c.customerId" required>
+                    <option value=""></option>
+                </select>
+                <p ng-show="form.Model.$invalid  && submitted" class="help-block">This field is required.</p>
+
             </div>
         </div>
 

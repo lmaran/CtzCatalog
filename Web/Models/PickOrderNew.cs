@@ -8,6 +8,11 @@ namespace Web.Models
 {
     public class PickOrderNew
     {
+        public PickOrderNew()
+        {
+            this.CreatedOn = DateTime.UtcNow;
+        }
+
         public string Name { get; set; }
         public DateTime CreatedOn { get; set; }
         public string CustomerId { get; set; }

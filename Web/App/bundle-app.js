@@ -2253,32 +2253,53 @@ app.controller('pickOrdersController', ['$scope', '$location', 'pickOrderService
     };
 }]);
 ///#source 1 1 /App/controllers/pickOrderController.js
-app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrderService', '$location', function ($scope, $window, $route, pickOrderService, $location) {
+app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrderService', 'customerService', '$location', function ($scope, $window, $route, pickOrderService, customerService, $location) {
     $scope.pickOrder = {};
+    $scope.customers = [];
     
+    getCustomers();
     if ($route.current.title == "PickOrderEdit") {
         init();
     }
 
     function init() {
         getPickOrder();
-        //getModels();
+        
     }
 
     function getPickOrder() {
         pickOrderService.getById($route.current.params.id).then(function (data) {
-            $scope.pickOrder = data;
+            //$scope.pickOrder = data;
+            $scope.pickOrder.pickOrderId = data.pickOrderId;
+            $scope.pickOrder.name = data.name;
+            $scope.pickOrder.createdOn = data.createdOn;
+            $scope.pickOrder.customer = {customerId:data.customerId, name:data.customerName};
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
         });
     }
 
+    function getCustomers() {
+        customerService.getAll().then(function (data) {
+            $scope.customers = data;
+        });
+    }
+
     $scope.create = function (form) {
         $scope.submitted = true;
         if (form.$valid) {
-            //alert(JSON.stringify($scope.product));
-            pickOrderService.add($scope.pickOrder)
+
+            var pickOrder = {};
+            pickOrder.name = $scope.pickOrder.name;
+            pickOrder.createdOn = $scope.pickOrder.createdOn;
+            pickOrder.customerId = $scope.pickOrder.customer.customerId;
+            pickOrder.customerName = $scope.pickOrder.customer.name;
+
+            //alert(JSON.stringify(pickOrder));
+            //return false;
+
+            pickOrderService.add(pickOrder)
                 .then(function (data) {
                     $location.path('/pickOrders');
                     //Logger.info("Widget created successfully");
@@ -2295,8 +2316,16 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
     $scope.update = function (form) {
         $scope.submitted = true;
         if (form.$valid) {
-            //alert(JSON.stringify($scope.pickOrder));
-            pickOrderService.update($scope.pickOrder)
+
+            var pickOrder = {};
+            pickOrder.pickOrderId = $scope.pickOrder.pickOrderId;
+            pickOrder.name = $scope.pickOrder.name;
+            pickOrder.createdOn = $scope.pickOrder.createdOn;
+            pickOrder.customerId = $scope.pickOrder.customer.customerId;
+            pickOrder.customerName = $scope.pickOrder.customer.name;
+
+            //alert(JSON.stringify(pickOrder));
+            pickOrderService.update(pickOrder)
                 .then(function (data) {
                     $location.path('/pickOrders');
                     //Logger.info("Widget created successfully");
@@ -2480,7 +2509,6 @@ app.controller('customerController', ['$scope', '$window', '$route', 'customerSe
 
     function init() {
         getCustomer();
-        //getModels();
     }
 
     function getCustomer() {

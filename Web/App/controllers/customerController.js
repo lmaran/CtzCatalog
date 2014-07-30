@@ -7,7 +7,6 @@
 
     function init() {
         getCustomer();
-        //getModels();
     }
 
     function getCustomer() {
