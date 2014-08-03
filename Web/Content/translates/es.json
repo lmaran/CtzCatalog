@@ -3,7 +3,8 @@
     {
         "Pick Orders": "Ordenes",
         "Products": "Productos",
-        "Customers": "Clientes"
+        "Customers": "Clientes",
+        "OptionSets": "Los conjuntos de opciones"
     },
  
     "Navbar":

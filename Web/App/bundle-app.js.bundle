@@ -41,10 +41,13 @@
         <file>/App/controllers/productController.js</file>
         <file>/App/controllers/customersController.js</file>
         <file>/App/controllers/customerController.js</file>
+        <file>/App/controllers/optionSetsController.js</file>
+        <file>/App/controllers/optionSetController.js</file>
 
         <file>/App/services/productService.js</file>
         <file>/App/services/pickOrderService.js</file>
         <file>/App/services/customerService.js</file>
+        <file>/App/services/optionSetService.js</file>
         
         <file>/App/services/dialogService.js</file>
     </files>

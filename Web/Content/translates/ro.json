@@ -3,7 +3,8 @@
     {
         "Pick Orders": "Comenzi de livrare",
         "Products": "Produse",
-        "Customers": "Clienti"
+        "Customers": "Clienti",
+        "OptionSets": "Seturi de optiuni"
     },
  
     "Navbar":

@@ -3,7 +3,8 @@
     {
         "Pick Orders": "Pick Orders",
         "Products": "Products",
-        "Customers": "Customers"
+        "Customers": "Customers",
+        "OptionSets": "OptionSets"
     },
  
     "Navbar":

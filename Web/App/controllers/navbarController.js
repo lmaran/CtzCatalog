@@ -8,6 +8,9 @@
     }, {
         'title': 'Customers',
         'link': '/customers'
+    }, {
+        'title': 'OptionSets',
+        'link': '/optionsets'
     }];
 
     // http://stackoverflow.com/a/18562339

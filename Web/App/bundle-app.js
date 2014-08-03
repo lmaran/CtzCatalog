@@ -2093,6 +2093,23 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             title: 'CustomerEdit'
         })
 
+        // *** optionSets ***
+        .when('/optionsets', {
+            controller: 'optionSetsController',
+            templateUrl: 'App/views/optionSets.html',
+            title: 'OptionSets'
+        })
+        .when('/optionsets/create', {
+            controller: 'optionSetController',
+            templateUrl: 'App/views/optionSetCreate.html',
+            title: 'OptionSetCreate'
+        })
+        .when('/optionsets/:id', {
+            controller: 'optionSetController',
+            templateUrl: 'App/views/optionSetEdit.html',
+            title: 'OptionSetEdit'
+        })
+
         .otherwise({ redirectTo: '/' });
 
     // use the HTML5 History API - http://scotch.io/quick-tips/js/angular/pretty-urls-in-angularjs-removing-the-hashtag
@@ -2146,6 +2163,9 @@ app.controller('navbarController', ['$scope', '$rootScope', '$location', '$trans
     }, {
         'title': 'Customers',
         'link': '/customers'
+    }, {
+        'title': 'OptionSets',
+        'link': '/optionsets'
     }];
 
     // http://stackoverflow.com/a/18562339
@@ -2563,6 +2583,128 @@ app.controller('customerController', ['$scope', '$window', '$route', 'customerSe
 
 
 }]);
+///#source 1 1 /App/controllers/optionSetsController.js
+app.controller('optionSetsController', ['$scope', '$rootScope', '$route', '$location', 'optionSetService', 'dialogService', function ($scope, $rootScope, $route, $location, optionSetService, dialogService) {
+    $scope.optionSets = [];
+    $scope.errors = {};
+
+    init();
+
+    $scope.delete = function (item) {
+        dialogService.confirm('Click ok to delete ' + item.name + ', otherwise click cancel.', 'Delete item')
+            .then(function () {
+
+                // get the index for selected item
+                var i = 0;
+                for (i in $scope.optionSets) {
+                    if ($scope.optionSets[i].optionSetId == item.optionSetId) break;
+                };
+
+                optionSetService.delete(item.optionSetId).then(function () {
+                    $scope.optionSets.splice(i, 1);
+                })
+                .catch(function (err) {
+                    $scope.errors = JSON.stringify(err.data, null, 4);
+                    alert($scope.errors);
+                });
+
+            }, function () {
+                //alert('cancelled');
+            });
+    };
+
+    $scope.create = function () {
+        $location.path('/optionsets/create');
+    }
+
+    $scope.refresh = function () {
+        init();
+    };
+
+    function init() {
+        optionSetService.getAll().then(function (data) {
+            $scope.optionSets = data;
+        });
+    };
+
+
+    // http://stackoverflow.com/a/18856665/2726725
+    // daca nu folosesc 'destroy' si pornesc app.pe pagina 'OptionSet', merg pe alt meniu (ex. 'Products') si revin, 
+    // atunci evenimentul se va declansa in continuare "in duble exemplar"
+    var cleanUpFunc = $rootScope.$on('$translateChangeSuccess', function () {
+        init(); //refresh data using the new translation
+    });
+
+    $scope.$on('$destroy', function() {
+        cleanUpFunc();
+    });
+
+}]);
+///#source 1 1 /App/controllers/optionSetController.js
+app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSetService', '$location', function ($scope, $window, $route, optionSetService, $location) {
+    $scope.product = {};
+
+    if ($route.current.title == "OptionSetEdit") {
+        init();
+    }
+
+    function init() {
+        getOptionSet();
+        //getModels();
+    }
+
+    function getOptionSet() {
+        optionSetService.getById($route.current.params.id).then(function (data) {
+            $scope.optionSet = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
+        });
+    }
+
+    $scope.create = function (form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            //alert(JSON.stringify($scope.product));
+            optionSetService.add($scope.optionSet)
+                .then(function (data) {
+                    $location.path('/optionsets');
+                    //Logger.info("Widget created successfully");
+                })
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+        }
+        else {
+            //alert('Invalid form');
+        }
+    };
+
+    $scope.update = function (form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            //alert(JSON.stringify($scope.product));
+            optionSetService.update($scope.optionSet)
+                .then(function (data) {
+                    $location.path('/optionsets');
+                    //Logger.info("Widget created successfully");
+                })
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+        }
+        else {
+            //alert('Invalid form');
+        }
+    };
+
+    $scope.cancel = function () {
+        //$location.path('/widgets')
+        $window.history.back();
+    }
+
+
+}]);
 ///#source 1 1 /App/services/productService.js
 app.factory('productService', ['$http', function ($http) {
 
@@ -2641,6 +2783,39 @@ app.factory('customerService', ['$http', function ($http) {
 
     factory.getAll = function () {
         return $http.get(rootUrl).then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.getById = function (itemId) {
+        return $http.get(rootUrl + encodeURIComponent(itemId)).then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.update = function (item) {
+        return $http.put(rootUrl, item);
+    };
+
+    factory.delete = function (itemId) {
+        return $http.delete(rootUrl + encodeURIComponent(itemId));
+    };
+
+
+    return factory;
+}]);
+///#source 1 1 /App/services/optionSetService.js
+app.factory('optionSetService', ['$http', '$translate', function ($http, $translate) {
+
+    var factory = {};
+    var rootUrl = '/api/optionSets/';
+
+    factory.add = function (item) {
+        return $http.post(rootUrl, item);
+    };
+
+    factory.getAll = function () {
+        return $http.get(rootUrl + '?lang=' + $translate.use()).then(function (result) {
             return result.data;
         });
     };
