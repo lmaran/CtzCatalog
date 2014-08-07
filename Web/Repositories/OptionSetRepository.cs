@@ -78,7 +78,8 @@ namespace Web.Repositories
             var entry = this.Retrieve("p", itemId);
 
             Mapper.CreateMap<OptionSetEntry, OptionSetViewModel>()
-                .ForMember(dest => dest.OptionSetId, opt => opt.MapFrom(src => src.RowKey));
+                .ForMember(dest => dest.OptionSetId, opt => opt.MapFrom(src => src.RowKey))
+                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<Option>>(src.Options ?? string.Empty)));
 
             return Mapper.Map<OptionSetEntry, OptionSetViewModel>(entry);
         }
@@ -87,7 +88,8 @@ namespace Web.Repositories
         {
             Mapper.CreateMap<OptionSetViewModel, OptionSetEntry>()
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.OptionSetId))
-                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
+                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"))
+                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Options)));
 
             var entity = Mapper.Map<OptionSetViewModel, OptionSetEntry>(item);
 

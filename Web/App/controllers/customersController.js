@@ -38,6 +38,9 @@
     function init() {
         customerService.getAll().then(function (data) {
             $scope.customers = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
         });
     };
 }]);
