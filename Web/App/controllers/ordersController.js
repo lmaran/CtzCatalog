@@ -38,6 +38,9 @@
     function init() {
         productService.getProducts().then(function (data) {
             $scope.products = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
         });
     };
 }]);

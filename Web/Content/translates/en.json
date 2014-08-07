@@ -4,7 +4,8 @@
         "Pick Orders": "Pick Orders",
         "Products": "Products",
         "Customers": "Customers",
-        "OptionSets": "OptionSets"
+        "OptionSets": "OptionSets",
+        "AttributeSets": "AttributeSets"
     },
  
     "Navbar":

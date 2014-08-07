@@ -17,6 +17,7 @@ namespace Web.App_Start
             container.RegisterType<IPickOrderRepository, PickOrderRepository>();
             container.RegisterType<ICustomerRepository, CustomerRepository>();
             container.RegisterType<IOptionSetRepository, OptionSetRepository>();
+            container.RegisterType<IAttributeSetRepository, AttributeSetRepository>();
 
             config.DependencyResolver = new UnityResolver(container);
         }

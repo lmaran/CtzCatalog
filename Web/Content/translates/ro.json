@@ -4,7 +4,8 @@
         "Pick Orders": "Comenzi de livrare",
         "Products": "Produse",
         "Customers": "Clienti",
-        "OptionSets": "Seturi de optiuni"
+        "OptionSets": "Seturi de optiuni",
+        "AttributeSets": "Seturi de atribute"
     },
  
     "Navbar":

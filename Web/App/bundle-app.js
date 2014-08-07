@@ -2110,6 +2110,23 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             title: 'OptionSetEdit'
         })
 
+        // *** attributeSets ***
+        .when('/attributesets', {
+            controller: 'attributeSetsController',
+            templateUrl: 'App/views/attributeSets.html',
+            title: 'AttributeSets'
+        })
+        .when('/attributesets/create', {
+            controller: 'attributeSetController',
+            templateUrl: 'App/views/attributeSetCreate.html',
+            title: 'AttributeSetCreate'
+        })
+        .when('/attributesets/:id', {
+            controller: 'attributeSetController',
+            templateUrl: 'App/views/attributeSetEdit.html',
+            title: 'AttributeSetEdit'
+        })
+
         .otherwise({ redirectTo: '/' });
 
     // use the HTML5 History API - http://scotch.io/quick-tips/js/angular/pretty-urls-in-angularjs-removing-the-hashtag
@@ -2166,6 +2183,9 @@ app.controller('navbarController', ['$scope', '$rootScope', '$location', '$trans
     }, {
         'title': 'OptionSets',
         'link': '/optionsets'
+    }, {
+        'title': 'AttributeSets',
+        'link': '/attributesets'
     }];
 
     // http://stackoverflow.com/a/18562339
@@ -2407,6 +2427,9 @@ app.controller('productsController', ['$scope', '$location', 'productService', '
     function init() {
         productService.getAll().then(function (data) {
             $scope.products = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
         });
     };
 }]);
@@ -2627,6 +2650,9 @@ app.controller('optionSetsController', ['$scope', '$rootScope', '$route', '$loca
     function init() {
         optionSetService.getAll().then(function (data) {
             $scope.optionSets = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
         });
     };
 
@@ -2779,6 +2805,202 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
 
 
 }]);
+///#source 1 1 /App/controllers/attributeSetsController.js
+app.controller('attributeSetsController', ['$scope', '$rootScope', '$route', '$location', 'attributeSetService', 'dialogService', function ($scope, $rootScope, $route, $location, attributeSetService, dialogService) {
+    $scope.attributeSets = [];
+    $scope.errors = {};
+
+    init();
+
+    $scope.delete = function (item) {
+        dialogService.confirm('Click ok to delete ' + item.name + ', otherwise click cancel.', 'Delete item')
+            .then(function () {
+
+                // get the index for selected item
+                var i = 0;
+                for (i in $scope.attributeSets) {
+                    if ($scope.attributeSets[i].attributeSetId == item.attributeSetId) break;
+                };
+
+                attributeSetService.delete(item.attributeSetId).then(function () {
+                    $scope.attributeSets.splice(i, 1);
+                })
+                .catch(function (err) {
+                    $scope.errors = JSON.stringify(err.data, null, 4);
+                    alert($scope.errors);
+                });
+
+            }, function () {
+                //alert('cancelled');
+            });
+    };
+
+    $scope.create = function () {
+        $location.path('/attributesets/create');
+    }
+
+    $scope.refresh = function () {
+        init();
+    };
+
+    function init() {
+        attributeSetService.getAll().then(function (data) {
+            $scope.attributeSets = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
+        });
+    };
+
+
+    // http://stackoverflow.com/a/18856665/2726725
+    // daca nu folosesc 'destroy' si pornesc app.pe pagina 'AttributeSet', merg pe alt meniu (ex. 'Products') si revin, 
+    // atunci evenimentul se va declansa in continuare "in duble exemplar"
+    var cleanUpFunc = $rootScope.$on('$translateChangeSuccess', function () {
+        init(); //refresh data using the new translation
+    });
+
+    $scope.$on('$destroy', function() {
+        cleanUpFunc();
+    });
+
+}]);
+///#source 1 1 /App/controllers/attributeSetController.js
+app.controller('attributeSetController', ['$scope', '$window', '$route', 'attributeSetService', '$location', function ($scope, $window, $route, attributeSetService, $location) {
+    $scope.attributeSet = {};
+    $scope.attributeBtnAreVisible = false;
+
+    if ($route.current.title == "AttributeSetEdit") {
+        init();
+    }
+
+    function init() {
+        getAttributeSet();
+        //getModels();
+    }
+
+    function getAttributeSet() {
+        attributeSetService.getById($route.current.params.id).then(function (data) {
+            $scope.attributeSet = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
+        });
+    }
+
+    $scope.create = function (form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            attributeSetService.add($scope.attributeSet)
+                .then(function (data) {
+                    $location.path('/attributesets');
+                    //Logger.info("Widget created successfully");
+                })
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+        }
+        else {
+            //alert('Invalid form');
+        }
+    };
+
+    $scope.update = function (form) {
+        $scope.submitted = true;
+        if (form.$valid) {
+            //alert(JSON.stringify($scope.attributeSet));
+            //return false;
+            attributeSetService.update($scope.attributeSet)
+                .then(function (data) {
+                    $location.path('/attributesets');
+                    //Logger.info("Widget created successfully");
+                })
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+        }
+        else {
+            //alert('Invalid form');
+        }
+    };
+
+    $scope.cancel = function () {
+        //$location.path('/widgets')
+        $window.history.back();
+    }
+
+    $scope.addAttribute = function () {
+        $scope.attributeSet.attributes.push({ "name": $scope.newAttributeValue, "description": "new description", "displayOrder": 10});
+        $scope.newAttributeValue = '';
+        //alert($scope.newAttributeValue);
+    };
+
+    $scope.removeAttribute = function (idx, attribute, e) {
+        // to not expand the panel at the end of action
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+
+        $scope.attributeSet.attributes.splice(idx, 1);
+        //alert(idx);
+    };
+
+    $scope.attributeUp = function (oldIdx, attribute, e) {
+        // to not expand the panel at the end of action
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+
+        var newIdx = oldIdx - 1, tmp;
+        var attributesLength = $scope.attributeSet.attributes.length;
+
+        if (oldIdx > 0) {
+            tmp = $scope.attributeSet.attributes[newIdx];
+            $scope.attributeSet.attributes[newIdx] = $scope.attributeSet.attributes[oldIdx];
+            $scope.attributeSet.attributes[oldIdx] = tmp;
+        } else { // oldIndex is first position
+            newIdx = attributesLength - 1; // circular list
+            tmp = $scope.attributeSet.attributes[oldIdx];
+
+            // move all remaining attributes one position up
+            for (var i = 1; i <= attributesLength; i++) {
+                $scope.attributeSet.attributes[i - 1] = $scope.attributeSet.attributes[i];
+            };
+            $scope.attributeSet.attributes[newIdx] = tmp;
+        }
+    }
+
+    $scope.attributeDown = function (oldIdx, attribute, e) {
+        //alert(JSON.stringify(attribute));
+        // to not expand the panel at the end of action
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+
+        var newIdx = oldIdx + 1, tmp;
+        var attributesLength = $scope.attributeSet.attributes.length;
+
+        if (oldIdx < attributesLength - 1) {
+            tmp = $scope.attributeSet.attributes[newIdx];
+            $scope.attributeSet.attributes[newIdx] = $scope.attributeSet.attributes[oldIdx];
+            $scope.attributeSet.attributes[oldIdx] = tmp;
+        } else { // oldIndex is last position
+            newIdx = 0; // circular list
+            tmp = $scope.attributeSet.attributes[oldIdx];
+
+            // move all remaining attributes one position down
+            for (var i = (attributesLength - 1); i > 0; i--) {
+                $scope.attributeSet.attributes[i] = $scope.attributeSet.attributes[i-1];
+            };
+            $scope.attributeSet.attributes[newIdx] = tmp;
+        }
+    }
+
+
+}]);
 ///#source 1 1 /App/services/productService.js
 app.factory('productService', ['$http', function ($http) {
 
@@ -2883,6 +3105,39 @@ app.factory('optionSetService', ['$http', '$translate', function ($http, $transl
 
     var factory = {};
     var rootUrl = '/api/optionSets/';
+
+    factory.add = function (item) {
+        return $http.post(rootUrl, item);
+    };
+
+    factory.getAll = function () {
+        return $http.get(rootUrl + '?lang=' + $translate.use()).then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.getById = function (itemId) {
+        return $http.get(rootUrl + encodeURIComponent(itemId)).then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.update = function (item) {
+        return $http.put(rootUrl, item);
+    };
+
+    factory.delete = function (itemId) {
+        return $http.delete(rootUrl + encodeURIComponent(itemId));
+    };
+
+
+    return factory;
+}]);
+///#source 1 1 /App/services/attributeSetService.js
+app.factory('attributeSetService', ['$http', '$translate', function ($http, $translate) {
+
+    var factory = {};
+    var rootUrl = '/api/attributeSets/';
 
     factory.add = function (item) {
         return $http.post(rootUrl, item);

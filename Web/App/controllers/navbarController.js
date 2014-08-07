@@ -11,6 +11,9 @@
     }, {
         'title': 'OptionSets',
         'link': '/optionsets'
+    }, {
+        'title': 'AttributeSets',
+        'link': '/attributesets'
     }];
 
     // http://stackoverflow.com/a/18562339

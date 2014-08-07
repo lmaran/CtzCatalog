@@ -77,6 +77,23 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             title: 'OptionSetEdit'
         })
 
+        // *** attributeSets ***
+        .when('/attributesets', {
+            controller: 'attributeSetsController',
+            templateUrl: 'App/views/attributeSets.html',
+            title: 'AttributeSets'
+        })
+        .when('/attributesets/create', {
+            controller: 'attributeSetController',
+            templateUrl: 'App/views/attributeSetCreate.html',
+            title: 'AttributeSetCreate'
+        })
+        .when('/attributesets/:id', {
+            controller: 'attributeSetController',
+            templateUrl: 'App/views/attributeSetEdit.html',
+            title: 'AttributeSetEdit'
+        })
+
         .otherwise({ redirectTo: '/' });
 
     // use the HTML5 History API - http://scotch.io/quick-tips/js/angular/pretty-urls-in-angularjs-removing-the-hashtag

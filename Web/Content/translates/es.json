@@ -4,7 +4,8 @@
         "Pick Orders": "Ordenes",
         "Products": "Productos",
         "Customers": "Clientes",
-        "OptionSets": "Los conjuntos de opciones"
+        "OptionSets": "Grupos de Opciones",
+        "AttributeSets": "Grupos de Atributos"
     },
  
     "Navbar":
