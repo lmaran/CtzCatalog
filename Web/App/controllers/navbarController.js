@@ -12,6 +12,9 @@
         'title': 'OptionSets',
         'link': '/optionsets'
     }, {
+        'title': 'Attributes',
+        'link': '/attributes'
+    }, {
         'title': 'AttributeSets',
         'link': '/attributesets'
     }];

@@ -77,6 +77,23 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             title: 'OptionSetEdit'
         })
 
+        // *** attributes ***
+        .when('/attributes', {
+            controller: 'attributesController',
+            templateUrl: 'App/views/attributes.html',
+            title: 'Attributes'
+        })
+        .when('/attributes/create', {
+            controller: 'attributeController',
+            templateUrl: 'App/views/attributeCreate.html',
+            title: 'AttributeCreate'
+        })
+        .when('/attributes/:id', {
+            controller: 'attributeController',
+            templateUrl: 'App/views/attributeEdit.html',
+            title: 'AttributeEdit'
+        })
+
         // *** attributeSets ***
         .when('/attributesets', {
             controller: 'attributeSetsController',
