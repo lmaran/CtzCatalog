@@ -27,6 +27,8 @@ namespace Web.Repositories
 
             entity.Properties["Name"] = new EntityProperty(item.Name);
             entity.Properties["Description"] = new EntityProperty(item.Description);
+            entity.Properties["Type"] = new EntityProperty(item.Type);
+            entity.Properties["TypeDetails"] = new EntityProperty(item.TypeDetails);
             entity.PartitionKey = "p";
             entity.RowKey = Guid.NewGuid().ToString();
 
@@ -42,6 +44,11 @@ namespace Web.Repositories
             var entitiesTable = this.ExecuteQuery(filter);
 
             // automapper: copy "entitiesTable" to "entitiesVM"
+            Mapper.CreateMap<AttributeEntry, AttributeViewModel>()
+                .ForMember(dest => dest.AttributeId, opt => opt.MapFrom(src => src.RowKey));
+            var entitiesVM = Mapper.Map<List<AttributeEntry>, List<AttributeViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
+
+
             // met asta nu a functionat. La primul apel rezultatul oferit e ok dar la urmatoarele, param. "lang" "revine" la valoarea initiala
             //Mapper.CreateMap<AttributeEntry, AttributeViewModel>()
             //    .ForMember(dest => dest.AttributeId, opt => opt.MapFrom(src => src.RowKey))
@@ -49,26 +56,26 @@ namespace Web.Repositories
             //        opt => opt.ResolveUsing<CustomResolver>().ConstructedBy(() => new CustomResolver(lang))    );               
             //var entitiesVM = Mapper.Map<List<AttributeEntry>, List<AttributeViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
 
-            var entitiesVM = new List<AttributeViewModel>();
-            foreach (var item in entitiesTable)
-            {
+            //var entitiesVM = new List<AttributeViewModel>();
+            //foreach (var item in entitiesTable)
+            //{
 
-                var newName = item.Name;
-                if (lang != null && !string.IsNullOrEmpty(item.TranslatedName))
-                {
-                    string translatedName;
-                    var transDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.TranslatedName);
-                    if (transDictionary.TryGetValue(lang, out translatedName))
-                        newName = translatedName;
-                }
+            //    var newName = item.Name;
+            //    if (lang != null && !string.IsNullOrEmpty(item.TranslatedName))
+            //    {
+            //        string translatedName;
+            //        var transDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.TranslatedName);
+            //        if (transDictionary.TryGetValue(lang, out translatedName))
+            //            newName = translatedName;
+            //    }
 
-                entitiesVM.Add(new AttributeViewModel()
-                {
-                    AttributeId = item.RowKey,
-                    Name = newName,
-                    Description = item.Description
-                });
-            }
+            //    entitiesVM.Add(new AttributeViewModel()
+            //    {
+            //        AttributeId = item.RowKey,
+            //        Name = newName,
+            //        Description = item.Description
+            //    });
+            //}
 
             return entitiesVM;
         }
@@ -78,8 +85,8 @@ namespace Web.Repositories
             var entry = this.Retrieve("p", itemId);
 
             Mapper.CreateMap<AttributeEntry, AttributeViewModel>()
-                .ForMember(dest => dest.AttributeId, opt => opt.MapFrom(src => src.RowKey))
-                .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<AttributeValue2>>(src.Attributes ?? string.Empty)));
+                .ForMember(dest => dest.AttributeId, opt => opt.MapFrom(src => src.RowKey));
+                //.ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<AttributeValue2>>(src.Attributes ?? string.Empty)));
 
             return Mapper.Map<AttributeEntry, AttributeViewModel>(entry);
         }
@@ -88,8 +95,8 @@ namespace Web.Repositories
         {
             Mapper.CreateMap<AttributeViewModel, AttributeEntry>()
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.AttributeId))
-                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"))
-                .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Attributes)));
+                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
+                //.ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Attributes)));
 
             var entity = Mapper.Map<AttributeViewModel, AttributeEntry>(item);
 

@@ -12,7 +12,7 @@
         <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
 
         <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
-            <label class="col-md-2 control-label">Name:</label>
+            <label class="col-md-2 control-label">Name</label>
             <div class="col-md-4">
                 <input class="form-control" ng-model="attribute.name" type="text" name="name" required />
                 <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
@@ -20,120 +20,51 @@
         </div>
 
         <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
-            <label class="col-md-2 control-label">Description:</label>
+            <label class="col-md-2 control-label">Description</label>
             <div class="col-md-4">
-                <input class="form-control" ng-model="attribute.description" type="text" name="description" required />
-                <p ng-show="form.description.$invalid  && submitted" class="help-block">This field is required.</p>
+                <input class="form-control" ng-model="attribute.description" type="text" name="description" />
             </div>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
-            <label class="col-md-2 control-label">Attributes:</label>
+        <div class="form-group" ng-class="{ 'has-error' : form.attributeType.$invalid && submitted }">
+            <label class="col-md-2 control-label">Attribute Type</label>
             <div class="col-md-4">
-                <div class="input-group">
-                    <input ng-model="newAttributeValue" name="newEmail" type="text" class="form-control" placeholder2="Enter a new attribute...">
-                    <span ng-click2="add()" class="input-group-btn"><button type="button" class="btn btn-primary" ng-click="addAttribute()"> <span class="glyphicon glyphicon-plus"></span> Add this attribute</button></span>
-                </div>
+                <select name="attributeType" class="form-control" ng-model="attribute.type" ng-change="changeType()" required>
+                    <option value=""></option>
+                    <option value="Text">Text</option>
+                    <option value="OptionSet">OptionSet</option>
+                    <!--<option value="TwoOptions">TwoOptions</option>
+                    <option value="Number">Number</option>-->
+                </select>
+                <p ng-show="form.attributeType.$invalid  && submitted" class="help-block">This field is required.</p>
             </div>
-            <!--<div class="form-inline col-md-2">
-                <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-arrow-up"></span></button>
-                <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-arrow-down"></span></button>
-            </div>-->
         </div>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
-            <!--<label class="col-md-2 control-label">Attributes:</label>-->
-            <div class="col-md-4 col-md-offset-2">
-            <!--<div class="col-md-4">-->
-                <!--<button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new attribute </button>
+        <!--<div ng-if="type=='Text'" class="form-group" ng-class="{ 'has-error' : form.defaultValue.$invalid && submitted }">
+        <label class="col-md-2 control-label">Default Value</label>
+        <div class="col-md-4">
+            <input class="form-control" ng-model="attribute.defaultValue" type="text" name="defaultValue" />
+        </div>
+    </div>-->
 
-                <br /><br />-->
-                <!--<div class="input-group">
-                    <input ng-model="newEmail" name="newEmail" type="text" class="form-control" placeholder22="Enter a new attribute...">
-                    <span ng-click="add()" class="input-group-btn"><button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add this attribute </button></span>
-                </div>
-
-                <br />-->
-
-                <!--<div class="input-group">
-                    <input ng-model="newAttributeValue" name="newEmail" type="text" class="form-control" placeholder="Enter a new attribute...">
-                    <span ng-click2="add()" class="input-group-btn"><button type="button" class="btn" ng-click="addAttribute()"> <span class="glyphicon glyphicon-plus"></span> Add </button></span>
-                </div>-->
-
-
-
-                <accordion close-others="true">
-                    <!--<accordion-group heading="Static Header, initially expanded" is-open="false" is-disabled="status.isFirstDisabled">
-                        This content is straight in the template.
-                    </accordion-group>-->
-                    <accordion-group ng-repeat="attribute in attribute.attributes" ng-mouseenter="attributeBtnAreVisible=true" ng-mouseleave="attributeBtnAreVisible=false">
-                        <accordion-heading>
-                            {{attribute.name}}
-                            <span class="pull-right" ng-if="attributeBtnAreVisible">
-                                <button type="button" class="btn btn-xs" ng-click="removeAttribute($index, attribute, $event)"> <span class="glyphicon glyphicon-remove"></span></button>
-                                <button type="button" class="btn btn-xs" ng-click="attributeDown($index, attribute, $event)"> <span class="glyphicon glyphicon-arrow-down"></span></button>
-                                <button type="button" class="btn btn-xs" ng-click="attributeUp($index, attribute, $event)"> <span class="glyphicon glyphicon-arrow-up"></span></button>
-                            </span>
-                        </accordion-heading>
-                        {{attribute.description}}
-                    </accordion-group>
-                </accordion>
-
-
+        <div ng-if="attribute.type=='OptionSet'" class="form-group" ng-class="{ 'has-error' : form.optionSet.$invalid && submitted }">
+            <label class="col-md-2 control-label">Option Set</label>
+            <div class="col-md-4">
+                <select name="optionSet" class="form-control" ng-model="dotObject.selectedOptionSetId" ng-options="c.optionSetId as c.name for c in optionSets" ng-change="changeOptionSet()" required>
+                    <option value=""></option>
+                </select>
+                <p ng-show="form.optionSet.$invalid  && submitted" class="help-block">This field is required.</p>
             </div>
-            <!--<div class="col-md-2">
-                <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new attribute </button>
-            </div>-->
         </div>
 
-        <!--<hr />-->
-        <!--<label>Attributes:</label>-->
-        <!--<button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new attribute </button>-->
-        <!--<div class="row toolbar">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new attribute </button>
-            </div>
-        </div>-->
-        <!--<div class="row toolbar">
-            <div class="col-md-12">
-                <label class="col-md-2 control-label">Attributes:</label>
-            </div>
-        </div>-->
-        <!--<div class="row toolbar">
+        <div ng-if="attribute.type=='OptionSet'" class="form-group" ng-class="{ 'has-error' : form.defaultValue.$invalid && submitted }">
+            <label class="col-md-2 control-label">Default Value</label>
             <div class="col-md-4">
-                <label class="col-md-2 control-label">Attributes:</label> <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new attribute </button>
-                <button type="button" class="btn" ng-click="refresh()"> <span class="glyphicon glyphicon-refresh"></span> </button>
+                <select class="form-control" ng-model="dotObject.selectedDefaultValueName" ng-options="c.name as c.name for c in options">
+                    <option value=""></option>
+                </select>
             </div>
-
-            <div class="col-md-3 pull-right">
-                <div class="input-group">
-                    <input ng-model="search" name="newEmail" type="text" class="form-control" placeholder="Search">
-                    <span class="input-group-btn"><button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-search"></span></button></span>
-                </div>
-            </div>
-
-        </div>-->
-        <!--<label>Attributes:</label>-->
-        <!--<div class="table-responsive">
-            <table class="table table-responsive table-bordered table-hover table-condensed">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-ng-repeat="attribute in attribute.attributes">
-                        <td><a ng-href="/attributes/{{attributeValue.name}}">{{attribute.name}}</a></td>
-                        <td>{{ attribute.description }}</td>
-                        <td>
-                            <a ng-click="delete(attribute.attribute)">delete</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>-->
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

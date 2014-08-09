@@ -2886,13 +2886,36 @@ app.controller('attributesController', ['$scope', '$rootScope', '$route', '$loca
 
 }]);
 ///#source 1 1 /App/controllers/attributeController.js
-app.controller('attributeController', ['$scope', '$window', '$route', 'attributeService', '$location', function ($scope, $window, $route, attributeService, $location) {
+app.controller('attributeController', ['$scope', '$window', '$route', 'attributeService', 'optionSetService', '$location', function ($scope, $window, $route, attributeService, optionSetService, $location) {
     $scope.attribute = {};
+
+    $scope.optionSets = [];
+
+    // we need an object (dotObject) to be able to use two-way data binding for ng-models in Select elements
+    // otherwise ue need to send the ng-model value of select control as parameter to a ng-change() function
+    // and init the model there
+    // worth to mention that the model is working properly in the view side {{my-model}}
+    // the above mention behavior is due to the fact that a new scope is created within Select element
+    // https://groups.google.com/forum/#!topic/angular/7Nd_me5YrHU
+    // https://egghead.io/lessons/angularjs-the-dot
+    // http://stackoverflow.com/questions/17606936/angularjs-dot-in-ng-model
+    $scope.dotObject = {};
+
+    $scope.options = [];
+
     $scope.attributeBtnAreVisible = false;
 
     if ($route.current.title == "AttributeEdit") {
         init();
     }
+
+    // at the end (async) initialize DDL values
+    optionSetService.getAll().then(function (data) {
+        $scope.optionSets = data;
+    })
+    .catch(function (err) {
+        alert(JSON.stringify(err, null, 4));
+    });
 
     function init() {
         getAttribute();
@@ -2902,6 +2925,23 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
     function getAttribute() {
         attributeService.getById($route.current.params.id).then(function (data) {
             $scope.attribute = data;
+            $scope.attribute.typeDetails = JSON.parse(data.typeDetails);
+            
+            if ($route.current.title == "AttributeEdit") {
+                // init typeDetails (each type has different details)
+                if ($scope.attribute.type == "OptionSet") {
+
+                    // for OptionSet we always have the properties typeDetails and optionSetId
+                    $scope.dotObject.selectedOptionSetId = $scope.attribute.typeDetails.optionSetId;
+                    $scope.dotObject.selectedDefaultValueName = $scope.attribute.typeDetails.defaultValue;
+
+                    getOptionSetValues($scope.attribute.typeDetails.optionSetId);
+                    if ($scope.attribute.typeDetails.defaultValue) {
+                        $scope.dotObject.selectedDefaultValueName = $scope.attribute.typeDetails.defaultValue;
+                    }
+                }
+                // else if($scope.attribute.type == "Text")...
+            }
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -2909,8 +2949,20 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
     }
 
     $scope.create = function (form) {
+        // send typeDetails as a string because we don't know the number or names of its properties
         $scope.submitted = true;
         if (form.$valid) {
+
+            // create 'typeDetails' property;
+            if ($scope.attribute.type == "OptionSet") {
+                var typeDetails = {};
+                typeDetails.optionSetId = $scope.dotObject.selectedOptionSetId;
+                if ($scope.dotObject.selectedDefaultValueName != null) {
+                    typeDetails.defaultValue = $scope.dotObject.selectedDefaultValueName;
+                }
+                $scope.attribute.typeDetails = JSON.stringify(typeDetails);
+            };
+
             attributeService.add($scope.attribute)
                 .then(function (data) {
                     $location.path('/attributes');
@@ -2928,8 +2980,17 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
     $scope.update = function (form) {
         $scope.submitted = true;
         if (form.$valid) {
-            //alert(JSON.stringify($scope.attribute));
-            //return false;
+
+            // create 'typeDetails' property;
+            if ($scope.attribute.type == "OptionSet") {
+                var typeDetails = {};
+                typeDetails.optionSetId = $scope.dotObject.selectedOptionSetId;
+                if ($scope.dotObject.selectedDefaultValueName != null) {
+                    typeDetails.defaultValue = $scope.dotObject.selectedDefaultValueName;
+                }
+                $scope.attribute.typeDetails = JSON.stringify(typeDetails);
+            };
+
             attributeService.update($scope.attribute)
                 .then(function (data) {
                     $location.path('/attributes');
@@ -2949,76 +3010,25 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
         $window.history.back();
     }
 
-    $scope.addAttribute = function () {
-        $scope.attribute.attributes.push({ "name": $scope.newAttributeValue, "description": "new description", "defaultValue": "10"});
-        $scope.newAttributeValue = '';
-        //alert($scope.newAttributeValue);
-    };
-
-    $scope.removeAttribute = function (idx, attribute, e) {
-        // to not expand the panel at the end of action
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        };
-
-        $scope.attribute.attributes.splice(idx, 1);
-        //alert(idx);
-    };
-
-    $scope.attributeUp = function (oldIdx, attribute, e) {
-        // to not expand the panel at the end of action
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        };
-
-        var newIdx = oldIdx - 1, tmp;
-        var attributesLength = $scope.attribute.attributes.length;
-
-        if (oldIdx > 0) {
-            tmp = $scope.attribute.attributes[newIdx];
-            $scope.attribute.attributes[newIdx] = $scope.attribute.attributes[oldIdx];
-            $scope.attribute.attributes[oldIdx] = tmp;
-        } else { // oldIndex is first position
-            newIdx = attributesLength - 1; // circular list
-            tmp = $scope.attribute.attributes[oldIdx];
-
-            // move all remaining attributes one position up
-            for (var i = 1; i <= attributesLength; i++) {
-                $scope.attribute.attributes[i - 1] = $scope.attribute.attributes[i];
-            };
-            $scope.attribute.attributes[newIdx] = tmp;
-        }
+    $scope.changeType = function () {
+        // clear previous details when you switch the type
+        // delete $scope.attribute.typeDetails;
     }
 
-    $scope.attributeDown = function (oldIdx, attribute, e) {
-        //alert(JSON.stringify(attribute));
-        // to not expand the panel at the end of action
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        };
-
-        var newIdx = oldIdx + 1, tmp;
-        var attributesLength = $scope.attribute.attributes.length;
-
-        if (oldIdx < attributesLength - 1) {
-            tmp = $scope.attribute.attributes[newIdx];
-            $scope.attribute.attributes[newIdx] = $scope.attribute.attributes[oldIdx];
-            $scope.attribute.attributes[oldIdx] = tmp;
-        } else { // oldIndex is last position
-            newIdx = 0; // circular list
-            tmp = $scope.attribute.attributes[oldIdx];
-
-            // move all remaining attributes one position down
-            for (var i = (attributesLength - 1); i > 0; i--) {
-                $scope.attribute.attributes[i] = $scope.attribute.attributes[i-1];
-            };
-            $scope.attribute.attributes[newIdx] = tmp;
-        }
+    $scope.changeOptionSet = function () {
+        getOptionSetValues($scope.dotObject.selectedOptionSetId);
     }
 
+
+    // helper functions
+    function getOptionSetValues(optionSetId){
+        optionSetService.getById(optionSetId).then(function (data) {
+            $scope.options = data.options;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
+        });
+    }
 
 }]);
 ///#source 1 1 /App/controllers/attributeSetsController.js

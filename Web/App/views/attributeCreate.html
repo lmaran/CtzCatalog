@@ -15,6 +15,7 @@
             <label class="col-md-2 control-label">Name</label>
             <div class="col-md-4">
                 <input class="form-control" ng-model="attribute.name" type="text" name="name" required />
+                <!--<p class="help-block">e.g. Color, Size, Type etc</p>-->
                 <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
             </div>
         </div>
@@ -22,8 +23,47 @@
         <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
             <label class="col-md-2 control-label">Description</label>
             <div class="col-md-4">
-                <input class="form-control" ng-model="attribute.description" type="text" name="description" required />
-                <p ng-show="form.description.$invalid  && submitted" class="help-block">This field is required.</p>
+                <input class="form-control" ng-model="attribute.description" type="text" name="description" />
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : form.attributeType.$invalid && submitted }">
+            <label class="col-md-2 control-label">Attribute Type</label>
+            <div class="col-md-4">
+                <select name="attributeType" class="form-control" ng-model="attribute.type" ng-change="changeType()" required>
+                    <option value=""></option>
+                    <option value="Text">Text</option>
+                    <option value="OptionSet">OptionSet</option>
+                    <!--<option value="TwoOptions">TwoOptions</option>
+                    <option value="Number">Number</option>-->
+                </select>
+                <p ng-show="form.attributeType.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
+
+        <!--<div ng-if="type=='Text'" class="form-group" ng-class="{ 'has-error' : form.defaultValue.$invalid && submitted }">
+            <label class="col-md-2 control-label">Default Value</label>
+            <div class="col-md-4">
+                <input class="form-control" ng-model="attribute.defaultValue" type="text" name="defaultValue" />
+            </div>
+        </div>-->
+
+        <div ng-if="attribute.type=='OptionSet'" class="form-group" ng-class="{ 'has-error' : form.optionSet.$invalid && submitted }">
+            <label class="col-md-2 control-label">Option Set</label>
+            <div class="col-md-4">
+                <select name="optionSet" class="form-control" ng-model="dotObject.selectedOptionSetId" ng-options="c.optionSetId as c.name for c in optionSets" ng-change="changeOptionSet()" required>
+                    <option value=""></option>
+                </select>
+                <p ng-show="form.optionSet.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
+
+        <div ng-if="attribute.type=='OptionSet'" class="form-group" ng-class="{ 'has-error' : form.defaultValue.$invalid && submitted }">
+            <label class="col-md-2 control-label">Default Value</label>
+            <div class="col-md-4">
+                <select class="form-control" ng-model="dotObject.selectedDefaultValueName" ng-options="c.name as c.name for c in options">
+                    <option value=""></option>
+                </select>
             </div>
         </div>
 
