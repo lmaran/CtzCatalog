@@ -18,9 +18,11 @@ namespace Web.ViewModels
 
     public class AttributeValue
     {
+        public string AttributeId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string DefaultValue { get; set; }
+        public string Type { get; set; }
+        public string TypeDetails { get; set; }
         //public Int32 DisplayOrder { get; set; }
     }
 }

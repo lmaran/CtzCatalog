@@ -21,34 +21,31 @@ namespace Web.Controllers
         }
 
 
-        [HttpPost]
-        [Route("")]
+        [HttpPost, Route]
         public void Post(CustomerNew item)
         {
             _repository.Add(item);
         }
 
-        [Route("")]
+        [HttpGet, Route]
         public IEnumerable<CustomerViewModel> Get() //pk
         {
             return _repository.GetAll();
         }
 
-        [Route("{itemId}")]
+        [HttpGet, Route]
         public CustomerViewModel Get(string itemId) //pk
         {
             return _repository.GetById(itemId);
         }
 
-        [HttpPut]
-        [Route("")]
+        [HttpPut, Route]
         public void Update(CustomerViewModel item)
         {
             _repository.Update(item);
         }
 
-        [HttpDelete]
-        [Route("{itemId}")]
+        [HttpDelete, Route("{itemId}")]
         public void Delete(string itemId)
         {
             _repository.Delete(itemId);

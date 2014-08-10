@@ -21,34 +21,31 @@ namespace Web.Controllers
         }
 
 
-        [HttpPost]
-        [Route("")]
+        [HttpPost, Route]
         public void Post(OptionSetNew item)
         {
             _repository.Add(item);
         }
 
-        [Route("{lang?}")]
+        [HttpGet, Route("{lang?}")]
         public IEnumerable<OptionSetViewModel> GetAll(string lang = null) //pk
         {
             return _repository.GetAll(lang);
         }
 
-        [Route("{itemId}")]
+        [HttpGet, Route("{itemId}")]
         public OptionSetViewModel Get(string itemId) //pk
         {
             return _repository.GetById(itemId);
         }
 
-        [HttpPut]
-        [Route("")]
+        [HttpPut, Route]
         public void Update(OptionSetViewModel item)
         {
             _repository.Update(item);
         }
 
-        [HttpDelete]
-        [Route("{itemId}")]
+        [HttpDelete, Route("{itemId}")]
         public void Delete(string itemId)
         {
             _repository.Delete(itemId);

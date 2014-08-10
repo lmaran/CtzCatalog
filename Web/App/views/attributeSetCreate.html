@@ -19,11 +19,45 @@
             </div>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
+        <div class="form-group">
             <label class="col-md-2 control-label">Description</label>
             <div class="col-md-4">
-                <input class="form-control" ng-model="attributeSet.description" type="text" name="description" required />
-                <p ng-show="form.description.$invalid  && submitted" class="help-block">This field is required.</p>
+                <input class="form-control" ng-model="attributeSet.description" type="text" name="description" />
+            </div>
+        </div>
+
+
+        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
+            <label class="col-md-2 control-label">Attributes:</label>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <select id="optionSetAttributes" class="form-control" ng-model="dotObject.selectedAttribute" ng-options="c as c.name for c in attributes">
+                        <option value="" title="aaa"></option>
+                    </select>
+                    <span class="input-group-btn"><button ng-disabled="attributes.length==0 || dotObject.selectedAttribute==undefined" type="button" class="btn btn-primary" ng-click="addAttribute()"> <span class="glyphicon glyphicon-plus"></span> Add this attribute</button></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
+            <div class="col-md-4 col-md-offset-2">
+
+                <accordion close-others="true">
+                    <accordion-group ng-repeat="attribute in attributeSet.attributes" ng-mouseenter="attributeBtnAreVisible=true" ng-mouseleave="attributeBtnAreVisible=false">
+                        <accordion-heading>
+                            {{attribute.name}}
+                            <span class="pull-right" ng-if="attributeBtnAreVisible">
+                                <button type="button" class="btn btn-xs" ng-click="removeAttribute($index, attribute, $event)"> <span class="glyphicon glyphicon-remove"></span></button>
+                                <button type="button" class="btn btn-xs" ng-click="attributeDown($index, attribute, $event)"> <span class="glyphicon glyphicon-arrow-down"></span></button>
+                                <button type="button" class="btn btn-xs" ng-click="attributeUp($index, attribute, $event)"> <span class="glyphicon glyphicon-arrow-up"></span></button>
+                            </span>
+                        </accordion-heading>
+                        <strong>Description:</strong> {{attribute.description}}<br />
+                        <strong>Type:</strong> {{attribute.type}} <br />
+                        <strong>TypeDetails:</strong> {{attribute.typeDetails}}
+                    </accordion-group>
+                </accordion>
+
             </div>
         </div>
 
