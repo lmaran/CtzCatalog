@@ -26,6 +26,9 @@ namespace Web.Repositories
 
             entity.Properties["Name"] = new EntityProperty(item.Name);
             entity.Properties["Description"] = new EntityProperty(item.Description);
+            entity.Properties["AttributeSetId"] = new EntityProperty(item.AttributeSetId);
+            entity.Properties["AttributeSetName"] = new EntityProperty(item.AttributeSetName);
+            entity.Properties["Attributes"] = new EntityProperty(item.Attributes);
             entity.PartitionKey = "p";
             entity.RowKey = Guid.NewGuid().ToString();
 

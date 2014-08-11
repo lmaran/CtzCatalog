@@ -28,6 +28,8 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>AttributeSet</th>
+                    <th>Attributes</th>
                     <th>Description</th>
                     <th></th>
                 </tr>
@@ -35,6 +37,8 @@
             <tbody>
                 <tr data-ng-repeat="product in products | filter:search">
                     <td><a ng-href="/products/{{product.productId}}">{{product.name}}</a></td>
+                    <td>{{ product.attributeSetName }}</td>
+                    <td>{{ product.attributes }}</td>
                     <td>{{ product.description }}</td>
                     <td>
                         <a ng-click="delete(product)">delete</a>
