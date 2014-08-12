@@ -2848,11 +2848,14 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
             $scope.optionSet = data;
 
             // set $scope.dotObject.options as an object
+            
             try {
-                if (data.options == '')
+                if (data.options == '' || data.options == null) {
                     $scope.dotObject.options = [];
+                    alert($scope.dotObject.options);
+                }
                 else
-                    $scope.dotObject.options = JSON.parse(data.options)
+                    $scope.dotObject.options = JSON.parse(data.options);
             }
             catch (err) {
                 $scope.dotObject.options = [];
