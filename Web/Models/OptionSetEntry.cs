@@ -22,7 +22,7 @@ namespace Web.Models
         }
 
         public string Name { get; set; }
-        public string TranslatedName { get; set; }
+        //public string TranslatedName { get; set; }
         public string Description { get; set; }
         public string Options { get; set; }
     }

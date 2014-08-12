@@ -23,7 +23,7 @@
                 });
 
             }, function () {
-                //alert('cancelled');
+                //alert('canceled');
             });
     };
 
@@ -38,6 +38,21 @@
     function init() {
         optionSetService.getAll().then(function (data) {
             $scope.optionSets = data;
+
+            // optional --> convert options from string to object
+            // only if you want to display them  in List view
+            data.forEach(function (item) {
+                try {
+                    if (item.options == '')
+                        item.options = [];
+                    else
+                        item.options = JSON.parse(item.options)
+                }
+                catch (err) {
+                    item.options = [];
+                    alert(err + ' for Options property of entity ' + item.name);
+                };
+            });
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -47,7 +62,7 @@
 
     // http://stackoverflow.com/a/18856665/2726725
     // daca nu folosesc 'destroy' si pornesc app.pe pagina 'OptionSet', merg pe alt meniu (ex. 'Products') si revin, 
-    // atunci evenimentul se va declansa in continuare "in duble exemplar"
+    // atunci evenimentul se va declansa in continuare "in dublu exemplar"
     var cleanUpFunc = $rootScope.$on('$translateChangeSuccess', function () {
         init(); //refresh data using the new translation
     });

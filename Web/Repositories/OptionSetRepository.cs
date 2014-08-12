@@ -23,12 +23,20 @@ namespace Web.Repositories
 
         public void Add(OptionSetNew item)
         {
-            var entity = new DynamicTableEntity();
+            //var entity = new DynamicTableEntity();
 
-            entity.Properties["Name"] = new EntityProperty(item.Name);
-            entity.Properties["Description"] = new EntityProperty(item.Description);
-            entity.PartitionKey = "p";
-            entity.RowKey = Guid.NewGuid().ToString();
+            //entity.Properties["Name"] = new EntityProperty(item.Name);
+            //entity.Properties["Description"] = new EntityProperty(item.Description);
+            //entity.PartitionKey = "p";
+            //entity.RowKey = Guid.NewGuid().ToString();
+
+            // met.2
+            Mapper.CreateMap<OptionSetNew, OptionSetEntry>()
+                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
+                //.ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.)));
+
+            var entity = Mapper.Map<OptionSetNew, OptionSetEntry>(item);
 
             // entity.ETag = "*"; // mandatory for <merge>
             // var operation = TableOperation.Merge(entity);
@@ -42,6 +50,11 @@ namespace Web.Repositories
             var entitiesTable = this.ExecuteQuery(filter);
 
             // automapper: copy "entitiesTable" to "entitiesVM"
+            Mapper.CreateMap<OptionSetEntry, OptionSetViewModel>()
+                .ForMember(dest => dest.OptionSetId, opt => opt.MapFrom(src => src.RowKey));
+
+            var entitiesVM = Mapper.Map<List<OptionSetEntry>, List<OptionSetViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
+
             // met asta nu a functionat. La primul apel rezultatul oferit e ok dar la urmatoarele, param. "lang" "revine" la valoarea initiala
             //Mapper.CreateMap<OptionSetEntry, OptionSetViewModel>()
             //    .ForMember(dest => dest.OptionSetId, opt => opt.MapFrom(src => src.RowKey))
@@ -49,26 +62,28 @@ namespace Web.Repositories
             //        opt => opt.ResolveUsing<CustomResolver>().ConstructedBy(() => new CustomResolver(lang))    );               
             //var entitiesVM = Mapper.Map<List<OptionSetEntry>, List<OptionSetViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
 
-            var entitiesVM = new List<OptionSetViewModel>();
-            foreach (var item in entitiesTable)
-            {
 
-                var newName = item.Name;
-                if (lang != null && !string.IsNullOrEmpty(item.TranslatedName))
-                {
-                    string translatedName;
-                    var transDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.TranslatedName);
-                    if (transDictionary.TryGetValue(lang, out translatedName))
-                        newName = translatedName;
-                }
+            // ok, with translations
+            //var entitiesVM = new List<OptionSetViewModel>();
+            //foreach (var item in entitiesTable)
+            //{
 
-                entitiesVM.Add(new OptionSetViewModel()
-                {
-                    OptionSetId = item.RowKey,
-                    Name = newName,
-                    Description = item.Description
-                });
-            }
+            //    var newName = item.Name;
+            //    if (lang != null && !string.IsNullOrEmpty(item.TranslatedName))
+            //    {
+            //        string translatedName;
+            //        var transDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.TranslatedName);
+            //        if (transDictionary.TryGetValue(lang, out translatedName))
+            //            newName = translatedName;
+            //    }
+
+            //    entitiesVM.Add(new OptionSetViewModel()
+            //    {
+            //        OptionSetId = item.RowKey,
+            //        Name = newName,
+            //        Description = item.Description
+            //    });
+            //}
 
             return entitiesVM;
         }
@@ -78,8 +93,8 @@ namespace Web.Repositories
             var entry = this.Retrieve("p", itemId);
 
             Mapper.CreateMap<OptionSetEntry, OptionSetViewModel>()
-                .ForMember(dest => dest.OptionSetId, opt => opt.MapFrom(src => src.RowKey))
-                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<Option>>(src.Options ?? string.Empty)));
+                .ForMember(dest => dest.OptionSetId, opt => opt.MapFrom(src => src.RowKey));
+                //.ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<Option>>(src.Options ?? string.Empty)));
 
             return Mapper.Map<OptionSetEntry, OptionSetViewModel>(entry);
         }
@@ -88,8 +103,8 @@ namespace Web.Repositories
         {
             Mapper.CreateMap<OptionSetViewModel, OptionSetEntry>()
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.OptionSetId))
-                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"))
-                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Options)));
+                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
+                //.ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Options)));
 
             var entity = Mapper.Map<OptionSetViewModel, OptionSetEntry>(item);
 

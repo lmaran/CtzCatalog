@@ -23,7 +23,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/pickOrders/:id', {
             controller: 'pickOrderController',
             templateUrl: 'App/views/pickOrderEdit.html',
-            title: 'PickOrderEdit'
+            title: 'PickOrderEdit',
+            isEditMode: true
         })
 
         // *** products ***
@@ -40,7 +41,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/products/:id', {
             controller: 'productController',
             templateUrl: 'App/views/productEdit.html',
-            title: 'ProductEdit'
+            title: 'ProductEdit',
+            isEditMode: true
         })
 
         // *** customers ***
@@ -57,7 +59,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/customers/:id', {
             controller: 'customerController',
             templateUrl: 'App/views/customerEdit.html',
-            title: 'CustomerEdit'
+            title: 'CustomerEdit',
+            isEditMode: true
         })
 
         // *** optionSets ***
@@ -74,7 +77,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/optionsets/:id', {
             controller: 'optionSetController',
             templateUrl: 'App/views/optionSetEdit.html',
-            title: 'OptionSetEdit'
+            title: 'OptionSetEdit',
+            isEditMode: true
         })
 
         // *** attributes ***
@@ -91,7 +95,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/attributes/:id', {
             controller: 'attributeController',
             templateUrl: 'App/views/attributeEdit.html',
-            title: 'AttributeEdit'
+            title: 'AttributeEdit',
+            isEditMode: true
         })
 
         // *** attributeSets ***
@@ -108,7 +113,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/attributesets/:id', {
             controller: 'attributeSetController',
             templateUrl: 'App/views/attributeSetEdit.html',
-            title: 'AttributeSetEdit'
+            title: 'AttributeSetEdit',
+            isEditMode: true
         })
 
         .otherwise({ redirectTo: '/' });

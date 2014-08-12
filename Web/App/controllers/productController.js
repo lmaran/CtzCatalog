@@ -5,6 +5,8 @@
     $scope.dotObject = {};
     $scope.dotObject.attributes = {};
 
+    
+
     // we need an object (dotObject) to be able to use two-way data binding for ng-models in Select elements
     // otherwise ue need to send the ng-model value of select control as parameter to a ng-change() function
     // and init the model there
@@ -29,6 +31,10 @@
     function getProduct() {
         productService.getById($route.current.params.id).then(function (data) {
             $scope.product = data;
+            $scope.product.attributes = JSON.parse(data.attributes);
+            //$scope.dotObject.selectedAttributeSet = { attributeSetId: data.attributeSetId, name: data.attributeSetName, description: 'a grup of profile attributes', attributes: null };
+            //$scope.product.attributeSetId = data.attributeSetId;
+            //alert(JSON.stringify($scope.dotObject.selectedAttributeSet, null, 4));
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -119,6 +125,7 @@
     }
 
     $scope.changeAttributeSet = function () {
+        alert(JSON.stringify($scope.dotObject.selectedAttributeSet, null, 4));
         getAttributeSet();
 
         // clean all attributes

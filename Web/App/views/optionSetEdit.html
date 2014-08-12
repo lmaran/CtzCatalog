@@ -19,54 +19,28 @@
             </div>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
+        <div class="form-group">
             <label class="col-md-2 control-label">Description:</label>
             <div class="col-md-4">
-                <input class="form-control" ng-model="optionSet.description" type="text" name="description" required />
-                <p ng-show="form.description.$invalid  && submitted" class="help-block">This field is required.</p>
+                <input class="form-control" ng-model="optionSet.description" type="text" name="description" />
             </div>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
+        <div class="form-group">
             <label class="col-md-2 control-label">Options:</label>
             <div class="col-md-4">
                 <div class="input-group">
-                    <input ng-model="newOptionValue" name="newEmail" type="text" class="form-control" placeholder2="Enter a new option...">
+                    <input ng-model="newOptionValue" type="text" class="form-control">
                     <span ng-click2="add()" class="input-group-btn"><button type="button" class="btn btn-primary" ng-click="addOption()"> <span class="glyphicon glyphicon-plus"></span> Add this option</button></span>
                 </div>
             </div>
-            <!--<div class="form-inline col-md-2">
-                <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-arrow-up"></span></button>
-                <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-arrow-down"></span></button>
-            </div>-->
         </div>
 
         <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
-            <!--<label class="col-md-2 control-label">Options:</label>-->
             <div class="col-md-4 col-md-offset-2">
-            <!--<div class="col-md-4">-->
-                <!--<button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new option </button>
-
-                <br /><br />-->
-                <!--<div class="input-group">
-                    <input ng-model="newEmail" name="newEmail" type="text" class="form-control" placeholder22="Enter a new option...">
-                    <span ng-click="add()" class="input-group-btn"><button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add this option </button></span>
-                </div>
-
-                <br />-->
-
-                <!--<div class="input-group">
-                    <input ng-model="newOptionValue" name="newEmail" type="text" class="form-control" placeholder="Enter a new option...">
-                    <span ng-click2="add()" class="input-group-btn"><button type="button" class="btn" ng-click="addOption()"> <span class="glyphicon glyphicon-plus"></span> Add </button></span>
-                </div>-->
-
-
 
                 <accordion close-others="true">
-                    <!--<accordion-group heading="Static Header, initially expanded" is-open="false" is-disabled="status.isFirstDisabled">
-                        This content is straight in the template.
-                    </accordion-group>-->
-                    <accordion-group ng-repeat="option in optionSet.options" ng-mouseenter="optionBtnAreVisible=true" ng-mouseleave="optionBtnAreVisible=false">
+                    <accordion-group ng-repeat="option in dotObject.options track by option.name" ng-mouseenter="optionBtnAreVisible=true" ng-mouseleave="optionBtnAreVisible=false">
                         <accordion-heading>
                             {{option.name}}
                             <span class="pull-right" ng-if="optionBtnAreVisible">
@@ -79,61 +53,9 @@
                     </accordion-group>
                 </accordion>
 
-
             </div>
-            <!--<div class="col-md-2">
-                <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new option </button>
-            </div>-->
         </div>
 
-        <!--<hr />-->
-        <!--<label>Options:</label>-->
-        <!--<button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new option </button>-->
-        <!--<div class="row toolbar">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new option </button>
-            </div>
-        </div>-->
-        <!--<div class="row toolbar">
-            <div class="col-md-12">
-                <label class="col-md-2 control-label">Options:</label>
-            </div>
-        </div>-->
-        <!--<div class="row toolbar">
-            <div class="col-md-4">
-                <label class="col-md-2 control-label">Options:</label> <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new optionSet </button>
-                <button type="button" class="btn" ng-click="refresh()"> <span class="glyphicon glyphicon-refresh"></span> </button>
-            </div>
-
-            <div class="col-md-3 pull-right">
-                <div class="input-group">
-                    <input ng-model="search" name="newEmail" type="text" class="form-control" placeholder="Search">
-                    <span class="input-group-btn"><button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-search"></span></button></span>
-                </div>
-            </div>
-
-        </div>-->
-        <!--<label>Options:</label>-->
-        <!--<div class="table-responsive">
-            <table class="table table-responsive table-bordered table-hover table-condensed">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-ng-repeat="option in optionSet.options">
-                        <td><a ng-href="/optionsets/{{optionValue.name}}">{{option.name}}</a></td>
-                        <td>{{ option.description }}</td>
-                        <td>
-                            <a ng-click="delete(optionSet.option)">delete</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>-->
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

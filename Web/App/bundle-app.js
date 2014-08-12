@@ -2056,7 +2056,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/pickOrders/:id', {
             controller: 'pickOrderController',
             templateUrl: 'App/views/pickOrderEdit.html',
-            title: 'PickOrderEdit'
+            title: 'PickOrderEdit',
+            isEditMode: true
         })
 
         // *** products ***
@@ -2073,7 +2074,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/products/:id', {
             controller: 'productController',
             templateUrl: 'App/views/productEdit.html',
-            title: 'ProductEdit'
+            title: 'ProductEdit',
+            isEditMode: true
         })
 
         // *** customers ***
@@ -2090,7 +2092,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/customers/:id', {
             controller: 'customerController',
             templateUrl: 'App/views/customerEdit.html',
-            title: 'CustomerEdit'
+            title: 'CustomerEdit',
+            isEditMode: true
         })
 
         // *** optionSets ***
@@ -2107,7 +2110,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/optionsets/:id', {
             controller: 'optionSetController',
             templateUrl: 'App/views/optionSetEdit.html',
-            title: 'OptionSetEdit'
+            title: 'OptionSetEdit',
+            isEditMode: true
         })
 
         // *** attributes ***
@@ -2124,7 +2128,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/attributes/:id', {
             controller: 'attributeController',
             templateUrl: 'App/views/attributeEdit.html',
-            title: 'AttributeEdit'
+            title: 'AttributeEdit',
+            isEditMode: true
         })
 
         // *** attributeSets ***
@@ -2141,7 +2146,8 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/attributesets/:id', {
             controller: 'attributeSetController',
             templateUrl: 'App/views/attributeSetEdit.html',
-            title: 'AttributeSetEdit'
+            title: 'AttributeSetEdit',
+            isEditMode: true
         })
 
         .otherwise({ redirectTo: '/' });
@@ -2461,6 +2467,8 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
     $scope.dotObject = {};
     $scope.dotObject.attributes = {};
 
+    
+
     // we need an object (dotObject) to be able to use two-way data binding for ng-models in Select elements
     // otherwise ue need to send the ng-model value of select control as parameter to a ng-change() function
     // and init the model there
@@ -2485,6 +2493,10 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
     function getProduct() {
         productService.getById($route.current.params.id).then(function (data) {
             $scope.product = data;
+            $scope.product.attributes = JSON.parse(data.attributes);
+            //$scope.dotObject.selectedAttributeSet = { attributeSetId: data.attributeSetId, name: data.attributeSetName, description: 'a grup of profile attributes', attributes: null };
+            //$scope.product.attributeSetId = data.attributeSetId;
+            //alert(JSON.stringify($scope.dotObject.selectedAttributeSet, null, 4));
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -2575,6 +2587,7 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
     }
 
     $scope.changeAttributeSet = function () {
+        alert(JSON.stringify($scope.dotObject.selectedAttributeSet, null, 4));
         getAttributeSet();
 
         // clean all attributes
@@ -2760,7 +2773,7 @@ app.controller('optionSetsController', ['$scope', '$rootScope', '$route', '$loca
                 });
 
             }, function () {
-                //alert('cancelled');
+                //alert('canceled');
             });
     };
 
@@ -2775,6 +2788,21 @@ app.controller('optionSetsController', ['$scope', '$rootScope', '$route', '$loca
     function init() {
         optionSetService.getAll().then(function (data) {
             $scope.optionSets = data;
+
+            // optional --> convert options from string to object
+            // only if you want to display them  in List view
+            data.forEach(function (item) {
+                try {
+                    if (item.options == '')
+                        item.options = [];
+                    else
+                        item.options = JSON.parse(item.options)
+                }
+                catch (err) {
+                    item.options = [];
+                    alert(err + ' for Options property of entity ' + item.name);
+                };
+            });
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -2784,7 +2812,7 @@ app.controller('optionSetsController', ['$scope', '$rootScope', '$route', '$loca
 
     // http://stackoverflow.com/a/18856665/2726725
     // daca nu folosesc 'destroy' si pornesc app.pe pagina 'OptionSet', merg pe alt meniu (ex. 'Products') si revin, 
-    // atunci evenimentul se va declansa in continuare "in duble exemplar"
+    // atunci evenimentul se va declansa in continuare "in dublu exemplar"
     var cleanUpFunc = $rootScope.$on('$translateChangeSuccess', function () {
         init(); //refresh data using the new translation
     });
@@ -2797,20 +2825,34 @@ app.controller('optionSetsController', ['$scope', '$rootScope', '$route', '$loca
 ///#source 1 1 /App/controllers/optionSetController.js
 app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSetService', '$location', function ($scope, $window, $route, optionSetService, $location) {
     $scope.optionSet = {};
+
+    $scope.dotObject={}
+    $scope.dotObject.options = [];
     $scope.optionBtnAreVisible = false;
 
-    if ($route.current.title == "OptionSetEdit") {
+    if ($route.current.isEditMode) {
         init();
     }
 
     function init() {
         getOptionSet();
-        //getModels();
     }
 
     function getOptionSet() {
         optionSetService.getById($route.current.params.id).then(function (data) {
             $scope.optionSet = data;
+
+            // set $scope.dotObject.options as an object
+            try {
+                if (data.options == '')
+                    $scope.dotObject.options = [];
+                else
+                    $scope.dotObject.options = JSON.parse(data.options)
+            }
+            catch (err) {
+                $scope.dotObject.options = [];
+                alert(err + ' for Options property of entity ' + data.name);
+            };
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -2820,10 +2862,12 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
     $scope.create = function (form) {
         $scope.submitted = true;
         if (form.$valid) {
+
+            $scope.optionSet.options = JSON.stringify($scope.dotObject.options);
+
             optionSetService.add($scope.optionSet)
                 .then(function (data) {
                     $location.path('/optionsets');
-                    //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -2837,12 +2881,12 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
     $scope.update = function (form) {
         $scope.submitted = true;
         if (form.$valid) {
-            //alert(JSON.stringify($scope.optionSet));
-            //return false;
+
+            $scope.optionSet.options = JSON.stringify($scope.dotObject.options);
+
             optionSetService.update($scope.optionSet)
                 .then(function (data) {
                     $location.path('/optionsets');
-                    //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -2854,14 +2898,26 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
     };
 
     $scope.cancel = function () {
-        //$location.path('/widgets')
         $window.history.back();
     }
 
     $scope.addOption = function () {
-        $scope.optionSet.options.push({ "name": $scope.newOptionValue, "description": "new description", "displayOrder": 10});
+
+        if ($scope.newOptionValue) {
+            $scope.dotObject.options.push({ name: $scope.newOptionValue });
+        } else {
+            alert("Enter a value and then press the button!");
+            return;
+        };
+        
         $scope.newOptionValue = '';
-        //alert($scope.newOptionValue);
+
+        // remove $$haskKey property from objects
+        // met.1 - use angular.copy: --> $scope.optionSet.options = angular.copy($scope.optionSet.options);
+        // met.2 - alert(angular.toJson($scope.optionSet.options));
+        // met.3 - use 'track by' in ng-repeat (I use that method because it is faster: http://www.codelord.net/2014/04/15/improving-ng-repeat-performance-with-track-by/)
+        // and don't have to clean up the object later on
+
     };
 
     $scope.removeOption = function (idx, option, e) {
@@ -2871,8 +2927,7 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
             e.stopPropagation();
         };
 
-        $scope.optionSet.options.splice(idx, 1);
-        //alert(idx);
+        $scope.dotObject.options.splice(idx, 1);
     };
 
     $scope.optionUp = function (oldIdx, option, e) {
@@ -2883,22 +2938,26 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
         };
 
         var newIdx = oldIdx - 1, tmp;
-        var optionsLength = $scope.optionSet.options.length;
+        var options = $scope.dotObject.options; 
+
+        var optionsLength = options.length;
 
         if (oldIdx > 0) {
-            tmp = $scope.optionSet.options[newIdx];
-            $scope.optionSet.options[newIdx] = $scope.optionSet.options[oldIdx];
-            $scope.optionSet.options[oldIdx] = tmp;
+            tmp = options[newIdx];
+            options[newIdx] = options[oldIdx];
+            options[oldIdx] = tmp;
         } else { // oldIndex is first position
             newIdx = optionsLength - 1; // circular list
-            tmp = $scope.optionSet.options[oldIdx];
+            tmp = options[oldIdx];
 
             // move all remaining options one position up
             for (var i = 1; i <= optionsLength; i++) {
-                $scope.optionSet.options[i - 1] = $scope.optionSet.options[i];
+                options[i - 1] = options[i];
             };
-            $scope.optionSet.options[newIdx] = tmp;
+            options[newIdx] = tmp;
         }
+        // options is just another reference to $scope.dotObject.options;
+        // so we don't have to switch back (e.g. $scope.dotObject.options = options)
     }
 
     $scope.optionDown = function (oldIdx, option, e) {
@@ -2910,22 +2969,26 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
         };
 
         var newIdx = oldIdx + 1, tmp;
-        var optionsLength = $scope.optionSet.options.length;
+        var options = $scope.dotObject.options;
+
+        var optionsLength = options.length;
 
         if (oldIdx < optionsLength - 1) {
-            tmp = $scope.optionSet.options[newIdx];
-            $scope.optionSet.options[newIdx] = $scope.optionSet.options[oldIdx];
-            $scope.optionSet.options[oldIdx] = tmp;
+            tmp = options[newIdx];
+            options[newIdx] = options[oldIdx];
+            options[oldIdx] = tmp;
         } else { // oldIndex is last position
             newIdx = 0; // circular list
-            tmp = $scope.optionSet.options[oldIdx];
+            tmp = options[oldIdx];
 
             // move all remaining options one position down
             for (var i = (optionsLength - 1); i > 0; i--) {
-                $scope.optionSet.options[i] = $scope.optionSet.options[i-1];
+                options[i] = options[i-1];
             };
-            $scope.optionSet.options[newIdx] = tmp;
+            options[newIdx] = tmp;
         }
+        // options is just another reference to $scope.dotObject.options;
+        // so we don't have to switch back (e.g. $scope.dotObject.options = options)
     }
 
 

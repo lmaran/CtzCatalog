@@ -19,11 +19,40 @@
             </div>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
+        <div class="form-group">
             <label class="col-md-2 control-label">Description</label>
             <div class="col-md-4">
-                <input class="form-control" ng-model="optionSet.description" type="text" name="description" required />
-                <p ng-show="form.description.$invalid  && submitted" class="help-block">This field is required.</p>
+                <input class="form-control" ng-model="optionSet.description" type="text" name="description" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Options:</label>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input ng-model="newOptionValue" type="text" class="form-control">
+                    <span ng-click2="add()" class="input-group-btn"><button type="button" class="btn btn-primary" ng-click="addOption()"> <span class="glyphicon glyphicon-plus"></span> Add this option</button></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
+            <div class="col-md-4 col-md-offset-2">
+
+                <accordion close-others="true">
+                    <accordion-group ng-repeat="option in dotObject.options track by option.name" ng-mouseenter="optionBtnAreVisible=true" ng-mouseleave="optionBtnAreVisible=false">
+                        <accordion-heading>
+                            {{option.name}}
+                            <span class="pull-right" ng-if="optionBtnAreVisible">
+                                <button type="button" class="btn btn-xs" ng-click="removeOption($index, option, $event)"> <span class="glyphicon glyphicon-remove"></span></button>
+                                <button type="button" class="btn btn-xs" ng-click="optionDown($index, option, $event)"> <span class="glyphicon glyphicon-arrow-down"></span></button>
+                                <button type="button" class="btn btn-xs" ng-click="optionUp($index, option, $event)"> <span class="glyphicon glyphicon-arrow-up"></span></button>
+                            </span>
+                        </accordion-heading>
+                        {{option.description}}
+                    </accordion-group>
+                </accordion>
+
             </div>
         </div>
 
