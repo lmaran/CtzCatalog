@@ -1,12 +1,17 @@
 ﻿app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSetService', '$location', function ($scope, $window, $route, optionSetService, $location) {
+    $scope.isEditMode = $route.current.isEditMode;
     $scope.optionSet = {};
 
     $scope.dotObject={}
     $scope.dotObject.options = [];
     $scope.optionBtnAreVisible = false;
 
-    if ($route.current.isEditMode) {
+    if ($scope.isEditMode) {
+        $scope.pageTitle = 'Edit optionSet';
         init();
+    }
+    else { // create mode
+        $scope.pageTitle = 'Add new optionSet';
     }
 
     function init() {

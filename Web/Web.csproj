@@ -168,8 +168,7 @@
     <Content Include="App\views\pickOrderCreate.html" />
     <Content Include="App\views\customerEdit.html" />
     <Content Include="App\views\customerCreate.html" />
-    <Content Include="App\views\optionSetCreate.html" />
-    <Content Include="App\views\optionSetEdit.html" />
+    <Content Include="App\views\optionSet.html" />
     <Content Include="App\views\productEdit.html" />
     <Content Include="App\views\productCreate.html" />
     <Content Include="App\views\optionSets.html" />

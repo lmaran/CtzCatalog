@@ -2051,12 +2051,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/pickOrders/create', {
             controller: 'pickOrderController',
             templateUrl: 'App/views/pickOrderCreate.html',
-            title: 'PickOrderCreate'
+            title: 'Create PickOrder'
         })
         .when('/pickOrders/:id', {
             controller: 'pickOrderController',
             templateUrl: 'App/views/pickOrderEdit.html',
-            title: 'PickOrderEdit',
+            title: 'Edit PickOrder',
             isEditMode: true
         })
 
@@ -2069,12 +2069,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/products/create', {
             controller: 'productController',
             templateUrl: 'App/views/productCreate.html',
-            title: 'ProductCreate'
+            title: 'Create Product'
         })
         .when('/products/:id', {
             controller: 'productController',
             templateUrl: 'App/views/productEdit.html',
-            title: 'ProductEdit',
+            title: 'Edit Product',
             isEditMode: true
         })
 
@@ -2087,12 +2087,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/customers/create', {
             controller: 'customerController',
             templateUrl: 'App/views/customerCreate.html',
-            title: 'CustomerCreate'
+            title: 'Create Customer'
         })
         .when('/customers/:id', {
             controller: 'customerController',
             templateUrl: 'App/views/customerEdit.html',
-            title: 'CustomerEdit',
+            title: 'Edit Customer',
             isEditMode: true
         })
 
@@ -2104,13 +2104,13 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         })
         .when('/optionsets/create', {
             controller: 'optionSetController',
-            templateUrl: 'App/views/optionSetCreate.html',
-            title: 'OptionSetCreate'
+            templateUrl: 'App/views/optionSet.html',
+            title: 'Create OptionSet'
         })
         .when('/optionsets/:id', {
             controller: 'optionSetController',
-            templateUrl: 'App/views/optionSetEdit.html',
-            title: 'OptionSetEdit',
+            templateUrl: 'App/views/optionSet.html',
+            title: 'Edit OptionSet',
             isEditMode: true
         })
 
@@ -2123,12 +2123,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/attributes/create', {
             controller: 'attributeController',
             templateUrl: 'App/views/attributeCreate.html',
-            title: 'AttributeCreate'
+            title: 'Create Attribute'
         })
         .when('/attributes/:id', {
             controller: 'attributeController',
             templateUrl: 'App/views/attributeEdit.html',
-            title: 'AttributeEdit',
+            title: 'Edit Attribute',
             isEditMode: true
         })
 
@@ -2141,12 +2141,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         .when('/attributesets/create', {
             controller: 'attributeSetController',
             templateUrl: 'App/views/attributeSetCreate.html',
-            title: 'AttributeSetCreate'
+            title: 'Create AttributeSet'
         })
         .when('/attributesets/:id', {
             controller: 'attributeSetController',
             templateUrl: 'App/views/attributeSetEdit.html',
-            title: 'AttributeSetEdit',
+            title: 'Edit AttributeSet',
             isEditMode: true
         })
 
@@ -2824,14 +2824,19 @@ app.controller('optionSetsController', ['$scope', '$rootScope', '$route', '$loca
 }]);
 ///#source 1 1 /App/controllers/optionSetController.js
 app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSetService', '$location', function ($scope, $window, $route, optionSetService, $location) {
+    $scope.isEditMode = $route.current.isEditMode;
     $scope.optionSet = {};
 
     $scope.dotObject={}
     $scope.dotObject.options = [];
     $scope.optionBtnAreVisible = false;
 
-    if ($route.current.isEditMode) {
+    if ($scope.isEditMode) {
+        $scope.pageTitle = 'Edit optionSet';
         init();
+    }
+    else { // create mode
+        $scope.pageTitle = 'Add new optionSet';
     }
 
     function init() {

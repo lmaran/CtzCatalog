@@ -1,18 +1,18 @@
 ﻿<header id="content-header" ng-class="contentHeaderClass">
     <h1>
         <i id="content-header-icon" class="glyphicon glyphicon-tags"></i>
-        OptionSets / Add new optionSet
+        OptionSets / {{pageTitle}}
     </h1>
     
 </header>
 
 <div id="content-body" class="container-fluid">
 
-    <form ng-submit="create(form)" name="form" class="form-horizontal max-width" role="form" novalidate>
+    <form ng-submit="isEditMode ? update(form) : create(form)" name="form" class="form-horizontal max-width" role="form" novalidate>
         <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
 
         <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
-            <label class="col-md-2 control-label">Name</label>
+            <label class="col-md-2 control-label">Name:</label>
             <div class="col-md-4">
                 <input class="form-control" ng-model="optionSet.name" type="text" name="name" required />
                 <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
@@ -20,7 +20,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-md-2 control-label">Description</label>
+            <label class="col-md-2 control-label">Description:</label>
             <div class="col-md-4">
                 <input class="form-control" ng-model="optionSet.description" type="text" name="description" />
             </div>
@@ -59,8 +59,8 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="submit"  class="btn btn-primary"> <span class="glyphicon glyphicon-floppy-disk"></span> Save </button>
-                <button type="button" class="btn" ng-click="cancel()"> <span class=" glyphicon glyphicon-remove"></span> Cancel </button>
+                <button type="submit" class="btn btn-primary"> <span class="glyphicon glyphicon-floppy-disk"></span> {{'GlobalButtons.Save' | translate}} </button>
+                <button type="button" class="btn" ng-click="cancel()"> <span class="glyphicon glyphicon-remove"></span> {{'GlobalButtons.Cancel' | translate}} </button>
             </div>
         </div>
 
