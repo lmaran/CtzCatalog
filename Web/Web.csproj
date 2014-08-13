@@ -149,6 +149,7 @@
     <Content Include="App\controllers\optionSetController.js" />
     <Content Include="App\controllers\productController.js" />
     <Content Include="App\controllers\ordersController.js" />
+    <Content Include="App\directives\myFocus.js" />
     <Content Include="App\services\attributeService.js" />
     <Content Include="App\services\dialogService.js" />
     <Content Include="App\services\attributeSetService.js" />
@@ -271,6 +272,8 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\OptionSetController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\GenerateSlug.cs" />
     <Compile Include="Helpers\HeliosHostingEnvironment.cs" />
     <Compile Include="Helpers\HtmlActionResult.cs" />
     <Compile Include="Models\AttributeEntry.cs" />

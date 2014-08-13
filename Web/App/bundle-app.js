@@ -2825,8 +2825,10 @@ app.controller('optionSetsController', ['$scope', '$rootScope', '$route', '$loca
 ///#source 1 1 /App/controllers/optionSetController.js
 app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSetService', '$location', function ($scope, $window, $route, optionSetService, $location) {
     $scope.isEditMode = $route.current.isEditMode;
-    $scope.optionSet = {};
+    $scope.isFocusOnOptions = false;
+    $scope.isFocusOnName = $scope.isEditMode ? false : true;
 
+    $scope.optionSet = {};
     $scope.dotObject={}
     $scope.dotObject.options = [];
     $scope.optionBtnAreVisible = false;
@@ -2909,16 +2911,29 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
         $window.history.back();
     }
 
-    $scope.addOption = function () {
+    $scope.addOptionOnEnter = function (event) {
+        if (event.which == 13) { //enter key
+            event.preventDefault();
+            event.stopPropagation();
+            $scope.addOption();
+        };
+    }
 
+    $scope.addOption = function () {
         if ($scope.newOptionValue) {
-            $scope.dotObject.options.push({ name: $scope.newOptionValue });
+            if (getIndexy($scope.dotObject.options, 'name', $scope.newOptionValue) == -1)
+                $scope.dotObject.options.push({ name: $scope.newOptionValue });
+            else {
+                alert('Duplicate value!');
+                return false;
+            }
         } else {
             alert("Enter a value and then press the button!");
             return;
         };
         
-        $scope.newOptionValue = '';
+        $scope.newOptionValue = undefined;
+        $scope.isFocusOnOptions = true;
 
         // remove $$haskKey property from objects
         // met.1 - use angular.copy: --> $scope.optionSet.options = angular.copy($scope.optionSet.options);
@@ -2999,6 +3014,22 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
         // so we don't have to switch back (e.g. $scope.dotObject.options = options)
     }
 
+
+    // helper functions
+    // get the index of selected object in array (objects with one level depth, selected by one of its property)
+    function getIndexy(data, propertyName, propertyValue) {
+        var idx = -1;
+        for (i = 0; i < data.length; i++) {
+            if (data[i][propertyName] === propertyValue) {
+                idx = i;
+                break;
+            };
+        };
+        return idx;
+
+        // met. 2 (shorter but requires full scan of array; IE > 8)
+        //return data.map(function (e) { return e[propertyName]; }).indexOf(propertyValue);
+    }
 
 }]);
 ///#source 1 1 /App/controllers/attributesController.js
@@ -3715,4 +3746,27 @@ app.factory('dialogService', ['$modal', function ($modal) {
         confirm: confirm,
         alert: alert
     };
+}]);
+///#source 1 1 /App/directives/myFocus.js
+http://stackoverflow.com/a/17739731/2726725
+
+app.directive('myFocus', ['$timeout', function($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            scope.$watch(attrs.myFocus, function (newValue, oldValue) {
+                if (newValue) { element[0].focus(); }
+            });
+            element.bind("blur", function(e) {
+                $timeout(function() {
+                    scope.$apply(attrs.myFocus + "=false");
+                }, 0);
+            });
+            element.bind("focus", function(e) {
+                $timeout(function() {
+                    scope.$apply(attrs.myFocus + "=true");
+                }, 0);
+            })
+        }
+    }
 }]);

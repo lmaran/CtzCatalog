@@ -56,5 +56,8 @@
         <file>/App/services/attributeSetService.js</file>
         
         <file>/App/services/dialogService.js</file>
+
+        <file>/App/directives/myFocus.js</file>
+
     </files>
 </bundle>
