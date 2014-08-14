@@ -38,6 +38,21 @@
     function init() {
         attributeService.getAll().then(function (data) {
             $scope.attributes = data;
+
+            // optional --> convert typeDetails from string to object
+            // only if you want to display them  in List view
+            data.forEach(function (item) {
+                try {
+                    if (item.typeDetails == '')
+                        item.typeDetails = [];
+                    else
+                        item.typeDetails = JSON.parse(item.typeDetails)
+                }
+                catch (err) {
+                    item.typeDetails = [];
+                    alert(err + ' for Options property of entity ' + item.name);
+                };
+            });
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));

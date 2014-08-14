@@ -38,7 +38,10 @@
                 <tr data-ng-repeat="attribute in attributes | filter:search">
                     <td><a ng-href="/attributes/{{attribute.attributeId}}">{{attribute.name}}</a></td>
                     <td>{{ attribute.type }}</td>
-                    <td><span ng-if="attribute.type=='OptionSet'">{{ attribute.typeDetails }}</span></td>
+                    <!--<td><span ng-if="attribute.type=='OptionSet'">{{ attribute.typeDetails }}</span></td>-->
+
+                    <td><span ng-if="attribute.type=='OptionSet'">{{ attribute.typeDetails.optionSetId}} / {{ attribute.typeDetails.defaultValue}} </span></td>
+
                     <td>{{ attribute.description }}</td>
                     <td>
                         <a ng-click="delete(attribute)">delete</a>

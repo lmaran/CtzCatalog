@@ -4,8 +4,10 @@
     $scope.isFocusOnName = $scope.isEditMode ? false : true;
 
     $scope.optionSet = {};
+
     $scope.dotObject={}
     $scope.dotObject.options = [];
+
     $scope.optionBtnAreVisible = false;
 
     if ($scope.isEditMode) {
@@ -25,12 +27,9 @@
             $scope.optionSet = data;
 
             // set $scope.dotObject.options as an object
-            
             try {
-                if (data.options == '' || data.options == null) {
+                if (data.options == '' || data.options == null)
                     $scope.dotObject.options = [];
-                    alert($scope.dotObject.options);
-                }
                 else
                     $scope.dotObject.options = JSON.parse(data.options);
             }
@@ -106,7 +105,7 @@
 
     $scope.addOption = function () {
         if ($scope.newOptionValue) {
-            if (getIndexy($scope.dotObject.options, 'name', $scope.newOptionValue) == -1)
+            if (getIndex($scope.dotObject.options, 'name', $scope.newOptionValue) == -1)
                 $scope.dotObject.options.push({ name: $scope.newOptionValue });
             else {
                 alert('Duplicate value!');
@@ -201,7 +200,7 @@
 
     // helper functions
     // get the index of selected object in array (objects with one level depth, selected by one of its property)
-    function getIndexy(data, propertyName, propertyValue) {
+    function getIndex(data, propertyName, propertyValue) {
         var idx = -1;
         for (i = 0; i < data.length; i++) {
             if (data[i][propertyName] === propertyValue) {

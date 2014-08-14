@@ -159,8 +159,7 @@
     <Content Include="App\services\productService.js" />
     <Content Include="App\views\alert.html" />
     <Content Include="App\views\attributes.html" />
-    <Content Include="App\views\attributeCreate.html" />
-    <Content Include="App\views\attributeEdit.html" />
+    <Content Include="App\views\attribute.html" />
     <Content Include="App\views\confirm.html" />
     <Content Include="App\views\attributeSets.html" />
     <Content Include="App\views\attributeSetCreate.html" />

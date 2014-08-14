@@ -12,7 +12,7 @@
         <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
 
         <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
-            <label class="col-md-2 control-label">Name:</label>
+            <label class="col-md-2 control-label">Name</label>
             <div class="col-md-4">
                 <input class="form-control" ng-model="optionSet.name" type="text" name="name" my-focus="isFocusOnName" required />
                 <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
@@ -20,14 +20,14 @@
         </div>
 
         <div class="form-group">
-            <label class="col-md-2 control-label">Description:</label>
+            <label class="col-md-2 control-label">Description</label>
             <div class="col-md-4">
                 <input class="form-control" ng-model="optionSet.description" type="text" name="description" />
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-md-2 control-label">Options:</label>
+            <label class="col-md-2 control-label">Options</label>
             <div class="col-md-4">
                 <div class="input-group">
                     <input ng-model="newOptionValue" type="text" class="form-control" my-focus="isFocusOnOptions" ng-keypress="addOptionOnEnter($event)" />
@@ -49,7 +49,7 @@
                                 <button type="button" class="btn btn-xs" ng-click="optionUp($index, option, $event)"> <span class="glyphicon glyphicon-arrow-up"></span></button>
                             </span>
                         </accordion-heading>
-                        <div>Description:</div>
+                        <div>Description</div>
                         <textarea class="form-control" msd-elastic ng-model="option.description"></textarea>
                     </accordion-group>
                 </accordion>

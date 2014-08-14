@@ -89,12 +89,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         })
         .when('/attributes/create', {
             controller: 'attributeController',
-            templateUrl: 'App/views/attributeCreate.html',
+            templateUrl: 'App/views/attribute.html',
             title: 'Create Attribute'
         })
         .when('/attributes/:id', {
             controller: 'attributeController',
-            templateUrl: 'App/views/attributeEdit.html',
+            templateUrl: 'App/views/attribute.html',
             title: 'Edit Attribute',
             isEditMode: true
         })
