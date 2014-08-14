@@ -192,6 +192,9 @@
     <Content Include="Scripts\angular-translate.js" />
     <Content Include="Scripts\bower_components\angular-cookies\angular-cookies.js" />
     <Content Include="Scripts\bower_components\angular-cookies\angular-cookies.min.js" />
+    <Content Include="Scripts\bower_components\angular-elastic\elastic.js" />
+    <Content Include="Scripts\bower_components\angular-elastic\index.html" />
+    <Content Include="Scripts\bower_components\angular-elastic\LICENCE.txt" />
     <Content Include="Scripts\bower_components\angular-route\angular-route.js" />
     <Content Include="Scripts\bower_components\angular-route\angular-route.min.js" />
     <Content Include="Scripts\bower_components\angular-translate-loader-static-files\.bower.json" />
@@ -223,6 +226,10 @@
     <Content Include="Scripts\bower_components\angular\angular.min.js.map" />
     <Content Include="Scripts\bower_components\angular\bower.json" />
     <Content Include="Scripts\bower_components\angular\README.md" />
+    <Content Include="Scripts\bower_components\angular-elastic\.bower.json" />
+    <Content Include="Scripts\bower_components\angular-elastic\bower.json" />
+    <Content Include="Scripts\bower_components\angular-elastic\package.json" />
+    <Content Include="Scripts\bower_components\angular-elastic\README.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

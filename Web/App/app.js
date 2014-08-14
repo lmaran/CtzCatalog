@@ -1,4 +1,4 @@
-﻿var app = angular.module('ctzCatalog', ['ngRoute', 'pascalprecht.translate', 'ngCookies', 'ui.bootstrap']);
+﻿var app = angular.module('ctzCatalog', ['ngRoute', 'pascalprecht.translate', 'ngCookies', 'ui.bootstrap', 'monospaced.elastic']);
 
 app.config(['$routeProvider', '$locationProvider', '$translateProvider', function ($routeProvider, $locationProvider, $translateProvider) {
     

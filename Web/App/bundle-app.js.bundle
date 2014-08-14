@@ -11,20 +11,11 @@
     <!--The order of the <file> elements determines the order of the files in the bundle.-->
     <files>
 
-        <!--<file>/Scripts/bower_components/angular-translate/angular-translate.js</file>
-        <file>/Scripts/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js</file>
-        <file>/Scripts/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js</file>    
-        <file>/Scripts/bower_components/angular-translate-storage-local/angular-translate-storage-local.js</file>-->
+        
+	    <file>/Scripts/bower_components/angular-cookies/angular-cookies.js</file>      
+	    <file>/Scripts/bower_components/angular-route/angular-route.js</file>
+        <file>/Scripts/bower_components/angular-elastic/elastic.js</file>
 
-
-        <!--<file>/Scripts/custom-version/angular-sanitize.js</file>-->
-        <!--<file>/Scripts/custom-version/angular-cookies.js</file>-->
-        
-	<file>/Scripts/bower_components/angular-cookies/angular-cookies.js</file>
-        <!--<file>/Scripts/custom-version/angular-route.js</file>-->
-        
-	<file>/Scripts/bower_components/angular-route/angular-route.js</file>
-        
         <file>/Scripts/angular-translate.js</file>
         <file>/Scripts/angular-translate-loader-static-files.js</file>
         <file>/Scripts/angular-translate-storage-cookie.js</file>

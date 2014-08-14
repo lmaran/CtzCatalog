@@ -48,6 +48,11 @@
         $scope.submitted = true;
         if (form.$valid) {
 
+            // remove description property if it has no value --> shorter JSON result
+            $scope.dotObject.options.forEach(function (item) {
+                if (item.description == '') delete item.description;
+            });
+
             $scope.optionSet.options = JSON.stringify($scope.dotObject.options);
 
             optionSetService.add($scope.optionSet)
@@ -66,6 +71,11 @@
     $scope.update = function (form) {
         $scope.submitted = true;
         if (form.$valid) {
+
+            // remove description property if it has no value --> shorter JSON result
+            $scope.dotObject.options.forEach(function (item) {
+                if (item.description == '') delete item.description;
+            });
 
             $scope.optionSet.options = JSON.stringify($scope.dotObject.options);
 
@@ -188,7 +198,6 @@
         // options is just another reference to $scope.dotObject.options;
         // so we don't have to switch back (e.g. $scope.dotObject.options = options)
     }
-
 
     // helper functions
     // get the index of selected object in array (objects with one level depth, selected by one of its property)

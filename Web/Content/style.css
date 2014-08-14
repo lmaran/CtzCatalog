@@ -311,3 +311,9 @@ body:after {
 [ng-click] {
     cursor: pointer;
 }
+
+/* 'remove' placeholder on focus- http://stackoverflow.com/a/24951134/2726725  */
+input:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder 
+{
+color: transparent;
+}
