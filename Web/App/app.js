@@ -35,12 +35,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         })
         .when('/products/create', {
             controller: 'productController',
-            templateUrl: 'App/views/productCreate.html',
+            templateUrl: 'App/views/product.html',
             title: 'Create Product'
         })
         .when('/products/:id', {
             controller: 'productController',
-            templateUrl: 'App/views/productEdit.html',
+            templateUrl: 'App/views/product.html',
             title: 'Edit Product',
             isEditMode: true
         })

@@ -67,10 +67,10 @@
             </div>
         </div>
 
-        <div ng-show="attribute.type=='OptionSet-MultiVal'"  data-placeholder="Select..." class="form-group">
+        <div ng-show="attribute.type=='OptionSet-MultiVal'"  class="form-group">
             <label class="col-md-2 control-label">Default Values</label>
             <div class="col-md-4">
-                <button type="button" class="btn btn-default" ng-model="dotObject.selectedDefaultValues" data-multiple="1" data-placeholder="Select..." data-animation="am-flip-x" ng-options="c.name as c.name for c in dotObject.selectedOptionSet.options" bs-select>
+                <button type="button" class="btn btn-default" ng-model="dotObject.selectedDefaultValues" data-multiple="1" data-placeholder="Select..." ng-options="c.name as c.name for c in dotObject.selectedOptionSet.options" bs-select>
                     <span class="caret"></span>
                 </button>
             </div>

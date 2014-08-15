@@ -168,8 +168,7 @@
     <Content Include="App\views\customerEdit.html" />
     <Content Include="App\views\customerCreate.html" />
     <Content Include="App\views\optionSet.html" />
-    <Content Include="App\views\productEdit.html" />
-    <Content Include="App\views\productCreate.html" />
+    <Content Include="App\views\product.html" />
     <Content Include="App\views\optionSets.html" />
     <Content Include="Content\translates\Flags\blank.gif" />
     <Content Include="Content\translates\Flags\flags.css" />

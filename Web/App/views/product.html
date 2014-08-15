@@ -1,14 +1,14 @@
 ﻿<header id="content-header" ng-class="contentHeaderClass">
     <h1>
         <i id="content-header-icon" class="glyphicon glyphicon-tags"></i>
-        Products / Add new product
+        Products / {{pageTitle}}
     </h1>
     
 </header>
 
 <div id="content-body" class="container-fluid">
 
-    <form ng-submit="create(form)" name="form" class="form-horizontal max-width" role="form" novalidate>
+    <form ng-submit="isEditMode ? update(form) : create(form)" name="form" class="form-horizontal max-width" role="form" novalidate>
         <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
 
         <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
@@ -26,33 +26,52 @@
             </div>
         </div>
 
+        <!--attributeSets: <pre>{{attributeSets | json}}</pre>-->
+
         <div class="form-group" ng-class="{ 'has-error' : form.selectedAttributeSet.$invalid && submitted }">
             <label class="col-md-2 control-label">AttributeSet:</label>
             <div class="col-md-4">
-                <select name="selectedAttributeSet" class="form-control" ng-model="dotObject.selectedAttributeSet" ng-options="c as c.name for c in attributeSets" ng-change="changeAttributeSet()" required>
+                <select name="selectedAttributeSet" class="form-control" ng-model="dotObject.selectedAttributeSet" ng-options="c as c.name for c in attributeSets track by c.attributeSetId" ng-change="changeAttributeSet()" required>
                     <option value=""></option>
                 </select>
                 <p ng-show="form.selectedAttributeSet.$invalid  && submitted" class="help-block">This field is required.</p>
             </div>
         </div>
 
-        <div ng-repeat ="c in dotObject.selectedAttributeSet.attributes">
+
+        <!--dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
+
+        <!--dotObject.optionSets: <pre>{{dotObject.optionSets | json}}</pre>-->
+        <!--dotObject.attributes: <pre>{{dotObject.attributes | json}}</pre>-->
+
+        <div ng-repeat="c in dotObject.selectedAttributeSet.attributes">
             <div class="form-group">
                 <label class="col-md-2 control-label">{{c.name}}: </label>
                 <div class="col-md-4" ng-switch="c.type">
                     <any ng-switch-when="OptionSet">
-                        <!--<select class="form-control" ng-model="dotObject.attributes[c.typeDetails.optionSetId]" ng-options="x.name as x.name for x in dotObject.attributeSets[c.typeDetails.optionSetId]">-->
-                        <select class="form-control" ng-model="dotObject.attributes[c.name]" ng-options="x.name as x.name for x in dotObject.attributeSets[c.typeDetails.optionSetId]">
+                        
+                        <select class="form-control" ng-model="dotObject.attributes[c.attributeId]" ng-options="x.name as x.name for x in dotObject.optionSets[c.typeDetails.optionSetId]">
                             <option value=""></option>
                         </select>
                     </any>
+
+                    <any ng-switch-when="OptionSet-MultiVal">                       
+
+                        <button type="button" class="btn btn-default" ng-model="dotObject.attributes[c.attributeId]" data-multiple="1" data-placeholder="Select..." ng-options="x.name as x.name for x in dotObject.optionSets[c.typeDetails.optionSetId]" bs-select>
+                            <span class="caret"></span>
+                        </button>
+                    </any>
+
                     <any ng-switch-default>
                         <input class="form-control" ng-model="dotObject.attributes[c.name]" type="text" name="name" />
                     </any>
-
-
-
                 </div>
+
+                <!--c: <pre>{{c | json}}</pre>-->
+                <!--dotObject.attributes[c.name]: <pre>{{dotObject.attributes[c.name] | json}}</pre>-->
+
+
+
             </div>
         </div>
 
@@ -65,5 +84,10 @@
         </div>
 
     </form>
+
+    <!--<pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
+    <!--dotObject: <pre>{{dotObject | json}}</pre>-->
+    <!--product: <pre>{{product | json}}</pre>-->
+    <!--selectedAttributeSet: <pre>{{selectedAttributeSet | json}}</pre>-->
 
 </div>

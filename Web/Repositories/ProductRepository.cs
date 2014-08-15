@@ -22,18 +22,23 @@ namespace Web.Repositories
 
         public void Add(ProductNew item)
         {
-            var entity = new DynamicTableEntity();
+            //var entity = new DynamicTableEntity();
+            //entity.Properties["Name"] = new EntityProperty(item.Name);
+            //entity.Properties["Description"] = new EntityProperty(item.Description);
+            //entity.Properties["AttributeSetId"] = new EntityProperty(item.AttributeSetId);
+            //entity.Properties["AttributeSetName"] = new EntityProperty(item.AttributeSetName);
+            //entity.Properties["Attributes"] = new EntityProperty(item.Attributes);
+            //entity.PartitionKey = "p";
+            //entity.RowKey = Guid.NewGuid().ToString();
 
-            entity.Properties["Name"] = new EntityProperty(item.Name);
-            entity.Properties["Description"] = new EntityProperty(item.Description);
-            entity.Properties["AttributeSetId"] = new EntityProperty(item.AttributeSetId);
-            entity.Properties["AttributeSetName"] = new EntityProperty(item.AttributeSetName);
-            entity.Properties["Attributes"] = new EntityProperty(item.Attributes);
-            entity.PartitionKey = "p";
-            entity.RowKey = Guid.NewGuid().ToString();
+            // met.2
+            Mapper.CreateMap<ProductNew, ProductEntry>()
+                //.ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
+                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
+                //.ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Attributes)));
+            var entity = Mapper.Map<ProductNew, ProductEntry>(item);
 
-            // entity.ETag = "*"; // mandatory for <merge>
-            // var operation = TableOperation.Merge(entity);
             var operation = TableOperation.Insert(entity);
             Table.Execute(operation);
         }
