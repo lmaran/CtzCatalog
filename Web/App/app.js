@@ -1,4 +1,4 @@
-﻿var app = angular.module('ctzCatalog', ['ngRoute', 'pascalprecht.translate', 'ngCookies', 'ui.bootstrap', 'monospaced.elastic']);
+﻿var app = angular.module('ctzCatalog', ['ngRoute', 'pascalprecht.translate', 'ngCookies', 'ui.bootstrap', 'monospaced.elastic', 'mgcrea.ngStrap.select']);
 
 app.config(['$routeProvider', '$locationProvider', '$translateProvider', function ($routeProvider, $locationProvider, $translateProvider) {
     
@@ -107,12 +107,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         })
         .when('/attributesets/create', {
             controller: 'attributeSetController',
-            templateUrl: 'App/views/attributeSetCreate.html',
+            templateUrl: 'App/views/attributeSet.html',
             title: 'Create AttributeSet'
         })
         .when('/attributesets/:id', {
             controller: 'attributeSetController',
-            templateUrl: 'App/views/attributeSetEdit.html',
+            templateUrl: 'App/views/attributeSet.html',
             title: 'Edit AttributeSet',
             isEditMode: true
         })

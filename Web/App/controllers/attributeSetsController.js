@@ -38,6 +38,22 @@
     function init() {
         attributeSetService.getAll().then(function (data) {
             $scope.attributeSets = data;
+
+
+            // optional --> convert typeDetails from string to object
+            // only if you want to display them  in List view
+            //data.forEach(function (item) {
+            //    try {
+            //        if (item.attributes == '')
+            //            item.attributes = [];
+            //        else
+            //            item.attributes = JSON.parse(item.attributes)
+            //    }
+            //    catch (err) {
+            //        item.attributes = [];
+            //        alert(err + ' for Options property of entity ' + item.name);
+            //    };
+            //});
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));

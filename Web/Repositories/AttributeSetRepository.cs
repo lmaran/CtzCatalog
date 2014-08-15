@@ -33,7 +33,8 @@ namespace Web.Repositories
 
             // met.2
             Mapper.CreateMap<AttributeSetNew, AttributeSetEntry>()
-                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+                //.ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"))
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Attributes)));
 
@@ -53,6 +54,13 @@ namespace Web.Repositories
             var entitiesTable = this.ExecuteQuery(filter);
 
             // automapper: copy "entitiesTable" to "entitiesVM"
+            Mapper.CreateMap<AttributeSetEntry, AttributeSetViewModel>()
+                .ForMember(dest => dest.AttributeSetId, opt => opt.MapFrom(src => src.RowKey))
+                .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<AttributeValue>>(src.Attributes ?? string.Empty)));
+            var entitiesVM = Mapper.Map<List<AttributeSetEntry>, List<AttributeSetViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
+
+
+
             // met asta nu a functionat. La primul apel rezultatul oferit e ok dar la urmatoarele, param. "lang" "revine" la valoarea initiala
             //Mapper.CreateMap<AttributeSetEntry, AttributeSetViewModel>()
             //    .ForMember(dest => dest.AttributeSetId, opt => opt.MapFrom(src => src.RowKey))
@@ -60,26 +68,27 @@ namespace Web.Repositories
             //        opt => opt.ResolveUsing<CustomResolver>().ConstructedBy(() => new CustomResolver(lang))    );               
             //var entitiesVM = Mapper.Map<List<AttributeSetEntry>, List<AttributeSetViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
 
-            var entitiesVM = new List<AttributeSetViewModel>();
-            foreach (var item in entitiesTable)
-            {
 
-                var newName = item.Name;
-                if (lang != null && !string.IsNullOrEmpty(item.TranslatedName))
-                {
-                    string translatedName;
-                    var transDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.TranslatedName);
-                    if (transDictionary.TryGetValue(lang, out translatedName))
-                        newName = translatedName;
-                }
+            //var entitiesVM = new List<AttributeSetViewModel>();
+            //foreach (var item in entitiesTable)
+            //{
 
-                entitiesVM.Add(new AttributeSetViewModel()
-                {
-                    AttributeSetId = item.RowKey,
-                    Name = newName,
-                    Description = item.Description
-                });
-            }
+            //    var newName = item.Name;
+            //    if (lang != null && !string.IsNullOrEmpty(item.TranslatedName))
+            //    {
+            //        string translatedName;
+            //        var transDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.TranslatedName);
+            //        if (transDictionary.TryGetValue(lang, out translatedName))
+            //            newName = translatedName;
+            //    }
+
+            //    entitiesVM.Add(new AttributeSetViewModel()
+            //    {
+            //        AttributeSetId = item.RowKey,
+            //        Name = newName,
+            //        Description = item.Description
+            //    });
+            //}
 
             return entitiesVM;
         }

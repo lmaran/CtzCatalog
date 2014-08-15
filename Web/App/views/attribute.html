@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
+        <div class="form-group">
             <label class="col-md-2 control-label">Description</label>
             <div class="col-md-4">
                 <input class="form-control" ng-model="attribute.description" type="text" name="description" />
@@ -33,6 +33,7 @@
                     <option value=""></option>
                     <option value="Text">Text</option>
                     <option value="OptionSet">OptionSet</option>
+                    <option value="OptionSet-MultiVal">OptionSet-MultiVal</option>
                     <!--<option value="TwoOptions">TwoOptions</option>
                     <option value="Number">Number</option>-->
                 </select>
@@ -47,7 +48,7 @@
             </div>
         </div>-->
 
-        <div ng-if="attribute.type=='OptionSet'" class="form-group" ng-class="{ 'has-error' : form.optionSet.$invalid && submitted }">
+        <div ng-if="attribute.type=='OptionSet' || attribute.type=='OptionSet-MultiVal'" class="form-group" ng-class="{ 'has-error' : form.optionSet.$invalid && submitted }">
             <label class="col-md-2 control-label">Option Set</label>
             <div class="col-md-4">
                 <select name="optionSet" class="form-control" ng-model="dotObject.selectedOptionSet" ng-options="c as c.name for c in dotObject.optionSets track by c.optionSetId" ng-change="changeOptionSet()" required>
@@ -66,6 +67,20 @@
             </div>
         </div>
 
+        <div ng-show="attribute.type=='OptionSet-MultiVal'"  data-placeholder="Select..." class="form-group">
+            <label class="col-md-2 control-label">Default Values</label>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-default" ng-model="dotObject.selectedDefaultValues" data-multiple="1" data-placeholder="Select..." data-animation="am-flip-x" ng-options="c.name as c.name for c in dotObject.selectedOptionSet.options" bs-select>
+                    <span class="caret"></span>
+                </button>
+            </div>
+        </div>
+
+
+
+
+        <!--action buttons-->
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button type="submit" class="btn btn-primary"> <span class="glyphicon glyphicon-floppy-disk"></span> {{'GlobalButtons.Save' | translate}} </button>
@@ -78,6 +93,7 @@
         <!--selectedOptionSet: <pre>{{dotObject.selectedOptionSet | json}}</pre>
         selectedDefaultValue: <pre>{{dotObject.selectedDefaultValue | json}}</pre>
         attribute: <pre>{{attribute | json}}-->
+        <!--<pre>{{dotObject.selectedDefaultValues | json}}</pre>-->
 
     </form>
 

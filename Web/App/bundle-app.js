@@ -2245,7 +2245,7 @@ angular.module('pascalprecht.translate').factory('$translateLocalStorage', [
   }
 ]);
 ///#source 1 1 /App/app.js
-var app = angular.module('ctzCatalog', ['ngRoute', 'pascalprecht.translate', 'ngCookies', 'ui.bootstrap', 'monospaced.elastic']);
+var app = angular.module('ctzCatalog', ['ngRoute', 'pascalprecht.translate', 'ngCookies', 'ui.bootstrap', 'monospaced.elastic', 'mgcrea.ngStrap.select']);
 
 app.config(['$routeProvider', '$locationProvider', '$translateProvider', function ($routeProvider, $locationProvider, $translateProvider) {
     
@@ -2354,12 +2354,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
         })
         .when('/attributesets/create', {
             controller: 'attributeSetController',
-            templateUrl: 'App/views/attributeSetCreate.html',
+            templateUrl: 'App/views/attributeSet.html',
             title: 'Create AttributeSet'
         })
         .when('/attributesets/:id', {
             controller: 'attributeSetController',
-            templateUrl: 'App/views/attributeSetEdit.html',
+            templateUrl: 'App/views/attributeSet.html',
             title: 'Edit AttributeSet',
             isEditMode: true
         })
@@ -3371,7 +3371,7 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
             
             if ($scope.isEditMode) {
                 // init typeDetails (each type has different details)
-                if ($scope.attribute.type == "OptionSet") {
+                if ($scope.attribute.type == "OptionSet" || $scope.attribute.type == "OptionSet-MultiVal") {
 
                     //alert(JSON.stringify($scope.dotObject.optionSets));
 
@@ -3384,10 +3384,16 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
                             $scope.dotObject.selectedOptionSet.options = convertToObject($scope.dotObject.selectedOptionSet.options);
                         }
 
-                        //getOptionSetValues($scope.attribute.typeDetails.optionSetId);
-                        if ($scope.attribute.typeDetails.defaultValue) {
-                            $scope.dotObject.selectedDefaultValue = $scope.attribute.typeDetails.defaultValue;
-                        }
+                        if ($scope.attribute.type == "OptionSet")
+                            if ($scope.attribute.typeDetails.defaultValue) {
+                                $scope.dotObject.selectedDefaultValue = $scope.attribute.typeDetails.defaultValue;
+                            }
+
+                        if ($scope.attribute.type == "OptionSet-MultiVal")
+                            if ($scope.attribute.typeDetails.defaultValues) {
+                                $scope.dotObject.selectedDefaultValues = $scope.attribute.typeDetails.defaultValues;
+                            }
+
                     })
                     .catch(function (err) {
                         alert(JSON.stringify(err, null, 4));
@@ -3415,6 +3421,15 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
                 typeDetails.optionSetId = $scope.dotObject.selectedOptionSet.optionSetId;
                 if ($scope.dotObject.selectedDefaultValue) {
                     typeDetails.defaultValue = $scope.dotObject.selectedDefaultValue;
+                }
+                $scope.attribute.typeDetails = JSON.stringify(typeDetails);
+            };
+
+            if ($scope.attribute.type == "OptionSet-MultiVal") {
+                var typeDetails = {};
+                typeDetails.optionSetId = $scope.dotObject.selectedOptionSet.optionSetId;
+                if ($scope.dotObject.selectedDefaultValues) {
+                    typeDetails.defaultValues = $scope.dotObject.selectedDefaultValues;
                 }
                 $scope.attribute.typeDetails = JSON.stringify(typeDetails);
             };
@@ -3449,6 +3464,15 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
                 $scope.attribute.typeDetails = JSON.stringify(typeDetails);
             };
 
+            if ($scope.attribute.type == "OptionSet-MultiVal") {
+                var typeDetails = {};
+                typeDetails.optionSetId = $scope.dotObject.selectedOptionSet.optionSetId;
+                if ($scope.dotObject.selectedDefaultValues) {
+                    typeDetails.defaultValues = $scope.dotObject.selectedDefaultValues;
+                }
+                $scope.attribute.typeDetails = JSON.stringify(typeDetails);
+            };
+
             attributeService.update($scope.attribute)
                 .then(function (data) {
                     $location.path('/attributes');
@@ -3473,7 +3497,7 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
         // delete $scope.attribute.typeDetails;
 
         // don't reload the optionSet list if it already exist
-        if ($scope.attribute.type == "OptionSet" && $scope.dotObject.optionSets.length == 0) {
+        if (($scope.attribute.type == "OptionSet" || $scope.attribute.type == "OptionSet-MultiVal")  && $scope.dotObject.optionSets.length == 0) {
             optionSetService.getAll().then(function (data) {
                 $scope.dotObject.optionSets = data;
             })
@@ -3504,7 +3528,7 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
 
     // helper functions
 
-    // ok, but I don't need anymore to get objectSet's options in a separate request
+    // get objectSet's options in a separate request
     function getOptionSetValues(optionSetId){
         optionSetService.getById(optionSetId).then(function (data) {
             // $scope.options = data.options;
@@ -3593,6 +3617,22 @@ app.controller('attributeSetsController', ['$scope', '$rootScope', '$route', '$l
     function init() {
         attributeSetService.getAll().then(function (data) {
             $scope.attributeSets = data;
+
+
+            // optional --> convert typeDetails from string to object
+            // only if you want to display them  in List view
+            //data.forEach(function (item) {
+            //    try {
+            //        if (item.attributes == '')
+            //            item.attributes = [];
+            //        else
+            //            item.attributes = JSON.parse(item.attributes)
+            //    }
+            //    catch (err) {
+            //        item.attributes = [];
+            //        alert(err + ' for Options property of entity ' + item.name);
+            //    };
+            //});
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -3614,6 +3654,9 @@ app.controller('attributeSetsController', ['$scope', '$rootScope', '$route', '$l
 }]);
 ///#source 1 1 /App/controllers/attributeSetController.js
 app.controller('attributeSetController', ['$scope', '$window', '$route', 'attributeService', 'attributeSetService', '$location', '$q', function ($scope, $window, $route, attributeService, attributeSetService, $location, $q) {
+    $scope.isEditMode = $route.current.isEditMode;
+    $scope.isFocusOnName = $scope.isEditMode ? false : true;
+
     $scope.attributeSet = {};
     $scope.attributes = [];
     var promiseToGetAttributeSet, promiseToGetAttributes;
@@ -3632,11 +3675,15 @@ app.controller('attributeSetController', ['$scope', '$window', '$route', 'attrib
 
     getAttributes();
 
-    if ($route.current.title == "AttributeSetEdit") {
+    if ($scope.isEditMode) {
+        $scope.pageTitle = 'Edit attributeSet';
         init();
-    } else { // AttributeSetCreate
-        $scope.attributeSet.attributes=[];
     }
+    else { // create mode
+        $scope.pageTitle = 'Add new attributeSet';
+        $scope.attributeSet.attributes = [];
+    }
+
 
     function init() {
         getAttributeSet();

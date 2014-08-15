@@ -1,4 +1,7 @@
 ﻿app.controller('attributeSetController', ['$scope', '$window', '$route', 'attributeService', 'attributeSetService', '$location', '$q', function ($scope, $window, $route, attributeService, attributeSetService, $location, $q) {
+    $scope.isEditMode = $route.current.isEditMode;
+    $scope.isFocusOnName = $scope.isEditMode ? false : true;
+
     $scope.attributeSet = {};
     $scope.attributes = [];
     var promiseToGetAttributeSet, promiseToGetAttributes;
@@ -17,11 +20,15 @@
 
     getAttributes();
 
-    if ($route.current.title == "AttributeSetEdit") {
+    if ($scope.isEditMode) {
+        $scope.pageTitle = 'Edit attributeSet';
         init();
-    } else { // AttributeSetCreate
-        $scope.attributeSet.attributes=[];
     }
+    else { // create mode
+        $scope.pageTitle = 'Add new attributeSet';
+        $scope.attributeSet.attributes = [];
+    }
+
 
     function init() {
         getAttributeSet();

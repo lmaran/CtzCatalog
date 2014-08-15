@@ -36,11 +36,8 @@ namespace Web.Repositories
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
                 //.ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.)));
-
             var entity = Mapper.Map<OptionSetNew, OptionSetEntry>(item);
 
-            // entity.ETag = "*"; // mandatory for <merge>
-            // var operation = TableOperation.Merge(entity);
             var operation = TableOperation.Insert(entity);
             Table.Execute(operation);
         }

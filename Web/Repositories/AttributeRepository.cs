@@ -23,14 +23,22 @@ namespace Web.Repositories
 
         public void Add(AttributeNew item)
         {
-            var entity = new DynamicTableEntity();
+            // met.1
+            //var entity = new DynamicTableEntity();
+            //entity.Properties["Name"] = new EntityProperty(item.Name);
+            //entity.Properties["Description"] = new EntityProperty(item.Description);
+            //entity.Properties["Type"] = new EntityProperty(item.Type);
+            //entity.Properties["TypeDetails"] = new EntityProperty(item.TypeDetails);
+            //entity.PartitionKey = "p";
+            //entity.RowKey = Guid.NewGuid().ToString();
 
-            entity.Properties["Name"] = new EntityProperty(item.Name);
-            entity.Properties["Description"] = new EntityProperty(item.Description);
-            entity.Properties["Type"] = new EntityProperty(item.Type);
-            entity.Properties["TypeDetails"] = new EntityProperty(item.TypeDetails);
-            entity.PartitionKey = "p";
-            entity.RowKey = Guid.NewGuid().ToString();
+            // met.2
+            Mapper.CreateMap<AttributeNew, AttributeEntry>()
+                //.ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
+                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
+            //.ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.)));
+            var entity = Mapper.Map<AttributeNew, AttributeEntry>(item);
 
             // entity.ETag = "*"; // mandatory for <merge>
             // var operation = TableOperation.Merge(entity);

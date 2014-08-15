@@ -162,8 +162,7 @@
     <Content Include="App\views\attribute.html" />
     <Content Include="App\views\confirm.html" />
     <Content Include="App\views\attributeSets.html" />
-    <Content Include="App\views\attributeSetCreate.html" />
-    <Content Include="App\views\attributeSetEdit.html" />
+    <Content Include="App\views\attributeSet.html" />
     <Content Include="App\views\pickOrderEdit.html" />
     <Content Include="App\views\pickOrderCreate.html" />
     <Content Include="App\views\customerEdit.html" />
