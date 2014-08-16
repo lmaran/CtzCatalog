@@ -1,6 +1,5 @@
 ﻿using Web.Helpers;
 using Web.Models;
-using Web.ViewModels;
 using AutoMapper;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -21,7 +20,7 @@ namespace Web.Repositories
         {
         }
 
-        public void Add(AttributeSetNew item)
+        public void Add(AttributeSet item)
         {
             // met.1
             //var entity = new DynamicTableEntity();
@@ -32,13 +31,13 @@ namespace Web.Repositories
             //entity.RowKey = Guid.NewGuid().ToString();
 
             // met.2
-            Mapper.CreateMap<AttributeSetNew, AttributeSetEntry>()
+            Mapper.CreateMap<AttributeSet, AttributeSetEntry>()
                 //.ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"))
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Attributes)));
 
-            var entity = Mapper.Map<AttributeSetNew, AttributeSetEntry>(item);
+            var entity = Mapper.Map<AttributeSet, AttributeSetEntry>(item);
 
 
 
@@ -48,16 +47,16 @@ namespace Web.Repositories
             Table.Execute(operation);
         }
 
-        public IEnumerable<AttributeSetViewModel> GetAll(string lang)
+        public IEnumerable<AttributeSet> GetAll(string lang)
         {
             var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "p");
             var entitiesTable = this.ExecuteQuery(filter);
 
             // automapper: copy "entitiesTable" to "entitiesVM"
-            Mapper.CreateMap<AttributeSetEntry, AttributeSetViewModel>()
+            Mapper.CreateMap<AttributeSetEntry, AttributeSet>()
                 .ForMember(dest => dest.AttributeSetId, opt => opt.MapFrom(src => src.RowKey))
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<AttributeValue>>(src.Attributes ?? string.Empty)));
-            var entitiesVM = Mapper.Map<List<AttributeSetEntry>, List<AttributeSetViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
+            var entitiesVM = Mapper.Map<List<AttributeSetEntry>, List<AttributeSet>>(entitiesTable.ToList()); //neaparat cu ToList()
 
 
 
@@ -93,25 +92,25 @@ namespace Web.Repositories
             return entitiesVM;
         }
 
-        public AttributeSetViewModel GetById(string itemId)
+        public AttributeSet GetById(string itemId)
         {
             var entry = this.Retrieve("p", itemId);
 
-            Mapper.CreateMap<AttributeSetEntry, AttributeSetViewModel>()
+            Mapper.CreateMap<AttributeSetEntry, AttributeSet>()
                 .ForMember(dest => dest.AttributeSetId, opt => opt.MapFrom(src => src.RowKey))
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<AttributeValue>>(src.Attributes ?? string.Empty)));
 
-            return Mapper.Map<AttributeSetEntry, AttributeSetViewModel>(entry);
+            return Mapper.Map<AttributeSetEntry, AttributeSet>(entry);
         }
 
-        public void Update(AttributeSetViewModel item)
+        public void Update(AttributeSet item)
         {
-            Mapper.CreateMap<AttributeSetViewModel, AttributeSetEntry>()
+            Mapper.CreateMap<AttributeSet, AttributeSetEntry>()
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.AttributeSetId))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"))
                 .ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Attributes)));
 
-            var entity = Mapper.Map<AttributeSetViewModel, AttributeSetEntry>(item);
+            var entity = Mapper.Map<AttributeSet, AttributeSetEntry>(item);
 
             entity.ETag = "*"; // mandatory for <replace>
             var operation = TableOperation.Replace(entity);
@@ -131,10 +130,10 @@ namespace Web.Repositories
 
     public interface IAttributeSetRepository : ITableStorage<AttributeSetEntry>
     {
-        void Add(AttributeSetNew item);
-        IEnumerable<AttributeSetViewModel> GetAll(string lang);
-        AttributeSetViewModel GetById(string itemId);
-        void Update(AttributeSetViewModel item);
+        void Add(AttributeSet item);
+        IEnumerable<AttributeSet> GetAll(string lang);
+        AttributeSet GetById(string itemId);
+        void Update(AttributeSet item);
         void Delete(string itemId);
     }
 

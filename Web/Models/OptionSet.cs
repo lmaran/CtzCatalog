@@ -5,8 +5,9 @@ using System.Web;
 
 namespace Web.Models
 {
-    public class OptionSetNew
+    public class OptionSet
     {
+        public string OptionSetId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Options { get; set; }

@@ -1,6 +1,5 @@
 ﻿using Web.Helpers;
 using Web.Models;
-using Web.ViewModels;
 using AutoMapper;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -20,7 +19,7 @@ namespace Web.Repositories
         {
         }
 
-        public void Add(ProductNew item)
+        public void Add(Product item)
         {
             //var entity = new DynamicTableEntity();
             //entity.Properties["Name"] = new EntityProperty(item.Name);
@@ -32,49 +31,47 @@ namespace Web.Repositories
             //entity.RowKey = Guid.NewGuid().ToString();
 
             // met.2
-            Mapper.CreateMap<ProductNew, ProductEntry>()
-                //.ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+            Mapper.CreateMap<Product, ProductEntry>()
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
-                //.ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Attributes)));
-            var entity = Mapper.Map<ProductNew, ProductEntry>(item);
+            var entity = Mapper.Map<Product, ProductEntry>(item);
 
             var operation = TableOperation.Insert(entity);
             Table.Execute(operation);
         }
 
-        public IEnumerable<ProductViewModel> GetAll()
+        public IEnumerable<Product> GetAll()
         {
             var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "p");
             var entitiesTable = this.ExecuteQuery(filter);
 
             // automapper: copy "entitiesTable" to "entitiesVM"
-            Mapper.CreateMap<ProductEntry, ProductViewModel>()
+            Mapper.CreateMap<ProductEntry, Product>()
                 .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.RowKey));
 
 
-            var entitiesVM = Mapper.Map<List<ProductEntry>, List<ProductViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
+            var entitiesVM = Mapper.Map<List<ProductEntry>, List<Product>>(entitiesTable.ToList()); //neaparat cu ToList()
 
             return entitiesVM;
         }
 
-        public ProductViewModel GetById(string itemId)
+        public Product GetById(string itemId)
         {
             var entry = this.Retrieve("p", itemId);
 
-            Mapper.CreateMap<ProductEntry, ProductViewModel>()
+            Mapper.CreateMap<ProductEntry, Product>()
                 .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.RowKey));
 
-            return Mapper.Map<ProductEntry, ProductViewModel>(entry);
+            return Mapper.Map<ProductEntry, Product>(entry);
         }
 
-        public void Update(ProductViewModel item)
+        public void Update(Product item)
         {
-            Mapper.CreateMap<ProductViewModel, ProductEntry>()
+            Mapper.CreateMap<Product, ProductEntry>()
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.ProductId))
                 .ForMember(dest => dest.PartitionKey, opt=> opt.UseValue("p"));
 
-            var entity = Mapper.Map<ProductViewModel, ProductEntry>(item);
+            var entity = Mapper.Map<Product, ProductEntry>(item);
 
             entity.ETag = "*"; // mandatory for <replace>
             var operation = TableOperation.Replace(entity);
@@ -94,10 +91,10 @@ namespace Web.Repositories
 
     public interface IProductRepository : ITableStorage<ProductEntry>
     {
-        void Add(ProductNew item);
-        IEnumerable<ProductViewModel> GetAll();
-        ProductViewModel GetById(string itemId);
-        void Update(ProductViewModel item);
+        void Add(Product item);
+        IEnumerable<Product> GetAll();
+        Product GetById(string itemId);
+        void Update(Product item);
         void Delete(string itemId);
     }
 }

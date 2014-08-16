@@ -1,6 +1,5 @@
 ﻿using Web.Helpers;
 using Web.Models;
-using Web.ViewModels;
 using AutoMapper;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -21,7 +20,7 @@ namespace Web.Repositories
         {
         }
 
-        public void Add(OptionSetNew item)
+        public void Add(OptionSet item)
         {
             //var entity = new DynamicTableEntity();
 
@@ -31,27 +30,27 @@ namespace Web.Repositories
             //entity.RowKey = Guid.NewGuid().ToString();
 
             // met.2
-            Mapper.CreateMap<OptionSetNew, OptionSetEntry>()
+            Mapper.CreateMap<OptionSet, OptionSetEntry>()
                 //.ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
                 //.ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.)));
-            var entity = Mapper.Map<OptionSetNew, OptionSetEntry>(item);
+            var entity = Mapper.Map<OptionSet, OptionSetEntry>(item);
 
             var operation = TableOperation.Insert(entity);
             Table.Execute(operation);
         }
 
-        public IEnumerable<OptionSetViewModel> GetAll(string lang)
+        public IEnumerable<OptionSet> GetAll(string lang)
         {
             var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "p");
             var entitiesTable = this.ExecuteQuery(filter);
 
             // automapper: copy "entitiesTable" to "entitiesVM"
-            Mapper.CreateMap<OptionSetEntry, OptionSetViewModel>()
+            Mapper.CreateMap<OptionSetEntry, OptionSet>()
                 .ForMember(dest => dest.OptionSetId, opt => opt.MapFrom(src => src.RowKey));
 
-            var entitiesVM = Mapper.Map<List<OptionSetEntry>, List<OptionSetViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
+            var entitiesVM = Mapper.Map<List<OptionSetEntry>, List<OptionSet>>(entitiesTable.ToList()); //neaparat cu ToList()
 
             // met asta nu a functionat. La primul apel rezultatul oferit e ok dar la urmatoarele, param. "lang" "revine" la valoarea initiala
             //Mapper.CreateMap<OptionSetEntry, OptionSetViewModel>()
@@ -86,25 +85,25 @@ namespace Web.Repositories
             return entitiesVM;
         }
 
-        public OptionSetViewModel GetById(string itemId)
+        public OptionSet GetById(string itemId)
         {
             var entry = this.Retrieve("p", itemId);
 
-            Mapper.CreateMap<OptionSetEntry, OptionSetViewModel>()
+            Mapper.CreateMap<OptionSetEntry, OptionSet>()
                 .ForMember(dest => dest.OptionSetId, opt => opt.MapFrom(src => src.RowKey));
                 //.ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<Option>>(src.Options ?? string.Empty)));
 
-            return Mapper.Map<OptionSetEntry, OptionSetViewModel>(entry);
+            return Mapper.Map<OptionSetEntry, OptionSet>(entry);
         }
 
-        public void Update(OptionSetViewModel item)
+        public void Update(OptionSet item)
         {
-            Mapper.CreateMap<OptionSetViewModel, OptionSetEntry>()
+            Mapper.CreateMap<OptionSet, OptionSetEntry>()
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.OptionSetId))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
                 //.ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Options)));
 
-            var entity = Mapper.Map<OptionSetViewModel, OptionSetEntry>(item);
+            var entity = Mapper.Map<OptionSet, OptionSetEntry>(item);
 
             entity.ETag = "*"; // mandatory for <replace>
             var operation = TableOperation.Replace(entity);
@@ -124,10 +123,10 @@ namespace Web.Repositories
 
     public interface IOptionSetRepository : ITableStorage<OptionSetEntry>
     {
-        void Add(OptionSetNew item);
-        IEnumerable<OptionSetViewModel> GetAll(string lang);
-        OptionSetViewModel GetById(string itemId);
-        void Update(OptionSetViewModel item);
+        void Add(OptionSet item);
+        IEnumerable<OptionSet> GetAll(string lang);
+        OptionSet GetById(string itemId);
+        void Update(OptionSet item);
         void Delete(string itemId);
     }
 

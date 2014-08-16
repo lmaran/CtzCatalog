@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using Web.Models;
 using Web.Repositories;
-using Web.ViewModels;
 
 namespace Web.Controllers
 {
@@ -22,25 +21,25 @@ namespace Web.Controllers
 
 
         [HttpPost, Route]
-        public void Post(PickOrderNew item)
+        public void Post(PickOrder item)
         {
             _repository.Add(item);
         }
 
         [HttpGet, Route]
-        public IEnumerable<PickOrderViewModel> Get() //pk
+        public IEnumerable<PickOrder> Get() //pk
         {
             return _repository.GetAll();
         }
 
         [HttpGet, Route("{itemId}")]
-        public PickOrderViewModel Get(string itemId) //pk
+        public PickOrder Get(string itemId) //pk
         {
             return _repository.GetById(itemId);
         }
 
         [HttpPut, Route]
-        public void Update(PickOrderViewModel item)
+        public void Update(PickOrder item)
         {
             _repository.Update(item);
         }

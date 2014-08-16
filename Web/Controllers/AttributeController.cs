@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Web.Models;
 using Web.Repositories;
-using Web.ViewModels;
+using Attribute = Web.Models.Attribute; // Type alias
 
 namespace Web.Controllers
 {
@@ -22,25 +22,25 @@ namespace Web.Controllers
 
 
         [HttpPost, Route]
-        public void Post(AttributeNew item)
+        public void Post(Attribute item)
         {
             _repository.Add(item);
         }
 
         [HttpGet, Route("{lang?}")]
-        public IEnumerable<AttributeViewModel> GetAll(string lang = null) //pk
+        public IEnumerable<Attribute> GetAll(string lang = null) //pk
         {
             return _repository.GetAll(lang);
         }
 
         [HttpGet, Route("{itemId}")]
-        public AttributeViewModel Get(string itemId) //pk
+        public Attribute Get(string itemId) //pk
         {
             return _repository.GetById(itemId);
         }
 
         [HttpPut, Route]
-        public void Update(AttributeViewModel item)
+        public void Update(Attribute item)
         {
             _repository.Update(item);
         }

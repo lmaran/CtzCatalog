@@ -1,6 +1,5 @@
 ﻿using Web.Helpers;
 using Web.Models;
-using Web.ViewModels;
 using AutoMapper;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -20,7 +19,7 @@ namespace Web.Repositories
         {
         }
 
-        public void Add(PickOrderNew item)
+        public void Add(PickOrder item)
         {
             var entity = new DynamicTableEntity();
 
@@ -37,39 +36,39 @@ namespace Web.Repositories
             Table.Execute(operation);
         }
 
-        public IEnumerable<PickOrderViewModel> GetAll()
+        public IEnumerable<PickOrder> GetAll()
         {
             var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "p");
             var entitiesTable = this.ExecuteQuery(filter);
 
             // automapper: copy "entitiesTable" to "entitiesVM"
-            Mapper.CreateMap<PickOrderEntry, PickOrderViewModel>()
+            Mapper.CreateMap<PickOrderEntry, PickOrder>()
                 //.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.PartitionKey))
                 .ForMember(dest => dest.PickOrderId, opt => opt.MapFrom(src => src.RowKey));
 
 
-            var entitiesVM = Mapper.Map<List<PickOrderEntry>, List<PickOrderViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
+            var entitiesVM = Mapper.Map<List<PickOrderEntry>, List<PickOrder>>(entitiesTable.ToList()); //neaparat cu ToList()
 
             return entitiesVM;
         }
 
-        public PickOrderViewModel GetById(string itemId)
+        public PickOrder GetById(string itemId)
         {
             var entry = this.Retrieve("p", itemId);
 
-            Mapper.CreateMap<PickOrderEntry, PickOrderViewModel>()
+            Mapper.CreateMap<PickOrderEntry, PickOrder>()
                 .ForMember(dest => dest.PickOrderId, opt => opt.MapFrom(src => src.RowKey));
 
-            return Mapper.Map<PickOrderEntry, PickOrderViewModel>(entry);
+            return Mapper.Map<PickOrderEntry, PickOrder>(entry);
         }
 
-        public void Update(PickOrderViewModel item)
+        public void Update(PickOrder item)
         {
-            Mapper.CreateMap<PickOrderViewModel, PickOrderEntry>()
+            Mapper.CreateMap<PickOrder, PickOrderEntry>()
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.PickOrderId))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
 
-            var entity = Mapper.Map<PickOrderViewModel, PickOrderEntry>(item);
+            var entity = Mapper.Map<PickOrder, PickOrderEntry>(item);
 
             entity.ETag = "*"; // mandatory for <replace>
             var operation = TableOperation.Replace(entity);
@@ -89,10 +88,10 @@ namespace Web.Repositories
 
     public interface IPickOrderRepository : ITableStorage<PickOrderEntry>
     {
-        void Add(PickOrderNew item);
-        IEnumerable<PickOrderViewModel> GetAll();
-        PickOrderViewModel GetById(string itemId);
-        void Update(PickOrderViewModel item);
+        void Add(PickOrder item);
+        IEnumerable<PickOrder> GetAll();
+        PickOrder GetById(string itemId);
+        void Update(PickOrder item);
         void Delete(string itemId);
     }
 }

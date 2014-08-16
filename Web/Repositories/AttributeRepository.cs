@@ -1,6 +1,5 @@
 ﻿using Web.Helpers;
 using Web.Models;
-using Web.ViewModels;
 using AutoMapper;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -11,6 +10,7 @@ using System.Net;
 using System.Web;
 using System.Web.Http;
 using System.Linq.Expressions;
+using Attribute = Web.Models.Attribute; // Type alias
 
 namespace Web.Repositories
 {
@@ -21,7 +21,7 @@ namespace Web.Repositories
         {
         }
 
-        public void Add(AttributeNew item)
+        public void Add(Attribute item)
         {
             // met.1
             //var entity = new DynamicTableEntity();
@@ -33,12 +33,12 @@ namespace Web.Repositories
             //entity.RowKey = Guid.NewGuid().ToString();
 
             // met.2
-            Mapper.CreateMap<AttributeNew, AttributeEntry>()
+            Mapper.CreateMap<Attribute, AttributeEntry>()
                 //.ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
             //.ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.)));
-            var entity = Mapper.Map<AttributeNew, AttributeEntry>(item);
+            var entity = Mapper.Map<Attribute, AttributeEntry>(item);
 
             // entity.ETag = "*"; // mandatory for <merge>
             // var operation = TableOperation.Merge(entity);
@@ -46,15 +46,15 @@ namespace Web.Repositories
             Table.Execute(operation);
         }
 
-        public IEnumerable<AttributeViewModel> GetAll(string lang)
+        public IEnumerable<Attribute> GetAll(string lang)
         {
             var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "p");
             var entitiesTable = this.ExecuteQuery(filter);
 
             // automapper: copy "entitiesTable" to "entitiesVM"
-            Mapper.CreateMap<AttributeEntry, AttributeViewModel>()
+            Mapper.CreateMap<AttributeEntry, Attribute>()
                 .ForMember(dest => dest.AttributeId, opt => opt.MapFrom(src => src.RowKey));
-            var entitiesVM = Mapper.Map<List<AttributeEntry>, List<AttributeViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
+            var entitiesVM = Mapper.Map<List<AttributeEntry>, List<Attribute>>(entitiesTable.ToList()); //neaparat cu ToList()
 
 
             // met asta nu a functionat. La primul apel rezultatul oferit e ok dar la urmatoarele, param. "lang" "revine" la valoarea initiala
@@ -88,25 +88,25 @@ namespace Web.Repositories
             return entitiesVM;
         }
 
-        public AttributeViewModel GetById(string itemId)
+        public Attribute GetById(string itemId)
         {
             var entry = this.Retrieve("p", itemId);
 
-            Mapper.CreateMap<AttributeEntry, AttributeViewModel>()
+            Mapper.CreateMap<AttributeEntry, Attribute>()
                 .ForMember(dest => dest.AttributeId, opt => opt.MapFrom(src => src.RowKey));
                 //.ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<AttributeValue2>>(src.Attributes ?? string.Empty)));
 
-            return Mapper.Map<AttributeEntry, AttributeViewModel>(entry);
+            return Mapper.Map<AttributeEntry, Attribute>(entry);
         }
 
-        public void Update(AttributeViewModel item)
+        public void Update(Attribute item)
         {
-            Mapper.CreateMap<AttributeViewModel, AttributeEntry>()
+            Mapper.CreateMap<Attribute, AttributeEntry>()
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.AttributeId))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
                 //.ForMember(dest => dest.Attributes, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.Attributes)));
 
-            var entity = Mapper.Map<AttributeViewModel, AttributeEntry>(item);
+            var entity = Mapper.Map<Attribute, AttributeEntry>(item);
 
             entity.ETag = "*"; // mandatory for <replace>
             var operation = TableOperation.Replace(entity);
@@ -126,10 +126,10 @@ namespace Web.Repositories
 
     public interface IAttributeRepository : ITableStorage<AttributeEntry>
     {
-        void Add(AttributeNew item);
-        IEnumerable<AttributeViewModel> GetAll(string lang);
-        AttributeViewModel GetById(string itemId);
-        void Update(AttributeViewModel item);
+        void Add(Attribute item);
+        IEnumerable<Attribute> GetAll(string lang);
+        Attribute GetById(string itemId);
+        void Update(Attribute item);
         void Delete(string itemId);
     }
 

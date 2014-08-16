@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using Web.Models;
 using Web.Repositories;
-using Web.ViewModels;
 
 namespace Web.Controllers
 {
@@ -22,25 +21,25 @@ namespace Web.Controllers
 
 
         [HttpPost, Route]
-        public void Post(AttributeSetNew item)
+        public void Post(AttributeSet item)
         {
             _repository.Add(item);
         }
 
         [HttpGet, Route("{lang?}")]
-        public IEnumerable<AttributeSetViewModel> GetAll(string lang = null) //pk
+        public IEnumerable<AttributeSet> GetAll(string lang = null) //pk
         {
             return _repository.GetAll(lang);
         }
 
         [HttpGet, Route("{itemId}")]
-        public AttributeSetViewModel Get(string itemId) //pk
+        public AttributeSet Get(string itemId) //pk
         {
             return _repository.GetById(itemId);
         }
 
         [HttpPut, Route]
-        public void Update(AttributeSetViewModel item)
+        public void Update(AttributeSet item)
         {
             _repository.Update(item);
         }

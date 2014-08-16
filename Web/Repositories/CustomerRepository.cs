@@ -1,6 +1,5 @@
 ﻿using Web.Helpers;
 using Web.Models;
-using Web.ViewModels;
 using AutoMapper;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -20,7 +19,7 @@ namespace Web.Repositories
         {
         }
 
-        public void Add(CustomerNew item)
+        public void Add(Customer item)
         {
             var entity = new DynamicTableEntity();
 
@@ -37,38 +36,38 @@ namespace Web.Repositories
             Table.Execute(operation);
         }
 
-        public IEnumerable<CustomerViewModel> GetAll()
+        public IEnumerable<Customer> GetAll()
         {
             var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "p");
             var entitiesTable = this.ExecuteQuery(filter);
 
             // automapper: copy "entitiesTable" to "entitiesVM"
-            Mapper.CreateMap<CustomerEntry, CustomerViewModel>()
+            Mapper.CreateMap<CustomerEntry, Customer>()
                 .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.RowKey));
 
 
-            var entitiesVM = Mapper.Map<List<CustomerEntry>, List<CustomerViewModel>>(entitiesTable.ToList()); //neaparat cu ToList()
+            var entitiesVM = Mapper.Map<List<CustomerEntry>, List<Customer>>(entitiesTable.ToList()); //neaparat cu ToList()
 
             return entitiesVM;
         }
 
-        public CustomerViewModel GetById(string itemId)
+        public Customer GetById(string itemId)
         {
             var entry = this.Retrieve("p", itemId);
 
-            Mapper.CreateMap<CustomerEntry, CustomerViewModel>()
+            Mapper.CreateMap<CustomerEntry, Customer>()
                 .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.RowKey));
 
-            return Mapper.Map<CustomerEntry, CustomerViewModel>(entry);
+            return Mapper.Map<CustomerEntry, Customer>(entry);
         }
 
-        public void Update(CustomerViewModel item)
+        public void Update(Customer item)
         {
-            Mapper.CreateMap<CustomerViewModel, CustomerEntry>()
+            Mapper.CreateMap<Customer, CustomerEntry>()
                 .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.CustomerId))
                 .ForMember(dest => dest.PartitionKey, opt=> opt.UseValue("p"));
 
-            var entity = Mapper.Map<CustomerViewModel, CustomerEntry>(item);
+            var entity = Mapper.Map<Customer, CustomerEntry>(item);
 
             entity.ETag = "*"; // mandatory for <replace>
             var operation = TableOperation.Replace(entity);
@@ -88,10 +87,10 @@ namespace Web.Repositories
 
     public interface ICustomerRepository : ITableStorage<CustomerEntry>
     {
-        void Add(CustomerNew item);
-        IEnumerable<CustomerViewModel> GetAll();
-        CustomerViewModel GetById(string itemId);
-        void Update(CustomerViewModel item);
+        void Add(Customer item);
+        IEnumerable<Customer> GetAll();
+        Customer GetById(string itemId);
+        void Update(Customer item);
         void Delete(string itemId);
     }
 }

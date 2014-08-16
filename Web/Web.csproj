@@ -281,17 +281,17 @@
     <Compile Include="Helpers\HeliosHostingEnvironment.cs" />
     <Compile Include="Helpers\HtmlActionResult.cs" />
     <Compile Include="Models\AttributeEntry.cs" />
-    <Compile Include="Models\AttributeNew.cs" />
-    <Compile Include="Models\CustomerNew.cs" />
+    <Compile Include="Models\Attribute.cs" />
+    <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\AttributeSetEntry.cs" />
-    <Compile Include="Models\AttributeSetNew.cs" />
-    <Compile Include="Models\PickOrderNew.cs" />
+    <Compile Include="Models\AttributeSet.cs" />
+    <Compile Include="Models\PickOrder.cs" />
     <Compile Include="Models\PickOrderEntry.cs" />
     <Compile Include="Models\CustomerEntry.cs" />
     <Compile Include="Models\OptionSetEntry.cs" />
     <Compile Include="Models\ProductEntry.cs" />
-    <Compile Include="Models\OptionSetNew.cs" />
-    <Compile Include="Models\ProductNew.cs" />
+    <Compile Include="Models\OptionSet.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AttributeRepository.cs" />
     <Compile Include="Repositories\AttributeSetRepository.cs" />
@@ -301,12 +301,6 @@
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\TableStorage.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\AttributeViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModel.cs" />
-    <Compile Include="ViewModels\AttributeSetViewModel.cs" />
-    <Compile Include="ViewModels\PickOrderViewModel.cs" />
-    <Compile Include="ViewModels\OptionSetViewModel.cs" />
-    <Compile Include="ViewModels\ProductViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App\filters\" />

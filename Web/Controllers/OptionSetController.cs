@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using Web.Models;
 using Web.Repositories;
-using Web.ViewModels;
 
 namespace Web.Controllers
 {
@@ -22,25 +21,25 @@ namespace Web.Controllers
 
 
         [HttpPost, Route]
-        public void Post(OptionSetNew item)
+        public void Post(OptionSet item)
         {
             _repository.Add(item);
         }
 
         [HttpGet, Route("{lang?}")]
-        public IEnumerable<OptionSetViewModel> GetAll(string lang = null) //pk
+        public IEnumerable<OptionSet> GetAll(string lang = null) //pk
         {
             return _repository.GetAll(lang);
         }
 
         [HttpGet, Route("{itemId}")]
-        public OptionSetViewModel Get(string itemId) //pk
+        public OptionSet Get(string itemId) //pk
         {
             return _repository.GetById(itemId);
         }
 
         [HttpPut, Route]
-        public void Update(OptionSetViewModel item)
+        public void Update(OptionSet item)
         {
             _repository.Update(item);
         }

@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using Web.Models;
 using Web.Repositories;
-using Web.ViewModels;
 
 namespace Web.Controllers
 {
@@ -22,25 +21,25 @@ namespace Web.Controllers
 
 
         [HttpPost, Route]
-         public void Post(ProductNew item)
+         public void Post(Product item)
         {
             _repository.Add(item);
         }
 
         [HttpGet, Route]
-        public IEnumerable<ProductViewModel> Get() //pk
+        public IEnumerable<Product> Get() //pk
         {
             return _repository.GetAll();
         }
 
         [HttpGet, Route("{itemId}")]
-        public ProductViewModel Get(string itemId) //pk
+        public Product Get(string itemId) //pk
         {
             return _repository.GetById(itemId);
         }
 
         [HttpPut, Route]
-        public void Update(ProductViewModel item)
+        public void Update(Product item)
         {
             _repository.Update(item);
         }

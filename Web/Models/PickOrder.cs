@@ -6,13 +6,14 @@ using System.Web;
 
 namespace Web.Models
 {
-    public class PickOrderNew
+    public class PickOrder
     {
-        public PickOrderNew()
+        public PickOrder()
         {
             this.CreatedOn = DateTime.UtcNow;
         }
 
+        public string PickOrderId { get; set; }
         public string Name { get; set; }
         public DateTime CreatedOn { get; set; }
         public string CustomerId { get; set; }
