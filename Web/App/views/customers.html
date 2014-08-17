@@ -30,16 +30,17 @@
                     <th>Name</th>
                     <th>Address</th>
                     <th>Phone</th>
-                    <th>Description</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="customer in customers | filter:search">
-                    <td><a ng-href="/customers/{{customer.customerId}}">{{customer.name}}</a></td>
+                    <td>
+                        <a ng-href="/customers/{{customer.customerId}}">{{customer.name}}</a>
+                        <i class="glyphicon glyphicon-info-sign" ng-if="customer.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{customer.description}}"></i>
+                    </td>
                     <td>{{ customer.address }}</td>
                     <td>{{ customer.phone }}</td>
-                    <td>{{ customer.description }}</td>
                     <td>
                         <a ng-click="delete(customer)">delete</a>
                     </td>

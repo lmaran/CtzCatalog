@@ -1,0 +1,18 @@
+﻿<div class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content modal-question">
+            <div class="modal-header" ng-show="title">
+                <button type="button" class="close" ng-click="cancel()">&times;</button>
+                <h4 class="modal-title">{{ title | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <h4>{{ message | translate }}</h4>
+                <p>{{ details | translate }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="ok();" data-translate>{{ yes | translate}}</button>
+                <button type="button" class="btn btn-warning" ng-click="cancel()" data-translate>{{ no | translate}}</button>
+            </div>
+        </div>
+     </div>
+</div>

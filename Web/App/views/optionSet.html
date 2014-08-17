@@ -49,8 +49,13 @@
                                 <button type="button" class="btn btn-xs" ng-click="optionUp($index, option, $event)"> <span class="glyphicon glyphicon-arrow-up"></span></button>
                             </span>
                         </accordion-heading>
+
+                        <div>Name</div>
+                        <input type="text" class="form-control" ng-model="option.name"></input>
+                        <br />
                         <div>Description</div>
                         <textarea class="form-control" msd-elastic ng-model="option.description"></textarea>
+
                     </accordion-group>
                 </accordion>
 

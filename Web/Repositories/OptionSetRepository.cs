@@ -10,29 +10,46 @@ using System.Net;
 using System.Web;
 using System.Web.Http;
 using System.Linq.Expressions;
+using SnowMaker;
 
 namespace Web.Repositories
 {
     public class OptionSetRepository : TableStorage<OptionSetEntry>, IOptionSetRepository
     {
-        public OptionSetRepository()
-            : base(tableName: "OptionSets")
+        const string entityPluralName = "OptionSets";
+        private readonly IUniqueIdGenerator _generator;
+
+        public OptionSetRepository(IUniqueIdGenerator generator)
+        //public OptionSetRepository()
+            : base(tableName: entityPluralName)
         {
+            this._generator = generator;
         }
 
         public void Add(OptionSet item)
         {
+            // experiments with idGenerator:
+            //var connString = ConfigurationManager.ConnectionStrings["CortizoAzureStorage"].ConnectionString;
+            //var storageAccount = CloudStorageAccount.Parse(connString);
+
+            //var _store = new BlobOptimisticDataStore(storageAccount, "testContainer");
+            //var generator = new UniqueIdGenerator(_store) { BatchSize = 3 };
+
+            //var generatedId = _generator.NextId("test");
+
+
             //var entity = new DynamicTableEntity();
 
             //entity.Properties["Name"] = new EntityProperty(item.Name);
             //entity.Properties["Description"] = new EntityProperty(item.Description);
             //entity.PartitionKey = "p";
             //entity.RowKey = Guid.NewGuid().ToString();
-
+            
             // met.2
             Mapper.CreateMap<OptionSet, OptionSetEntry>()
                 //.ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
-                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
+                //.ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
+                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => _generator.NextId(entityPluralName)))
                 .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
                 //.ForMember(dest => dest.Options, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.)));
             var entity = Mapper.Map<OptionSet, OptionSetEntry>(item);

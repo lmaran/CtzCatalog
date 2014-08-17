@@ -29,17 +29,18 @@
                 <tr>
                     <th>Name</th>
                     <th>Attributes</th>
-                    <th>Description</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="attributeSet in attributeSets | filter:search">
-                    <td><a ng-href="/attributesets/{{attributeSet.attributeSetId}}">{{attributeSet.name}}</a></td>
+                    <td>
+                        <a ng-href="/attributesets/{{attributeSet.attributeSetId}}">{{attributeSet.name}}</a>
+                        <i class="glyphicon glyphicon-info-sign" ng-if="attributeSet.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{attributeSet.description}}"></i>
+                    </td>
                     <td>
                         <span>[<span ng-repeat="item in  attributeSet.attributes">{{item.name}}<span ng-if="!$last">, </span></span>] </span>
                     </td>
-                    <td>{{ attributeSet.description }}</td>
                     <td>
                         <a ng-click="delete(attributeSet)">delete</a>
                     </td>

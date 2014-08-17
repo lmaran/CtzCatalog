@@ -10,7 +10,7 @@
     <div class="row toolbar">
         <div class="col-md-4">
             <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new product </button>
-            <button type="button" class="btn" ng-click="refresh()"> <span class="glyphicon glyphicon-refresh"></span> </button>
+            <button type="button" class="btn" ng-click="refresh()"> <span class="glyphicon glyphicon-refresh"></span> </button>           
         </div>
 
         <div class="col-md-3 pull-right">
@@ -27,21 +27,26 @@
         <table class="table table-responsive table-hover table-condensed">
             <thead>
                 <tr>
+                    <th>Category</th>
+                    <th>Code</th>
                     <th>Name</th>
-                    <th>AttributeSet</th>
                     <th>Attributes</th>
-                    <th>Description</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="product in products | filter:search">
-                    <td><a ng-href="/products/{{product.productId}}">{{product.name}}</a></td>
                     <td>{{ product.attributeSetName }}</td>
-                    <td>{{ product.attributes }}</td>
-                    <td>{{ product.description }}</td>
+                    <td>{{ product.code }}</td>
                     <td>
-                        <a ng-click="delete(product)">delete</a>
+                        <a ng-href="/products/{{product.productId}}" >{{product.name}}</a>
+                        <!--<span ng-if="product.description" class="glyphicon glyphicon-info-sign" data-placement="top" data-trigger="hover" html="true" data-content="{{product.attributes}}" bs-popover></span>-->
+                        <i class="glyphicon glyphicon-info-sign" ng-if="product.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{product.description}}"></i>
+                    </td>
+                    
+                    <td>{{ product.attributes }}</td>
+                    <td>
+                        <a ng-click="delete(product)" >delete</a>
                     </td>
                 </tr>
             </tbody>

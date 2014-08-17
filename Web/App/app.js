@@ -1,6 +1,22 @@
-﻿var app = angular.module('ctzCatalog', ['ngRoute', 'pascalprecht.translate', 'ngCookies', 'ui.bootstrap', 'monospaced.elastic', 'mgcrea.ngStrap.select']);
+﻿// in case we want to load ui.bootstrap as individual components we need to add references to the related templates
+// we can specify only the related templates: E.g. for <ui.bootstrap.accordion> --> 'template/accordion/accordion-group.html', 'template/accordion/accordion.html'
+// or we can specify a reference to the entire template: --> 'ui.bootstrap.tpls', in case we plan to use more modules in the future and reduce maintenance overhead
+// https://github.com/angular-ui/bootstrap/issues/266
+var app = angular.module('ctzCatalog', [
+    'ngAnimate',
+    'ngSanitize',
+    'ngRoute',
+    'pascalprecht.translate',
+    'ngCookies',
+    'monospaced.elastic',
+    'mgcrea.ngStrap',
+    'ui.bootstrap.accordion',
+    'ui.bootstrap.tpls' // or add only the related templates: 'template/accordion/accordion-group.html', 'template/accordion/accordion.html',
+    
 
-app.config(['$routeProvider', '$locationProvider', '$translateProvider', function ($routeProvider, $locationProvider, $translateProvider) {
+]);
+
+app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$tooltipProvider', function ($routeProvider, $locationProvider, $translateProvider, $tooltipProvider) {
     
     $routeProvider
         .when('/',
@@ -134,6 +150,11 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
             prefix: 'Content/translates/',
             suffix: '.json'
         });
+
+    angular.extend($tooltipProvider.defaults, {
+        html: true
+    });
+
 }]);
 
 

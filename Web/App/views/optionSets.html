@@ -28,15 +28,17 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Description</th>
                     <th>Options</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="optionSet in optionSets | filter:search">
-                    <td><a ng-href="/optionsets/{{optionSet.optionSetId}}">{{optionSet.name}}</a></td>
-                    <td >{{ optionSet.description }}</td>
+                    <td>
+                        <a ng-href="/optionsets/{{optionSet.optionSetId}}">{{optionSet.name}}</a>
+                        <i class="glyphicon glyphicon-info-sign" ng-if="optionSet.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{optionSet.description}}"></i>
+                    </td>
+                    <!--<td >{{ optionSet.description }}</td>-->
                     <td><span ng-repeat="option in optionSet.options">{{option.name}}; </span></td>
                     
                     <td>

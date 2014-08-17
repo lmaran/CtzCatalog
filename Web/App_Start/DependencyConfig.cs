@@ -1,6 +1,9 @@
 ﻿using Microsoft.Practices.Unity;
+using Microsoft.WindowsAzure.Storage;
+using SnowMaker;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
 using Web.Repositories;
@@ -19,6 +22,16 @@ namespace Web.App_Start
             container.RegisterType<IOptionSetRepository, OptionSetRepository>();
             container.RegisterType<IAttributeRepository, AttributeRepository>();
             container.RegisterType<IAttributeSetRepository, AttributeSetRepository>();
+
+            var connString = ConfigurationManager.ConnectionStrings["CortizoAzureStorage"].ConnectionString;
+            var storageAccount = CloudStorageAccount.Parse(connString);
+
+            container.RegisterType<IUniqueIdGenerator, UniqueIdGenerator>(
+                new ContainerControlledLifetimeManager(),
+                new InjectionConstructor(
+                    new BlobOptimisticDataStore(storageAccount, "ctz-idgenerator")
+                ),
+                new InjectionProperty("BatchSize", 3));
 
             config.DependencyResolver = new UnityResolver(container);
         }

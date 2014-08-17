@@ -95,6 +95,9 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="SnowMaker">
+      <HintPath>..\packages\SnowMaker.1.0.0.46\lib\net40\SnowMaker.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -163,6 +166,8 @@
     <Content Include="App\views\confirm.html" />
     <Content Include="App\views\attributeSets.html" />
     <Content Include="App\views\attributeSet.html" />
+    <Content Include="App\views\dialog.alert.html" />
+    <Content Include="App\views\dialog.confirm.html" />
     <Content Include="App\views\pickOrderEdit.html" />
     <Content Include="App\views\pickOrderCreate.html" />
     <Content Include="App\views\customerEdit.html" />
@@ -187,6 +192,8 @@
     <Content Include="Scripts\angular-translate-storage-cookie.js" />
     <Content Include="Scripts\angular-translate-storage-local.js" />
     <Content Include="Scripts\angular-translate.js" />
+    <Content Include="Scripts\bower_components\angular-animate\angular-animate.js" />
+    <Content Include="Scripts\bower_components\angular-animate\angular-animate.min.js" />
     <Content Include="Scripts\bower_components\angular-cookies\angular-cookies.js" />
     <Content Include="Scripts\bower_components\angular-cookies\angular-cookies.min.js" />
     <Content Include="Scripts\bower_components\angular-elastic\elastic.js" />
@@ -194,6 +201,8 @@
     <Content Include="Scripts\bower_components\angular-elastic\LICENCE.txt" />
     <Content Include="Scripts\bower_components\angular-route\angular-route.js" />
     <Content Include="Scripts\bower_components\angular-route\angular-route.min.js" />
+    <Content Include="Scripts\bower_components\angular-sanitize\angular-sanitize.js" />
+    <Content Include="Scripts\bower_components\angular-sanitize\angular-sanitize.min.js" />
     <Content Include="Scripts\bower_components\angular-translate-loader-static-files\.bower.json" />
     <Content Include="Scripts\bower_components\angular-translate-loader-static-files\bower.json" />
     <Content Include="Scripts\bower_components\angular-translate-loader-static-files\README.md" />
@@ -227,6 +236,14 @@
     <Content Include="Scripts\bower_components\angular-elastic\bower.json" />
     <Content Include="Scripts\bower_components\angular-elastic\package.json" />
     <Content Include="Scripts\bower_components\angular-elastic\README.md" />
+    <Content Include="Scripts\bower_components\angular-animate\.bower.json" />
+    <Content Include="Scripts\bower_components\angular-animate\angular-animate.min.js.map" />
+    <Content Include="Scripts\bower_components\angular-animate\bower.json" />
+    <Content Include="Scripts\bower_components\angular-animate\README.md" />
+    <Content Include="Scripts\bower_components\angular-sanitize\.bower.json" />
+    <Content Include="Scripts\bower_components\angular-sanitize\angular-sanitize.min.js.map" />
+    <Content Include="Scripts\bower_components\angular-sanitize\bower.json" />
+    <Content Include="Scripts\bower_components\angular-sanitize\README.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

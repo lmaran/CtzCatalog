@@ -5,26 +5,23 @@
     init();
 
     $scope.delete = function (item) {
-        dialogService.confirm('Click ok to delete ' + item.name + ', otherwise click cancel.', 'Delete item')
-            .then(function () {
+        dialogService.confirm('Are you sure you want to delete this item?', item.name).then(function () {
 
-                // get the index for selected item
-                var i = 0;
-                for (i in $scope.optionSets) {
-                    if ($scope.optionSets[i].optionSetId == item.optionSetId) break;
-                };
+            // get the index for selected item
+            var i = 0;
+            for (i in $scope.optionSets) {
+                if ($scope.optionSets[i].optionSetId == item.optionSetId) break;
+            };
 
-                optionSetService.delete(item.optionSetId).then(function () {
-                    $scope.optionSets.splice(i, 1);
-                })
-                .catch(function (err) {
-                    $scope.errors = JSON.stringify(err.data, null, 4);
-                    alert($scope.errors);
-                });
-
-            }, function () {
-                //alert('canceled');
+            optionSetService.delete(item.optionSetId).then(function () {
+                $scope.optionSets.splice(i, 1);
+            })
+            .catch(function (err) {
+                $scope.errors = JSON.stringify(err.data, null, 4);
+                alert($scope.errors);
             });
+
+        });
     };
 
     $scope.create = function () {

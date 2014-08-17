@@ -27,11 +27,11 @@
     getAttributeSets();
 
     if ($scope.isEditMode) {
-        $scope.pageTitle = 'Edit attributeSet';
+        $scope.pageTitle = 'Edit product';
         init();
     }
     else { // create mode
-        $scope.pageTitle = 'Add new attributeSet';
+        $scope.pageTitle = 'Add new product';
     }
 
     function init() {

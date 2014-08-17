@@ -4,27 +4,23 @@
 
     init();
 
-    $scope.delete = function (pickOrder) {
-        dialogService.confirm('Click ok to delete ' + pickOrder.name + ', otherwise click cancel.', 'Delete PickOrder')
-            .then(function () {
+    $scope.delete = function (item) {
+        dialogService.confirm('Are you sure you want to delete this item?', item.name).then(function () {
 
-                // get the index for selected item
-                var i = 0;
-                for (i in $scope.pickOrders) {
-                    if ($scope.pickOrders[i].pickOrderId == pickOrder.pickOrderId) break;
-                };
+            // get the index for selected item
+            var i = 0;
+            for (i in $scope.pickOrders) {
+                if ($scope.pickOrders[i].pickOrderId == item.pickOrderId) break;
+            };
 
-                pickOrderService.delete(pickOrder.pickOrderId).then(function () {
-                    $scope.pickOrders.splice(i, 1);
-                })
-                .catch(function (err) {
-                    $scope.errors = JSON.stringify(err.data, null, 4);
-                    alert($scope.errors);
-                });
-
-            }, function () {
-                //alert('cancelled');
+            pickOrderService.delete(item.pickOrderId).then(function () {
+                $scope.pickOrders.splice(i, 1);
+            })
+            .catch(function (err) {
+                $scope.errors = JSON.stringify(err.data, null, 4);
+                alert($scope.errors);
             });
+        });
     };
 
     $scope.create = function () {
