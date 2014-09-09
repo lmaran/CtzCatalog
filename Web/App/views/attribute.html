@@ -32,49 +32,70 @@
                 <select name="attributeType" class="form-control" ng-model="attribute.type" ng-change="changeType()" required>
                     <option value=""></option>
                     <option value="Text">Text</option>
-                    <option value="OptionSet">OptionSet</option>
-                    <option value="OptionSet-MultiVal">OptionSet-MultiVal</option>
-                    <!--<option value="TwoOptions">TwoOptions</option>
-                    <option value="Number">Number</option>-->
+                    <option value="SingleOption">SingleOption</option>
+                    <option value="MultipleOptions">MultipleOptions</option>
                 </select>
                 <p ng-show="form.attributeType.$invalid  && submitted" class="help-block">This field is required.</p>
             </div>
         </div>
 
-        <!--<div ng-if="type=='Text'" class="form-group" ng-class="{ 'has-error' : form.defaultValue.$invalid && submitted }">
+        <div ng-show="attribute.type=='SingleOption' || attribute.type=='MultipleOptions'">
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">Options</label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input ng-model="newOptionValue" type="text" class="form-control" my-focus="isFocusOnOptions" ng-keypress="addOptionOnEnter($event)" />
+                        <span class="input-group-btn"><button type="button" class="btn btn-primary" ng-click="addOption()"> <span class="glyphicon glyphicon-plus"></span> Add this option</button></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && submitted }">
+                <div class="col-md-4 col-md-offset-2">
+
+                    <accordion close-others="true">
+                        <accordion-group ng-repeat="option in attribute.options" ng-mouseenter="optionBtnAreVisible=true" ng-mouseleave="optionBtnAreVisible=false">
+                            <accordion-heading>
+                                {{option}}
+                                <span class="pull-right" ng-if="optionBtnAreVisible">
+                                    <button type="button" class="btn btn-xs" ng-click="removeOption($index, option, $event)"> <span class="glyphicon glyphicon-remove"></span></button>
+                                    <button type="button" class="btn btn-xs" ng-click="optionDown($index, option, $event)"> <span class="glyphicon glyphicon-arrow-down"></span></button>
+                                    <button type="button" class="btn btn-xs" ng-click="optionUp($index, option, $event)"> <span class="glyphicon glyphicon-arrow-up"></span></button>
+                                </span>
+                            </accordion-heading>
+                        </accordion-group>
+                    </accordion>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div ng-if="attribute.type=='Text'" class="form-group" ng-class="{ 'has-error' : form.defaultValue.$invalid && submitted }">
             <label class="col-md-2 control-label">Default Value</label>
             <div class="col-md-4">
-                <input class="form-control" ng-model="attribute.defaultValue" type="text" name="defaultValue" />
-            </div>
-        </div>-->
-
-        <div ng-if="attribute.type=='OptionSet' || attribute.type=='OptionSet-MultiVal'" class="form-group" ng-class="{ 'has-error' : form.optionSet.$invalid && submitted }">
-            <label class="col-md-2 control-label">Option Set</label>
-            <div class="col-md-4">
-                <select name="optionSet" class="form-control" ng-model="dotObject.selectedOptionSet" ng-options="c as c.name for c in dotObject.optionSets track by c.optionSetId" ng-change="changeOptionSet()" required>
-                    <option value=""></option>
-                </select>
-                <p ng-show="form.optionSet.$invalid  && submitted" class="help-block">This field is required.</p>
+                <input class="form-control" ng-model="attribute.defaultValue" type="text" />
             </div>
         </div>
 
-        <div ng-if="attribute.type=='OptionSet'" class="form-group" ng-class="{ 'has-error' : form.defaultValue.$invalid && submitted }">
-            <label class="col-md-2 control-label">Default Value</label>
+        <div ng-if="attribute.type=='SingleOption'" class="form-group" ng-class="{ 'has-error' : form.defaultValue.$invalid && submitted }">
+            <label class="col-md-2 control-label">Default Option</label>
             <div class="col-md-4">
-                <select class="form-control" ng-model="dotObject.selectedDefaultValue" ng-options="c.name as c.name for c in dotObject.selectedOptionSet.options">
+                <select class="form-control" ng-model="attribute.defaultValue" ng-options="c as c for c in attribute.options">
                     <option value=""></option>
                 </select>
             </div>
         </div>
 
-        <div ng-show="attribute.type=='OptionSet-MultiVal'"  class="form-group">
-            <label class="col-md-2 control-label">Default Values</label>
+        <!--<div ng-show="attribute.type=='MultipleOptions'" class="form-group">
+            <label class="col-md-2 control-label">Default Options</label>
             <div class="col-md-4">
                 <button type="button" class="btn btn-default" ng-model="dotObject.selectedDefaultValues" data-multiple="1" data-placeholder="Select..." ng-options="c.name as c.name for c in dotObject.selectedOptionSet.options" bs-select>
                     <span class="caret"></span>
                 </button>
             </div>
-        </div>
+        </div>-->
 
 
 
@@ -88,13 +109,13 @@
             </div>
         </div>
 
-        
-        <!--optionSets:<pre>{{dotObject.optionSets | json}}</pre>-->
-        <!--selectedOptionSet: <pre>{{dotObject.selectedOptionSet | json}}</pre>
-        selectedDefaultValue: <pre>{{dotObject.selectedDefaultValue | json}}</pre>
-        attribute: <pre>{{attribute | json}}-->
-        <!--<pre>{{dotObject.selectedDefaultValues | json}}</pre>-->
 
+        <!--optionSets:<pre>{{dotObject.optionSets | json}}</pre>-->
+        <!--selectedOptionSet: <pre>{{dotObject.selectedOptionSet | json}}</pre>-->
+        <!--selectedDefaultValue: <pre>{{dotObject.selectedDefaultValue | json}}</pre>-->
+        <!--newOptionValue: <pre>{{newOptionValue}}</pre>-->
+        <!--attribute: <pre>{{attribute | json}}</pre>-->
+        <!--<pre>{{dotObject.selectedDefaultValues | json}}</pre>-->
     </form>
 
 </div>

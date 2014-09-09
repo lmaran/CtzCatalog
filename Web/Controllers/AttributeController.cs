@@ -24,17 +24,17 @@ namespace Web.Controllers
         [HttpPost, Route]
         public void Post(Attribute item)
         {
-            _repository.Add(item);
+            _repository.Create(item);
         }
 
-        [HttpGet, Route("{lang?}")]
-        public IEnumerable<Attribute> GetAll(string lang = null) //pk
+        [HttpGet, Route]
+        public IEnumerable<Attribute> GetAll()
         {
-            return _repository.GetAll(lang);
+            return _repository.GetAll();
         }
 
         [HttpGet, Route("{itemId}")]
-        public Attribute Get(string itemId) //pk
+        public Attribute Get(string itemId)
         {
             return _repository.GetById(itemId);
         }

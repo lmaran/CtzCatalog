@@ -5407,20 +5407,20 @@ app.controller('optionSetsController', ['$scope', '$rootScope', '$route', '$loca
         optionSetService.getAll().then(function (data) {
             $scope.optionSets = data;
 
-            // optional --> convert options from string to object
-            // only if you want to display them  in List view
-            data.forEach(function (item) {
-                try {
-                    if (item.options == '')
-                        item.options = [];
-                    else
-                        item.options = JSON.parse(item.options)
-                }
-                catch (err) {
-                    item.options = [];
-                    alert(err + ' for Options property of entity ' + item.name);
-                };
-            });
+            //// optional --> convert options from string to object
+            //// only if you want to display them  in List view
+            //data.forEach(function (item) {
+            //    try {
+            //        if (item.options == '')
+            //            item.options = [];
+            //        else
+            //            item.options = JSON.parse(item.options)
+            //    }
+            //    catch (err) {
+            //        item.options = [];
+            //        alert(err + ' for Options property of entity ' + item.name);
+            //    };
+            //});
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -5449,7 +5449,6 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
     $scope.optionSet = {};
 
     $scope.dotObject={}
-    $scope.dotObject.options = [];
 
     $scope.optionBtnAreVisible = false;
 
@@ -5468,18 +5467,6 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
     function getOptionSet() {
         optionSetService.getById($route.current.params.id).then(function (data) {
             $scope.optionSet = data;
-
-            // set $scope.dotObject.options as an object
-            try {
-                if (data.options == '' || data.options == null)
-                    $scope.dotObject.options = [];
-                else
-                    $scope.dotObject.options = JSON.parse(data.options);
-            }
-            catch (err) {
-                $scope.dotObject.options = [];
-                alert(err + ' for Options property of entity ' + data.name);
-            };
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -5491,11 +5478,11 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
         if (form.$valid) {
 
             // remove description property if it has no value --> shorter JSON result
-            $scope.dotObject.options.forEach(function (item) {
-                if (item.description == '') delete item.description;
-            });
-
-            $scope.optionSet.options = JSON.stringify($scope.dotObject.options);
+            if ($scope.optionSet.options) {
+                $scope.optionSet.options.forEach(function (item) {
+                    if (item.description == '') delete item.description;
+                });
+            }
 
             optionSetService.add($scope.optionSet)
                 .then(function (data) {
@@ -5505,9 +5492,6 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
                     alert(JSON.stringify(err.data, null, 4));
                 });
         }
-        else {
-            //alert('Invalid form');
-        }
     };
 
     $scope.update = function (form) {
@@ -5515,11 +5499,9 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
         if (form.$valid) {
 
             // remove description property if it has no value --> shorter JSON result
-            $scope.dotObject.options.forEach(function (item) {
+            $scope.optionSet.options.forEach(function (item) {
                 if (item.description == '') delete item.description;
             });
-
-            $scope.optionSet.options = JSON.stringify($scope.dotObject.options);
 
             optionSetService.update($scope.optionSet)
                 .then(function (data) {
@@ -5528,9 +5510,6 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
                 });
-        }
-        else {
-            //alert('Invalid form');
         }
     };
 
@@ -5548,12 +5527,8 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
 
     $scope.addOption = function () {
         if ($scope.newOptionValue) {
-            if (getIndex($scope.dotObject.options, 'name', $scope.newOptionValue) == -1)
-                $scope.dotObject.options.push({ name: $scope.newOptionValue });
-            else {
-                alert('Duplicate value!');
-                return false;
-            }
+            if (!$scope.optionSet.options) $scope.optionSet.options = [];
+            $scope.optionSet.options.push({ name: $scope.newOptionValue });
         } else {
             alert("Enter a value and then press the button!");
             return;
@@ -5577,7 +5552,7 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
             e.stopPropagation();
         };
 
-        $scope.dotObject.options.splice(idx, 1);
+        $scope.optionSet.options.splice(idx, 1);
     };
 
     $scope.optionUp = function (oldIdx, option, e) {
@@ -5588,7 +5563,7 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
         };
 
         var newIdx = oldIdx - 1, tmp;
-        var options = $scope.dotObject.options; 
+        var options = $scope.optionSet.options;
 
         var optionsLength = options.length;
 
@@ -5606,12 +5581,11 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
             };
             options[newIdx] = tmp;
         }
-        // options is just another reference to $scope.dotObject.options;
-        // so we don't have to switch back (e.g. $scope.dotObject.options = options)
+        // options is just another reference to $scope.optionSet.options;
+        // so we don't have to switch back (e.g. $scope.optionSet.options = options)
     }
 
     $scope.optionDown = function (oldIdx, option, e) {
-        //alert(JSON.stringify(option));
         // to not expand the panel at the end of action
         if (e) {
             e.preventDefault();
@@ -5619,7 +5593,7 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
         };
 
         var newIdx = oldIdx + 1, tmp;
-        var options = $scope.dotObject.options;
+        var options = $scope.optionSet.options;
 
         var optionsLength = options.length;
 
@@ -5637,8 +5611,8 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
             };
             options[newIdx] = tmp;
         }
-        // options is just another reference to $scope.dotObject.options;
-        // so we don't have to switch back (e.g. $scope.dotObject.options = options)
+        // options is just another reference to $scope.optionSet.options;
+        // so we don't have to switch back (e.g. $scope.optionSet.options = options)
     }
 
     // helper functions
@@ -5671,10 +5645,10 @@ app.controller('attributesController', ['$scope', '$rootScope', '$route', '$loca
             // get the index for selected item
             var i = 0;
             for (i in $scope.attributes) {
-                if ($scope.attributes[i].attributeId == item.attributeId) break;
+                if ($scope.attributes[i].id == item.id) break;
             };
 
-            attributeService.delete(item.attributeId).then(function () {
+            attributeService.delete(item.id).then(function () {
                 $scope.attributes.splice(i, 1);
             })
             .catch(function (err) {
@@ -5699,18 +5673,18 @@ app.controller('attributesController', ['$scope', '$rootScope', '$route', '$loca
 
             // optional --> convert typeDetails from string to object
             // only if you want to display them  in List view
-            data.forEach(function (item) {
-                try {
-                    if (item.typeDetails == '')
-                        item.typeDetails = [];
-                    else
-                        item.typeDetails = JSON.parse(item.typeDetails)
-                }
-                catch (err) {
-                    item.typeDetails = [];
-                    alert(err + ' for Options property of entity ' + item.name);
-                };
-            });
+            //data.forEach(function (item) {
+            //    try {
+            //        if (item.typeDetails == '')
+            //            item.typeDetails = [];
+            //        else
+            //            item.typeDetails = JSON.parse(item.typeDetails)
+            //    }
+            //    catch (err) {
+            //        item.typeDetails = [];
+            //        alert(err + ' for Options property of entity ' + item.name);
+            //    };
+            //});
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -5731,26 +5705,26 @@ app.controller('attributesController', ['$scope', '$rootScope', '$route', '$loca
 
 }]);
 ///#source 1 1 /App/controllers/attributeController.js
-app.controller('attributeController', ['$scope', '$window', '$route', 'attributeService', 'optionSetService', '$location', function ($scope, $window, $route, attributeService, optionSetService, $location) {
+app.controller('attributeController', ['$scope', '$window', '$route', 'attributeService', '$location', function ($scope, $window, $route, attributeService, $location) {
     $scope.isEditMode = $route.current.isEditMode;
     $scope.isFocusOnName = $scope.isEditMode ? false : true;
 
     $scope.attribute = {};
 
-    // we need an object (dotObject) to be able to use two-way data binding for ng-models in Select elements
-    // otherwise ue need to send the ng-model value of select control as parameter to a ng-change() function
-    // and init the model there
-    // worth to mention that the model is working properly in the view side {{my-model}}
-    // the above mention behavior is due to the fact that a new scope is created within Select element
-    // https://groups.google.com/forum/#!topic/angular/7Nd_me5YrHU
-    // https://egghead.io/lessons/angularjs-the-dot
-    // http://stackoverflow.com/questions/17606936/angularjs-dot-in-ng-model
-    $scope.dotObject = {}
-    $scope.dotObject.optionSets = [];
-    //$scope.dotObject.selectedOptionSet = {};
-    //$scope.dotObject.selectedDefaultValue = {};
+    //// we need an object (dotObject) to be able to use two-way data binding for ng-models in Select elements
+    //// otherwise ue need to send the ng-model value of select control as parameter to a ng-change() function
+    //// and init the model there
+    //// worth to mention that the model is working properly in the view side {{my-model}}
+    //// the above mention behavior is due to the fact that a new scope is created within Select element
+    //// https://groups.google.com/forum/#!topic/angular/7Nd_me5YrHU
+    //// https://egghead.io/lessons/angularjs-the-dot
+    //// http://stackoverflow.com/questions/17606936/angularjs-dot-in-ng-model
+    //$scope.dotObject = {}
+    //$scope.dotObject.optionSets = [];
+    ////$scope.dotObject.selectedOptionSet = {};
+    ////$scope.dotObject.selectedDefaultValue = {};
 
-    $scope.attributeBtnAreVisible = false;
+    ////$scope.attributeBtnAreVisible = false;
 
     if ($scope.isEditMode) {
         $scope.pageTitle = 'Edit attribute';
@@ -5762,49 +5736,12 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
 
     function init() {
         getAttribute();
-        //getModels();
     }
+
 
     function getAttribute() {
         attributeService.getById($route.current.params.id).then(function (data) {
             $scope.attribute = data;
-            $scope.attribute.typeDetails = convertToObject(data.typeDetails);
-            
-            if ($scope.isEditMode) {
-                // init typeDetails (each type has different details)
-                if ($scope.attribute.type == "OptionSet" || $scope.attribute.type == "OptionSet-MultiVal") {
-
-                    //alert(JSON.stringify($scope.dotObject.optionSets));
-
-                    optionSetService.getAll().then(function (data) {
-                        $scope.dotObject.optionSets = data;
-
-                        // for OptionSet we always have the properties typeDetails and optionSetId
-                        $scope.dotObject.selectedOptionSet = getObject($scope.dotObject.optionSets, 'optionSetId', $scope.attribute.typeDetails.optionSetId);
-                        if ($scope.dotObject.selectedOptionSet != null) {
-                            $scope.dotObject.selectedOptionSet.options = convertToObject($scope.dotObject.selectedOptionSet.options);
-                        }
-
-                        if ($scope.attribute.type == "OptionSet")
-                            if ($scope.attribute.typeDetails.defaultValue) {
-                                $scope.dotObject.selectedDefaultValue = $scope.attribute.typeDetails.defaultValue;
-                            }
-
-                        if ($scope.attribute.type == "OptionSet-MultiVal")
-                            if ($scope.attribute.typeDetails.defaultValues) {
-                                $scope.dotObject.selectedDefaultValues = $scope.attribute.typeDetails.defaultValues;
-                            }
-
-                    })
-                    .catch(function (err) {
-                        alert(JSON.stringify(err, null, 4));
-                    });
-
-
-
-                }
-                // else if($scope.attribute.type == "Text")...
-            }
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -5812,33 +5749,9 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
     }
 
     $scope.create = function (form) {
-        // send typeDetails as a string because we don't know the number or names of its properties
         $scope.submitted = true;
         if (form.$valid) {
-
-            // create 'typeDetails' property;
-            if ($scope.attribute.type == "OptionSet") {
-                var typeDetails = {};
-                typeDetails.optionSetId = $scope.dotObject.selectedOptionSet.optionSetId;
-                if ($scope.dotObject.selectedDefaultValue) {
-                    typeDetails.defaultValue = $scope.dotObject.selectedDefaultValue;
-                }
-                $scope.attribute.typeDetails = JSON.stringify(typeDetails);
-            };
-
-            if ($scope.attribute.type == "OptionSet-MultiVal") {
-                var typeDetails = {};
-                typeDetails.optionSetId = $scope.dotObject.selectedOptionSet.optionSetId;
-                if ($scope.dotObject.selectedDefaultValues) {
-                    typeDetails.defaultValues = $scope.dotObject.selectedDefaultValues;
-                }
-                $scope.attribute.typeDetails = JSON.stringify(typeDetails);
-            };
-
-            //return false;
-
-            // save attribute to DB
-            attributeService.add($scope.attribute)
+            attributeService.create($scope.attribute)
                 .then(function (data) {
                     $location.path('/attributes');
                 })
@@ -5854,30 +5767,9 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
     $scope.update = function (form) {
         $scope.submitted = true;
         if (form.$valid) {
-
-            // create 'typeDetails' property;
-            if ($scope.attribute.type == "OptionSet") {
-                var typeDetails = {};
-                typeDetails.optionSetId = $scope.dotObject.selectedOptionSet.optionSetId;
-                if ($scope.dotObject.selectedDefaultValue) {
-                    typeDetails.defaultValue = $scope.dotObject.selectedDefaultValue;
-                }
-                $scope.attribute.typeDetails = JSON.stringify(typeDetails);
-            };
-
-            if ($scope.attribute.type == "OptionSet-MultiVal") {
-                var typeDetails = {};
-                typeDetails.optionSetId = $scope.dotObject.selectedOptionSet.optionSetId;
-                if ($scope.dotObject.selectedDefaultValues) {
-                    typeDetails.defaultValues = $scope.dotObject.selectedDefaultValues;
-                }
-                $scope.attribute.typeDetails = JSON.stringify(typeDetails);
-            };
-
             attributeService.update($scope.attribute)
                 .then(function (data) {
                     $location.path('/attributes');
-                    //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -5889,92 +5781,147 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
     };
 
     $scope.cancel = function () {
-        //$location.path('/widgets')
         $window.history.back();
     }
 
     $scope.changeType = function () {
-        // clear previous details when you switch the type
-        // delete $scope.attribute.typeDetails;
-
-        // don't reload the optionSet list if it already exist
-        if (($scope.attribute.type == "OptionSet" || $scope.attribute.type == "OptionSet-MultiVal")  && $scope.dotObject.optionSets.length == 0) {
-            optionSetService.getAll().then(function (data) {
-                $scope.dotObject.optionSets = data;
-            })
-            .catch(function (err) {
-                alert(JSON.stringify(err, null, 4));
-            });
-        }
-
-        //$scope.newOptionValue = undefined;
+        // clear previous default value when you switch the type
+        $scope.attribute.defaultValue = '';
     }
 
-    $scope.changeOptionSet = function () {
-        //getOptionSetValues($scope.dotObject.selectedOptionSet.optionSetId);
 
-        // set objectSet's options as an object
-        try {
-            if ($scope.dotObject.selectedOptionSet.options == '' || $scope.dotObject.selectedOptionSet.options == null)
-                $scope.dotObject.selectedOptionSet.options = [];
-            else
-                $scope.dotObject.selectedOptionSet.options = JSON.parse($scope.dotObject.selectedOptionSet.options);
-        }
-        catch (err) {
-            $scope.dotObject.selectedOptionSet.options = [];
-            alert(err + ' for Options property of entity ' + $scope.dotObject.selectedOptionSet.name);
+
+    $scope.addOptionOnEnter = function (event) {
+        if (event.which == 13) { //enter key
+            event.preventDefault();
+            event.stopPropagation();
+            $scope.addOption();
         };
+    }
+
+    $scope.addOption = function () {
+        if ($scope.newOptionValue) {
+            if (!$scope.attribute.options) $scope.attribute.options = [];
+            $scope.attribute.options.push($scope.newOptionValue);
+        } else {
+            alert("Enter a value and then press the button!");
+            return;
+        };
+
+        $scope.newOptionValue = undefined;
+        $scope.isFocusOnOptions = true;
+
+        // remove $$haskKey property from objects
+        // met.1 - use angular.copy: --> $scope.optionSet.options = angular.copy($scope.optionSet.options);
+        // met.2 - alert(angular.toJson($scope.optionSet.options));
+        // met.3 - use 'track by' in ng-repeat (I use that method because it is faster: http://www.codelord.net/2014/04/15/improving-ng-repeat-performance-with-track-by/)
+        // and don't have to clean up the object later on
+
+    };
+
+    $scope.removeOption = function (idx, option, e) {
+        // to not expand the panel at the end of action
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+
+        $scope.attribute.options.splice(idx, 1);
+
+        //remove also from default value (if apply)
+        if ($scope.attribute.defaultValue == option)
+            $scope.attribute.defaultValue = '';
+    };
+
+    $scope.optionUp = function (oldIdx, option, e) {
+        // to not expand the panel at the end of action
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+
+        var newIdx = oldIdx - 1, tmp;
+        var options = $scope.attribute.options;
+
+        var optionsLength = options.length;
+
+        if (oldIdx > 0) {
+            tmp = options[newIdx];
+            options[newIdx] = options[oldIdx];
+            options[oldIdx] = tmp;
+        } else { // oldIndex is first position
+            newIdx = optionsLength - 1; // circular list
+            tmp = options[oldIdx];
+
+            // move all remaining options one position up
+            for (var i = 1; i <= optionsLength; i++) {
+                options[i - 1] = options[i];
+            };
+            options[newIdx] = tmp;
+        }
+        // options is just another reference to $scope.optionSet.options;
+        // so we don't have to switch back (e.g. $scope.optionSet.options = options)
+    }
+
+    $scope.optionDown = function (oldIdx, option, e) {
+        // to not expand the panel at the end of action
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+
+        var newIdx = oldIdx + 1, tmp;
+        var options = $scope.attribute.options;
+
+        var optionsLength = options.length;
+
+        if (oldIdx < optionsLength - 1) {
+            tmp = options[newIdx];
+            options[newIdx] = options[oldIdx];
+            options[oldIdx] = tmp;
+        } else { // oldIndex is last position
+            newIdx = 0; // circular list
+            tmp = options[oldIdx];
+
+            // move all remaining options one position down
+            for (var i = (optionsLength - 1) ; i > 0; i--) {
+                options[i] = options[i - 1];
+            };
+            options[newIdx] = tmp;
+        }
+        // options is just another reference to $scope.optionSet.options;
+        // so we don't have to switch back (e.g. $scope.optionSet.options = options)
     }
 
 
     // helper functions
 
-    // get objectSet's options in a separate request
-    function getOptionSetValues(optionSetId){
-        optionSetService.getById(optionSetId).then(function (data) {
-            // $scope.options = data.options;
-            // set $scope.dotObject.options as an object
-            try {
-                if (data.options == '' || data.options == null)
-                    $scope.dotObject.options = [];
-                else
-                    $scope.dotObject.options = JSON.parse(data.options);
-            }
-            catch (err) {
-                $scope.dotObject.options = [];
-                alert(err + ' for Options property of entity ' + data.name);
-            };
-        })
-        .catch(function (err) {
-            alert(JSON.stringify(err, null, 4));
-        });
-    }
 
-    // find object in array (objects with one level depth)
-    function getObject(data, propertyName, propertyValue) {
-        var item = null;
-        for (i = 0; i < data.length; i++) {
-            if (data[i][propertyName] === propertyValue) {
-                item = data[i];
-                break;
-            };
-        };
-        return item;
-    }
+    //// find object in array (objects with one level depth)
+    //function getObject(data, propertyName, propertyValue) {
+    //    var item = null;
+    //    for (i = 0; i < data.length; i++) {
+    //        if (data[i][propertyName] === propertyValue) {
+    //            item = data[i];
+    //            break;
+    //        };
+    //    };
+    //    return item;
+    //}
 
-    // set 'options' as an object
-    function convertToObject(str) {
-        try {
-            if (str == '' || str == null)
-                return null;
-            else
-                return JSON.parse(str);
-        }
-        catch (err) {
-            alert(err);
-            return null;
-        };
-    }
+    //// set 'options' as an object
+    //function convertToObject(str) {
+    //    try {
+    //        if (str == '' || str == null)
+    //            return null;
+    //        else
+    //            return JSON.parse(str);
+    //    }
+    //    catch (err) {
+    //        alert(err);
+    //        return null;
+    //    };
+    //}
 
 }]);
 ///#source 1 1 /App/controllers/attributeSetsController.js
@@ -6401,7 +6348,7 @@ app.factory('attributeService', ['$http', '$translate', function ($http, $transl
     var factory = {};
     var rootUrl = '/api/attributes/';
 
-    factory.add = function (item) {
+    factory.create = function (item) {
         return $http.post(rootUrl, item);
     };
 

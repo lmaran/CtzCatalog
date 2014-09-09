@@ -40,7 +40,8 @@
             <div class="col-md-4 col-md-offset-2">
 
                 <accordion close-others="true">
-                    <accordion-group ng-repeat="option in dotObject.options track by option.name" ng-mouseenter="optionBtnAreVisible=true" ng-mouseleave="optionBtnAreVisible=false">
+                    <!--<accordion-group ng-repeat="option in dotObject.options track by option.name" ng-mouseenter="optionBtnAreVisible=true" ng-mouseleave="optionBtnAreVisible=false">-->
+                    <accordion-group ng-repeat="option in optionSet.options track by option.name" ng-mouseenter="optionBtnAreVisible=true" ng-mouseleave="optionBtnAreVisible=false">
                         <accordion-heading>
                             {{option.name}}
                             <span class="pull-right" ng-if="optionBtnAreVisible">
@@ -71,5 +72,7 @@
         </div>
 
     </form>
+
+    <pre>{{optionSet | json}}</pre>
 
 </div>

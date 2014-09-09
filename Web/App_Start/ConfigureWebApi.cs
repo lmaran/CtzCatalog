@@ -14,7 +14,14 @@ namespace Web
             var config = new HttpConfiguration();
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
-            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); //Camel Case for JSON data
+            //config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); //Camel Case for JSON data
+
+            // suppress properties with null value - http://stackoverflow.com/a/14486694/2726725
+            // see more in ConfigureJsonNet.cs file
+            config.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings { 
+                NullValueHandling = NullValueHandling.Ignore, 
+                ContractResolver = new CamelCasePropertyNamesContractResolver() //Camel Case for JSON data
+            };
 
             // Enabling Attribute Routing
             config.MapHttpAttributeRoutes();

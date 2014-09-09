@@ -29,23 +29,25 @@
                 <tr>
                     <th>Name</th>
                     <th>Type</th>
-                    <th>TypeDetails</th>
+                    <!--<th>TypeDetails</th>-->
+                    <th>DefaultValue</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="attribute in attributes | filter:search">
                     <td>
-                        <a ng-href="/attributes/{{attribute.attributeId}}">{{attribute.name}}</a>
+                        <a ng-href="/attributes/{{attribute.id}}">{{attribute.name}}</a>
                         <i class="glyphicon glyphicon-info-sign" ng-if="attribute.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{attribute.description}}"></i>
                     </td>
                     <td>{{ attribute.type }}</td>
                     <!--<td><span ng-if="attribute.type=='OptionSet'">{{ attribute.typeDetails }}</span></td>-->
 
-                    <td>
+                    <!--<td>
                         <span ng-if="attribute.type=='OptionSet'">{{ attribute.typeDetails.optionSetId}} [{{ attribute.typeDetails.defaultValue}}] </span>
                         <span ng-if="attribute.type=='OptionSet-MultiVal'">{{ attribute.typeDetails.optionSetId}} [<span ng-repeat="item in  attribute.typeDetails.defaultValues">{{item}}<span ng-if="!$last">, </span></span>] </span>
-                    </td>
+                    </td>-->
+                    <td>{{ attribute.defaultValue }}</td>
                     <td>
                         <a ng-click="delete(attribute)">delete</a>
                     </td>

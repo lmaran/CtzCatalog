@@ -6,7 +6,6 @@
     $scope.optionSet = {};
 
     $scope.dotObject={}
-    $scope.dotObject.options = [];
 
     $scope.optionBtnAreVisible = false;
 
@@ -25,18 +24,6 @@
     function getOptionSet() {
         optionSetService.getById($route.current.params.id).then(function (data) {
             $scope.optionSet = data;
-
-            // set $scope.dotObject.options as an object
-            try {
-                if (data.options == '' || data.options == null)
-                    $scope.dotObject.options = [];
-                else
-                    $scope.dotObject.options = JSON.parse(data.options);
-            }
-            catch (err) {
-                $scope.dotObject.options = [];
-                alert(err + ' for Options property of entity ' + data.name);
-            };
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -48,11 +35,11 @@
         if (form.$valid) {
 
             // remove description property if it has no value --> shorter JSON result
-            $scope.dotObject.options.forEach(function (item) {
-                if (item.description == '') delete item.description;
-            });
-
-            $scope.optionSet.options = JSON.stringify($scope.dotObject.options);
+            if ($scope.optionSet.options) {
+                $scope.optionSet.options.forEach(function (item) {
+                    if (item.description == '') delete item.description;
+                });
+            }
 
             optionSetService.add($scope.optionSet)
                 .then(function (data) {
@@ -62,9 +49,6 @@
                     alert(JSON.stringify(err.data, null, 4));
                 });
         }
-        else {
-            //alert('Invalid form');
-        }
     };
 
     $scope.update = function (form) {
@@ -72,11 +56,9 @@
         if (form.$valid) {
 
             // remove description property if it has no value --> shorter JSON result
-            $scope.dotObject.options.forEach(function (item) {
+            $scope.optionSet.options.forEach(function (item) {
                 if (item.description == '') delete item.description;
             });
-
-            $scope.optionSet.options = JSON.stringify($scope.dotObject.options);
 
             optionSetService.update($scope.optionSet)
                 .then(function (data) {
@@ -85,9 +67,6 @@
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
                 });
-        }
-        else {
-            //alert('Invalid form');
         }
     };
 
@@ -105,12 +84,8 @@
 
     $scope.addOption = function () {
         if ($scope.newOptionValue) {
-            if (getIndex($scope.dotObject.options, 'name', $scope.newOptionValue) == -1)
-                $scope.dotObject.options.push({ name: $scope.newOptionValue });
-            else {
-                alert('Duplicate value!');
-                return false;
-            }
+            if (!$scope.optionSet.options) $scope.optionSet.options = [];
+            $scope.optionSet.options.push({ name: $scope.newOptionValue });
         } else {
             alert("Enter a value and then press the button!");
             return;
@@ -134,7 +109,7 @@
             e.stopPropagation();
         };
 
-        $scope.dotObject.options.splice(idx, 1);
+        $scope.optionSet.options.splice(idx, 1);
     };
 
     $scope.optionUp = function (oldIdx, option, e) {
@@ -145,7 +120,7 @@
         };
 
         var newIdx = oldIdx - 1, tmp;
-        var options = $scope.dotObject.options; 
+        var options = $scope.optionSet.options;
 
         var optionsLength = options.length;
 
@@ -163,12 +138,11 @@
             };
             options[newIdx] = tmp;
         }
-        // options is just another reference to $scope.dotObject.options;
-        // so we don't have to switch back (e.g. $scope.dotObject.options = options)
+        // options is just another reference to $scope.optionSet.options;
+        // so we don't have to switch back (e.g. $scope.optionSet.options = options)
     }
 
     $scope.optionDown = function (oldIdx, option, e) {
-        //alert(JSON.stringify(option));
         // to not expand the panel at the end of action
         if (e) {
             e.preventDefault();
@@ -176,7 +150,7 @@
         };
 
         var newIdx = oldIdx + 1, tmp;
-        var options = $scope.dotObject.options;
+        var options = $scope.optionSet.options;
 
         var optionsLength = options.length;
 
@@ -194,8 +168,8 @@
             };
             options[newIdx] = tmp;
         }
-        // options is just another reference to $scope.dotObject.options;
-        // so we don't have to switch back (e.g. $scope.dotObject.options = options)
+        // options is just another reference to $scope.optionSet.options;
+        // so we don't have to switch back (e.g. $scope.optionSet.options = options)
     }
 
     // helper functions
