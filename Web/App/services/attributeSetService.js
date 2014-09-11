@@ -3,12 +3,13 @@
     var factory = {};
     var rootUrl = '/api/attributeSets/';
 
-    factory.add = function (item) {
+    factory.create = function (item) {
         return $http.post(rootUrl, item);
     };
 
     factory.getAll = function () {
-        return $http.get(rootUrl + '?lang=' + $translate.use()).then(function (result) {
+        //return $http.get(rootUrl + '?lang=' + $translate.use()).then(function (result) {
+        return $http.get(rootUrl).then(function (result) {
             return result.data;
         });
     };

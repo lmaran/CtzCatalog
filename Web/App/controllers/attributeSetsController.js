@@ -10,10 +10,10 @@
             // get the index for selected item
             var i = 0;
             for (i in $scope.attributeSets) {
-                if ($scope.attributeSets[i].attributeSetId == item.attributeSetId) break;
+                if ($scope.attributeSets[i].id == item.id) break;
             };
 
-            attributeSetService.delete(item.attributeSetId).then(function () {
+            attributeSetService.delete(item.id).then(function () {
                 $scope.attributeSets.splice(i, 1);
             })
             .catch(function (err) {
@@ -35,22 +35,6 @@
     function init() {
         attributeSetService.getAll().then(function (data) {
             $scope.attributeSets = data;
-
-
-            // optional --> convert typeDetails from string to object
-            // only if you want to display them  in List view
-            //data.forEach(function (item) {
-            //    try {
-            //        if (item.attributes == '')
-            //            item.attributes = [];
-            //        else
-            //            item.attributes = JSON.parse(item.attributes)
-            //    }
-            //    catch (err) {
-            //        item.attributes = [];
-            //        alert(err + ' for Options property of entity ' + item.name);
-            //    };
-            //});
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));

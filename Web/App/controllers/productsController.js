@@ -10,10 +10,10 @@
             // get the index for selected item
             var i = 0;
             for (i in $scope.products) {
-                if ($scope.products[i].productId == item.productId) break;
+                if ($scope.products[i].id == item.id) break;
             };
 
-            productService.delete(item.productId).then(function () {
+            productService.delete(item.id).then(function () {
                 $scope.products.splice(i, 1);
             })
             .catch(function (err) {

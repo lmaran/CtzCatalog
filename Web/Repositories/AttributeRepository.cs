@@ -12,7 +12,8 @@ using System.Linq.Expressions;
 using Attribute = Web.Models.Attribute; // Type alias
 using MongoDB.Driver;
 using Web.Repositories.Mongo;
-using MongoDB.Driver.Builders; 
+using MongoDB.Driver.Builders;
+using MongoDB.Bson; 
 namespace Web.Repositories
 {
     public class AttributeRepository : IAttributeRepository
@@ -36,8 +37,7 @@ namespace Web.Repositories
 
         public Attribute GetById(string itemId)
         {
-            var query = Query<Attribute>.EQ(x => x.Id, itemId);
-            return _collection.FindOne(query);
+            return _collection.FindOneById(ObjectId.Parse(itemId));
         }
 
         public void Update(Attribute item)

@@ -39,12 +39,12 @@
                     <td>{{ product.attributeSetName }}</td>
                     <td>{{ product.code }}</td>
                     <td>
-                        <a ng-href="/products/{{product.productId}}" >{{product.name}}</a>
+                        <a ng-href="/products/{{product.id}}" >{{product.name}}</a>
                         <!--<span ng-if="product.description" class="glyphicon glyphicon-info-sign" data-placement="top" data-trigger="hover" html="true" data-content="{{product.attributes}}" bs-popover></span>-->
                         <i class="glyphicon glyphicon-info-sign" ng-if="product.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{product.description}}"></i>
                     </td>
                     
-                    <td>{{ product.attributes }}</td>
+                    <td>{{ product.attributes.count() }}</td>
                     <td>
                         <a ng-click="delete(product)" >delete</a>
                     </td>

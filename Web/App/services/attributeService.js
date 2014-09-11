@@ -8,7 +8,8 @@
     };
 
     factory.getAll = function () {
-        return $http.get(rootUrl + '?lang=' + $translate.use()).then(function (result) {
+        //return $http.get(rootUrl + '?lang=' + $translate.use()).then(function (result) {
+        return $http.get(rootUrl).then(function (result) {
             return result.data;
         });
     };

@@ -38,7 +38,7 @@
 
             // remove already used attributes from the list of available attributes
             $scope.attributeSet.attributes.forEach(function(attr) {
-                var idx = getIndexInArray($scope.attributes, attr.attributeId, "attributeId");
+                var idx = getIndexInArray($scope.attributes, attr.id, "id");
                 if (idx != -1) {
                     $scope.attributes.splice(idx, 1);
                 };
@@ -61,16 +61,16 @@
         promiseToGetAttributes = attributeService.getAll().then(function (data) {
             $scope.attributes = data;
 
-            // optional: loop through the options and set title (for tool-tip on options)
-            // http://sandipchitale.blogspot.ro/2013/03/tip-setting-title-attributes-of-option.html
-            setTimeout(function () {
-                var options = document.querySelectorAll("#optionSetAttributes option");
-                if (options) {
-                    for (var i = 1; i < options.length; i++) {
-                        options[i].title = $scope.attributes[i-1].description;
-                    }
-                }
-            }, 0);
+            //// optional: loop through the options and set title (for tool-tip on options)
+            //// http://sandipchitale.blogspot.ro/2013/03/tip-setting-title-attributes-of-option.html
+            //setTimeout(function () {
+            //    var options = document.querySelectorAll("#optionSetAttributes option");
+            //    if (options) {
+            //        for (var i = 1; i < options.length; i++) {
+            //            options[i].title = $scope.attributes[i-1].description;
+            //        }
+            //    }
+            //}, 0);
 
         })
         .catch(function (err) {
@@ -82,7 +82,7 @@
         $scope.submitted = true;
         if (form.$valid) {
             //alert(JSON.stringify($scope.attributeSet, null, 4));
-            attributeSetService.add($scope.attributeSet)
+            attributeSetService.create($scope.attributeSet)
                 .then(function (data) {
                     $location.path('/attributesets');
                     //Logger.info("Widget created successfully");

@@ -10,9 +10,9 @@
         'title': 'Customers',
         'link': '/customers'
     }, {
-        'title': 'OptionSets',
-        'link': '/optionsets'
-    }, {
+    //    'title': 'OptionSets',
+    //    'link': '/optionsets'
+    //}, {
         'title': 'Attributes',
         'link': '/attributes'
     }, {

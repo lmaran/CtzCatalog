@@ -10,6 +10,9 @@ namespace Web.Repositories.Mongo
         public static class Collections
         {
             public const string Attributes = "Attributes";
+            public const string AttributeSets = "AttributeSets";
+            public const string Products = "Products";
+            public const string Customers = "Customers";
         }
     }
 }

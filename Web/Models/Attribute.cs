@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Web.Models
 {
-    public class Attribute:Entity
+    public class Attribute : Entity
     {
 
         //public string AttributeId { get; set; }

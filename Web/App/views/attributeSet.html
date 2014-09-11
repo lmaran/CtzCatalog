@@ -34,7 +34,7 @@
                     <select id="optionSetAttributes" class="form-control" ng-model="dotObject.selectedAttribute" ng-options="c as c.name for c in attributes">
                         <option value=""></option>
                     </select>
-                    <span class="input-group-btn"><button ng-disabled="attributes.length==0 || dotObject.selectedAttribute==undefined" type="button" class="btn btn-primary" ng-click="addAttribute()"> <span class="glyphicon glyphicon-plus"></span> Add this attribute</button></span>
+                    <span class="input-group-btn"><button type="button" class="btn btn-primary" ng-click="addAttribute()"> <span class="glyphicon glyphicon-plus"></span> Add this attribute</button></span>
                 </div>
             </div>
         </div>
@@ -72,3 +72,6 @@
     </form>
 
 </div>
+
+<!--Attributes: <pre>{{attributes | json}}</pre>-->
+<!--AttributeSet: <pre>{{attributeSet | json}}</pre>-->

@@ -1,7 +1,6 @@
 ﻿using Web.Helpers;
 using Web.Models;
 using AutoMapper;
-using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,89 +8,55 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
+using Web.Repositories.Mongo;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Driver.Builders;
 
 namespace Web.Repositories
 {
-    public class ProductRepository : TableStorage<ProductEntry>, IProductRepository
+    public class ProductRepository : IProductRepository
     {
-        public ProductRepository()
-            : base(tableName: "Products")
-        {
+
+        private readonly MongoCollection<Product> _collection;
+
+        public ProductRepository() {
+            _collection = MongoContext.AppInstance.Database.GetCollection<Product>(MongoConstants.Collections.Products);
         }
 
-        public void Add(Product item)
+
+        public void Create(Product item)
         {
-            //var entity = new DynamicTableEntity();
-            //entity.Properties["Name"] = new EntityProperty(item.Name);
-            //entity.Properties["Description"] = new EntityProperty(item.Description);
-            //entity.Properties["AttributeSetId"] = new EntityProperty(item.AttributeSetId);
-            //entity.Properties["AttributeSetName"] = new EntityProperty(item.AttributeSetName);
-            //entity.Properties["Attributes"] = new EntityProperty(item.Attributes);
-            //entity.PartitionKey = "p";
-            //entity.RowKey = Guid.NewGuid().ToString();
-
-            // met.2
-            Mapper.CreateMap<Product, ProductEntry>()
-                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.Name.GenerateSlug()))
-                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
-            var entity = Mapper.Map<Product, ProductEntry>(item);
-
-            var operation = TableOperation.Insert(entity);
-            Table.Execute(operation);
+            _collection.Insert(item);
         }
 
         public IEnumerable<Product> GetAll()
         {
-            var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "p");
-            var entitiesTable = this.ExecuteQuery(filter);
-
-            // automapper: copy "entitiesTable" to "entitiesVM"
-            Mapper.CreateMap<ProductEntry, Product>()
-                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.RowKey));
-
-
-            var entitiesVM = Mapper.Map<List<ProductEntry>, List<Product>>(entitiesTable.ToList()); //neaparat cu ToList()
-
-            return entitiesVM;
+            return _collection.FindAll();
         }
 
         public Product GetById(string itemId)
         {
-            var entry = this.Retrieve("p", itemId);
-
-            Mapper.CreateMap<ProductEntry, Product>()
-                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.RowKey));
-
-            return Mapper.Map<ProductEntry, Product>(entry);
+            return _collection.FindOneById(ObjectId.Parse(itemId));
         }
 
         public void Update(Product item)
         {
-            Mapper.CreateMap<Product, ProductEntry>()
-                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.ProductId))
-                .ForMember(dest => dest.PartitionKey, opt=> opt.UseValue("p"));
-
-            var entity = Mapper.Map<Product, ProductEntry>(item);
-
-            entity.ETag = "*"; // mandatory for <replace>
-            var operation = TableOperation.Replace(entity);
-            Table.Execute(operation);
+            _collection.Save(item);
         }
 
         public void Delete(string itemId)
         {
-            var item = new ProductEntry();
-            item.PartitionKey = "p";
-            item.RowKey = itemId;
-            this.Delete(item);
+            var query = Query<Product>.EQ(x => x.Id, itemId);
+            _collection.Remove(query);
         }
 
     }
 
 
-    public interface IProductRepository : ITableStorage<ProductEntry>
+    public interface IProductRepository
     {
-        void Add(Product item);
+        void Create(Product item);
         IEnumerable<Product> GetAll();
         Product GetById(string itemId);
         void Update(Product item);

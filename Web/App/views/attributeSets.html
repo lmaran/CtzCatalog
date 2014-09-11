@@ -35,7 +35,7 @@
             <tbody>
                 <tr data-ng-repeat="attributeSet in attributeSets | filter:search">
                     <td>
-                        <a ng-href="/attributesets/{{attributeSet.attributeSetId}}">{{attributeSet.name}}</a>
+                        <a ng-href="/attributesets/{{attributeSet.id}}">{{attributeSet.name}}</a>
                         <i class="glyphicon glyphicon-info-sign" ng-if="attributeSet.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{attributeSet.description}}"></i>
                     </td>
                     <td>

@@ -39,7 +39,7 @@
         <div class="form-group" ng-class="{ 'has-error' : form.selectedAttributeSet.$invalid && submitted }">
             <label class="col-md-2 control-label">AttributeSet</label>
             <div class="col-md-4">
-                <select name="selectedAttributeSet" class="form-control" ng-model="dotObject.selectedAttributeSet" ng-options="c as c.name for c in attributeSets track by c.attributeSetId" ng-change="changeAttributeSet()" required>
+                <select name="selectedAttributeSet" class="form-control" ng-model="dotObject.selectedAttributeSet" ng-options="c as c.name for c in dotObject.attributeSets" ng-change="changeAttributeSet()" required>
                     <option value=""></option>
                 </select>
                 <p ng-show="form.selectedAttributeSet.$invalid  && submitted" class="help-block">This field is required.</p>
@@ -56,18 +56,23 @@
             <div class="form-group">
                 <label class="col-md-2 control-label">{{c.name}}: </label>
                 <div class="col-md-4" ng-switch="c.type">
-                    <any ng-switch-when="OptionSet">
+                    <any ng-switch-when="SingleOption">
                         
-                        <select class="form-control" ng-model="dotObject.attributes[c.attributeId]" ng-options="x.name as x.name for x in dotObject.optionSets[c.typeDetails.optionSetId]">
+                        <select class="form-control" ng-model="c['value']" ng-options="x for x in c.options">
                             <option value=""></option>
                         </select>
+
+                        <!--dotObject.selectedAttributeSet.attributes[{{c.name}}]: <pre>{{c | json}}</pre>-->
+
                     </any>
 
-                    <any ng-switch-when="OptionSet-MultiVal">                       
+                    <any ng-switch-when="MultipleOptions">                       
 
-                        <button type="button" class="btn btn-default" ng-model="dotObject.attributes[c.attributeId]" data-multiple="1" data-placeholder="Select..." ng-options="x.name as x.name for x in dotObject.optionSets[c.typeDetails.optionSetId]" bs-select>
+                        <button type="button" class="btn btn-default" ng-model="c['values']" data-multiple="1" data-placeholder="Select..." ng-options=" x for x in c.options" bs-select>
                             <span class="caret"></span>
                         </button>
+
+                        <!--dotObject.selectedAttributeSet.attributes[{{c.name}}]: <pre>{{c | json}}</pre>-->
                     </any>
 
                     <any ng-switch-default>
@@ -93,9 +98,10 @@
 
     </form>
 
-    <!--<pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
+
     <!--dotObject: <pre>{{dotObject | json}}</pre>-->
     <!--product: <pre>{{product | json}}</pre>-->
-    <!--selectedAttributeSet: <pre>{{selectedAttributeSet | json}}</pre>-->
+    <!--dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
+
 
 </div>
