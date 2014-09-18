@@ -23,5 +23,6 @@ namespace Web.Models
         public bool? AllowCustomValues { get; set; } // allow to add value(s) that are not in the Options list
 
         public string DefaultValue { get; set; }
+        public List<string> DefaultValues { get; set; }
     }
 }

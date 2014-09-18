@@ -15,25 +15,25 @@ namespace Web.Repositories.Mongo
 	{
         private static void RegisterConventions()
         {
-            // set ignoreIfNull for all Types - http://pragmateek.com/reduce-the-size-of-mongodb-documents-generated-from-netc/
+            // conventions for all types - http://pragmateek.com/reduce-the-size-of-mongodb-documents-generated-from-netc/
             ConventionPack pack = new ConventionPack();
-            pack.Add(new IgnoreIfNullConvention(true));
-            ConventionRegistry.Register("Ignore null properties of data", pack, type => true);
+            pack.Add(new IgnoreIfNullConvention(true)); // ignore nullable MongoDB fields
+            pack.Add(new IgnoreExtraElementsConvention(true)); // ignore MongoDB fields which do dot have corresponding C# properties; otherwise we get an error at deserialization
 
-            // ignoreIfNull for a specific Type
+            ConventionRegistry.Register("Ignore null properties and extra elements", pack, type => true);
+
+            // register conventions only for a specific Type:
             //ConventionRegistry.Register("Ignore null properties of data", pack, type => type == typeof(ProductAttribute));
 
             BsonClassMap.RegisterClassMap<Entity>(cm =>
             {
                 cm.AutoMap();
 
-                //cm.SetIdMember(cm.GetMemberMap(c => c.OtherId)); // if the key name <> "Id"
+                //cm.SetIdMember(cm.GetMemberMap(c => c.Id)); // if the key name <> "Id"
 
                 // http://stackoverflow.com/a/24351900/2726725
                 cm.IdMemberMap.SetRepresentation(BsonType.ObjectId);
-                cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance);
-
-                
+                //cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance);
 
                 // Ignore Extra Elements
                 cm.SetIgnoreExtraElements(true);
@@ -42,6 +42,8 @@ namespace Web.Repositories.Mongo
             //BsonClassMap.RegisterClassMap<Attribute>(cm =>
             //{
             //    cm.AutoMap();
+
+            //    cm.SetIgnoreExtraElements(true); // Ignore Extra Elements
 
             //    //cm.GetMemberMap(c => c.Options).SetIgnoreIfNull(true);
             //    //cm.GetMemberMap(c => c.AllowMultiple).SetIgnoreIfNull(true);
@@ -52,7 +54,7 @@ namespace Web.Repositories.Mongo
             //    // we have also to set this property as nullable in the corresponding class
             //    // details: http://stackoverflow.com/a/4895977/2726725
             //    //cm.SetIgnoreExtraElements(true); 
-                
+
             //    //cm.SetExtraElementsMember(cm.GetMemberMap(c => c.Values));
 
             //    //cm.GetMemberMap(c => c.Metadata).SetElementName(MongoConstants.Fields.DataEntity.Metadata).SetIgnoreIfNull(true);

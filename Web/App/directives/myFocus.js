@@ -3,9 +3,11 @@
 app.directive('myFocus', ['$timeout', function($timeout) {
     return {
         restrict: 'A',
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
             scope.$watch(attrs.myFocus, function (newValue, oldValue) {
-                if (newValue) { element[0].focus(); }
+                $timeout(function () {
+                    if (newValue) { element[0].focus(); }
+                }, 0);
             });
             element.bind("blur", function(e) {
                 $timeout(function() {
@@ -18,5 +20,18 @@ app.directive('myFocus', ['$timeout', function($timeout) {
                 }, 0);
             })
         }
+
+
+        //link: function (scope, element, attrs) {
+        //    scope.$watch(attrs.myFocus, function (_focusVal) {
+        //        $timeout(function() {
+        //            _focusVal ? element[0].focus() :
+        //                element[0].blur();
+        //        });
+        //    });
+        //}
+
     }
 }]);
+
+

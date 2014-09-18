@@ -44,7 +44,7 @@
             //alert(JSON.stringify(pickOrder));
             //return false;
 
-            pickOrderService.add(pickOrder)
+            pickOrderService.create(pickOrder)
                 .then(function (data) {
                     $location.path('/pickOrders');
                     //Logger.info("Widget created successfully");

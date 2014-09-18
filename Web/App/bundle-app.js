@@ -4937,7 +4937,7 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
             //alert(JSON.stringify(pickOrder));
             //return false;
 
-            pickOrderService.add(pickOrder)
+            pickOrderService.create(pickOrder)
                 .then(function (data) {
                     $location.path('/pickOrders');
                     //Logger.info("Widget created successfully");
@@ -5373,7 +5373,7 @@ app.controller('customerController', ['$scope', '$window', '$route', 'customerSe
         $scope.submitted = true;
         if (form.$valid) {
             //alert(JSON.stringify($scope.customer));
-            customerService.add($scope.customer)
+            customerService.create($scope.customer)
                 .then(function (data) {
                     $location.path('/customers');
                     //Logger.info("Widget created successfully");
@@ -5528,7 +5528,7 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
                 });
             }
 
-            optionSetService.add($scope.optionSet)
+            optionSetService.create($scope.optionSet)
                 .then(function (data) {
                     $location.path('/optionsets');
                 })
@@ -5750,10 +5750,6 @@ app.controller('attributesController', ['$scope', '$rootScope', '$route', '$loca
 }]);
 ///#source 1 1 /App/controllers/attributeController.js
 app.controller('attributeController', ['$scope', '$window', '$route', 'attributeService', '$location', function ($scope, $window, $route, attributeService, $location) {
-    $scope.isEditMode = $route.current.isEditMode;
-    $scope.isFocusOnName = $scope.isEditMode ? false : true;
-
-    $scope.attribute = {};
 
     //// we need an object (dotObject) to be able to use two-way data binding for ng-models in Select elements
     //// otherwise ue need to send the ng-model value of select control as parameter to a ng-change() function
@@ -5763,12 +5759,12 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
     //// https://groups.google.com/forum/#!topic/angular/7Nd_me5YrHU
     //// https://egghead.io/lessons/angularjs-the-dot
     //// http://stackoverflow.com/questions/17606936/angularjs-dot-in-ng-model
-    //$scope.dotObject = {}
-    //$scope.dotObject.optionSets = [];
-    ////$scope.dotObject.selectedOptionSet = {};
-    ////$scope.dotObject.selectedDefaultValue = {};
+    $scope.dotObject = {};
 
-    ////$scope.attributeBtnAreVisible = false;
+    $scope.isEditMode = $route.current.isEditMode;
+    $scope.isFocusOnName = $scope.isEditMode ? false : true;
+
+    $scope.attribute = {};
 
     if ($scope.isEditMode) {
         $scope.pageTitle = 'Edit attribute';
@@ -5811,6 +5807,22 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
     $scope.update = function (form) {
         $scope.submitted = true;
         if (form.$valid) {
+            // remove DefaultValue if the corresponding option has been removed from list
+            if ($scope.attribute.type == "SingleOption" && $scope.attribute.options.indexOf($scope.attribute.defaultValue) == -1) {
+                $scope.attribute.defaultValue = null;
+            }
+
+            if ($scope.attribute.type == "MultipleOptions") {
+                $scope.attribute.defaultValues.forEach(function (defaultValue) {
+                    if ($scope.attribute.options.indexOf(defaultValue) == -1) {
+                        var index = $scope.attribute.defaultValues.indexOf(defaultValue);    // <-- Not supported in <IE9
+                        if (index !== -1) {
+                            $scope.attribute.defaultValues.splice(index, 1);
+                        }
+                    }
+                });
+            };
+
             attributeService.update($scope.attribute)
                 .then(function (data) {
                     $location.path('/attributes');
@@ -5833,139 +5845,6 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
         $scope.attribute.defaultValue = '';
     }
 
-
-
-    $scope.addOptionOnEnter = function (event) {
-        if (event.which == 13) { //enter key
-            event.preventDefault();
-            event.stopPropagation();
-            $scope.addOption();
-        };
-    }
-
-    $scope.addOption = function () {
-        if ($scope.newOptionValue) {
-            if (!$scope.attribute.options) $scope.attribute.options = [];
-            $scope.attribute.options.push($scope.newOptionValue);
-        } else {
-            alert("Enter a value and then press the button!");
-            return;
-        };
-
-        $scope.newOptionValue = undefined;
-        $scope.isFocusOnOptions = true;
-
-        // remove $$haskKey property from objects
-        // met.1 - use angular.copy: --> $scope.optionSet.options = angular.copy($scope.optionSet.options);
-        // met.2 - alert(angular.toJson($scope.optionSet.options));
-        // met.3 - use 'track by' in ng-repeat (I use that method because it is faster: http://www.codelord.net/2014/04/15/improving-ng-repeat-performance-with-track-by/)
-        // and don't have to clean up the object later on
-
-    };
-
-    $scope.removeOption = function (idx, option, e) {
-        // to not expand the panel at the end of action
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        };
-
-        $scope.attribute.options.splice(idx, 1);
-
-        //remove also from default value (if apply)
-        if ($scope.attribute.defaultValue == option)
-            $scope.attribute.defaultValue = '';
-    };
-
-    $scope.optionUp = function (oldIdx, option, e) {
-        // to not expand the panel at the end of action
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        };
-
-        var newIdx = oldIdx - 1, tmp;
-        var options = $scope.attribute.options;
-
-        var optionsLength = options.length;
-
-        if (oldIdx > 0) {
-            tmp = options[newIdx];
-            options[newIdx] = options[oldIdx];
-            options[oldIdx] = tmp;
-        } else { // oldIndex is first position
-            newIdx = optionsLength - 1; // circular list
-            tmp = options[oldIdx];
-
-            // move all remaining options one position up
-            for (var i = 1; i <= optionsLength; i++) {
-                options[i - 1] = options[i];
-            };
-            options[newIdx] = tmp;
-        }
-        // options is just another reference to $scope.optionSet.options;
-        // so we don't have to switch back (e.g. $scope.optionSet.options = options)
-    }
-
-    $scope.optionDown = function (oldIdx, option, e) {
-        // to not expand the panel at the end of action
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        };
-
-        var newIdx = oldIdx + 1, tmp;
-        var options = $scope.attribute.options;
-
-        var optionsLength = options.length;
-
-        if (oldIdx < optionsLength - 1) {
-            tmp = options[newIdx];
-            options[newIdx] = options[oldIdx];
-            options[oldIdx] = tmp;
-        } else { // oldIndex is last position
-            newIdx = 0; // circular list
-            tmp = options[oldIdx];
-
-            // move all remaining options one position down
-            for (var i = (optionsLength - 1) ; i > 0; i--) {
-                options[i] = options[i - 1];
-            };
-            options[newIdx] = tmp;
-        }
-        // options is just another reference to $scope.optionSet.options;
-        // so we don't have to switch back (e.g. $scope.optionSet.options = options)
-    }
-
-
-    // helper functions
-
-
-    //// find object in array (objects with one level depth)
-    //function getObject(data, propertyName, propertyValue) {
-    //    var item = null;
-    //    for (i = 0; i < data.length; i++) {
-    //        if (data[i][propertyName] === propertyValue) {
-    //            item = data[i];
-    //            break;
-    //        };
-    //    };
-    //    return item;
-    //}
-
-    //// set 'options' as an object
-    //function convertToObject(str) {
-    //    try {
-    //        if (str == '' || str == null)
-    //            return null;
-    //        else
-    //            return JSON.parse(str);
-    //    }
-    //    catch (err) {
-    //        alert(err);
-    //        return null;
-    //    };
-    //}
 
 }]);
 ///#source 1 1 /App/controllers/attributeSetsController.js
@@ -6277,7 +6156,7 @@ app.factory('pickOrderService', ['$http', function ($http) {
     var factory = {};
     var rootUrl = '/api/pickOrders/';
 
-    factory.add = function (item) {
+    factory.create = function (item) {
         return $http.post(rootUrl, item);
     };
 
@@ -6310,7 +6189,7 @@ app.factory('customerService', ['$http', function ($http) {
     var factory = {};
     var rootUrl = '/api/customers/';
 
-    factory.add = function (item) {
+    factory.create = function (item) {
         return $http.post(rootUrl, item);
     };
 
@@ -6343,7 +6222,7 @@ app.factory('optionSetService', ['$http', '$translate', function ($http, $transl
     var factory = {};
     var rootUrl = '/api/optionSets/';
 
-    factory.add = function (item) {
+    factory.create = function (item) {
         return $http.post(rootUrl, item);
     };
 
@@ -6510,9 +6389,11 @@ http://stackoverflow.com/a/17739731/2726725
 app.directive('myFocus', ['$timeout', function($timeout) {
     return {
         restrict: 'A',
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
             scope.$watch(attrs.myFocus, function (newValue, oldValue) {
-                if (newValue) { element[0].focus(); }
+                $timeout(function () {
+                    if (newValue) { element[0].focus(); }
+                }, 0);
             });
             element.bind("blur", function(e) {
                 $timeout(function() {
@@ -6525,5 +6406,232 @@ app.directive('myFocus', ['$timeout', function($timeout) {
                 }, 0);
             })
         }
+
+
+        //link: function (scope, element, attrs) {
+        //    scope.$watch(attrs.myFocus, function (_focusVal) {
+        //        $timeout(function() {
+        //            _focusVal ? element[0].focus() :
+        //                element[0].blur();
+        //        });
+        //    });
+        //}
+
     }
+}]);
+
+
+
+///#source 1 1 /App/directives/inPlaceEditText.js
+// Usage: <ANY in-place-edit-text value="widget.name"> 
+app.directive('inPlaceEditText', [function () {
+    return {
+        restrict: 'A',
+        scope: { value: '=' },
+        template: '<span class="inplaceedit-child0 active" ng-click="edit()">' +
+                        '{{value}}' +
+                        '<span class="inplaceedit-icon">&#x270f;</span>' +
+                  '</span>' +
+                  '<input class="inplaceedit-child1" ng-model="value"></input>',
+
+        link: function ($scope, element, attrs) {
+            var spanElement = angular.element(element.children()[0]);
+            var inputElement = angular.element(element.children()[1]);
+
+            // ng-click handler to activate edit-in-place
+            $scope.edit = function () {
+                spanElement.removeClass('active');
+                inputElement.addClass('active');
+
+                inputElement[0].focus();
+            };
+
+            inputElement.bind('blur', function () {
+                spanElement.addClass('active');
+                inputElement.removeClass('active');
+
+                if (inputElement.val() == '') {
+                    $scope.value = 'New widget'; // Monica's spec.
+                };
+            });
+
+            element.bind("keydown keypress", function (event) {
+                if (event.keyCode === 13) {
+                    // alert('enter');
+                };
+                if (event.keyCode == 27) {
+                    // alert('escape');
+                };
+            });
+
+        }
+    };
+}]);
+///#source 1 1 /App/directives/editableSimpleList.js
+// Usage: <editable-simple-list items="attribute.options" />
+app.directive('editableSimpleList', [function () {
+    return {
+        restrict: 'E',
+        scope: { items: '=' },
+        templateUrl: '/App/templates/editableSimpleList.tpl.html',
+
+
+        // without this construction Angular throw an "Unknown provider" message when we try to use the $scope variable inside the function
+        controller: ['$scope', function ($scope) {
+
+            // initialize variables here
+            $scope.dotObject = {};
+            $scope.dotObject.modifiedItem = '';
+
+            $scope.items = $scope.items || [];
+
+            $scope.isVisibleAddNewItem = false;
+
+            $scope.isFocusOnAddItem = false;
+            $scope.isFocusOnEditItem = false;
+
+            $scope.selectedIndex = -1; //no item selected
+
+            $scope.isItemInEditMode = false;
+
+
+            $scope.addItem = function () {
+                var items = $scope.items;
+
+                if ($scope.newItemValue) {
+                    items.push($scope.newItemValue);
+                } else {
+                    alert("Enter a value and then press the button!");
+                    return;
+                };
+
+                $scope.newItemValue = undefined;
+                $scope.isFocusOnAddItem = true;
+
+                // remove $$haskKey property from objects
+                // met.1 - use angular.copy: --> $scope.itemSet.items = angular.copy($scope.itemSet.items);
+                // met.2 - alert(angular.toJson($scope.itemSet.items));
+                // met.3 - use 'track by' in ng-repeat (I use that method because it is faster: http://www.codelord.net/2014/04/15/improving-ng-repeat-performance-with-track-by/)
+                // and don't have to clean up the object later on
+            };
+
+            // toggle selection for a given item by name 
+            // http://stackoverflow.com/a/14520103/2726725
+            $scope.toggleSelection = function toggleSelection(currentIndex) {
+                $scope.isVisibleAddNewItem = false;
+
+                if ($scope.selectedIndex == currentIndex)
+                    $scope.selectedIndex = -1;
+                else
+                    $scope.selectedIndex = currentIndex;
+            };
+
+            $scope.addItemOnEnter = function (e) {
+                if (e.which == 13) { //enter key
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $scope.addItem();
+                };
+            }
+
+            $scope.updateItemOnEnter = function (idx, item, e) {
+                if (e.which == 13) { //enter key
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $scope.updateItem(idx, item, e);
+                };
+            }
+
+
+            $scope.editItem = function (idx, item, e) {
+                $scope.isItemInEditMode = true;
+                $scope.dotObject.modifiedItem = item;
+                $scope.isFocusOnEditItem = true;
+            };
+
+            $scope.cancelItem = function (idx, item, e) {
+                $scope.isItemInEditMode = false;
+                $scope.dotObject.modifiedItem = '';
+                $scope.isFocusOnEditItem = false;
+            };
+
+            $scope.updateItem = function (idx, item, e) {
+                $scope.items[idx] = $scope.dotObject.modifiedItem;
+
+                $scope.isItemInEditMode = false;
+                $scope.dotObject.modifiedItem = '';
+            };
+
+            $scope.removeItem = function (idx, item, e) {
+                $scope.items.splice(idx, 1);
+
+                // instead of clear selection, we are selecting the next item in list (allowing so to easy delete multiple records)
+                $scope.selectedIndex = idx;
+            };
+
+            $scope.itemUp = function () {
+
+                var items = $scope.items;
+                var oldIdx = $scope.selectedIndex;
+                var newIdx = oldIdx - 1, tmp;
+
+                var itemsLength = items.length;
+
+                if (oldIdx > 0) {
+                    tmp = items[newIdx];
+                    items[newIdx] = items[oldIdx];
+                    items[oldIdx] = tmp;
+                } else { // oldIndex correspond to first position
+                    newIdx = itemsLength - 1; // circular list
+                    tmp = items[oldIdx];
+
+                    // move all remaining items one position up
+                    for (var i = 1; i <= itemsLength; i++) {
+                        items[i - 1] = items[i];
+                    };
+                    items[newIdx] = tmp;
+                };
+
+                // <items> is just another reference to $scope.items;
+                // so we don't have to switch back (e.g. $scope.items = items)
+
+                // update selectedIndex to the new index
+                $scope.selectedIndex = newIdx;
+            }
+
+            $scope.itemDown = function () {
+
+                var items = $scope.items;
+                var oldIdx = $scope.selectedIndex;
+                var newIdx = oldIdx + 1, tmp;
+
+                var itemsLength = items.length;
+
+                if (oldIdx < itemsLength - 1) {
+                    tmp = items[newIdx];
+                    items[newIdx] = items[oldIdx];
+                    items[oldIdx] = tmp;
+                } else { // oldIndex correspond to last position
+                    newIdx = 0; // circular list
+                    tmp = items[oldIdx];
+
+                    // move all remaining items one position down
+                    for (var i = (itemsLength - 1) ; i > 0; i--) {
+                        items[i] = items[i - 1];
+                    };
+                    items[newIdx] = tmp;
+                };
+
+                // <items> is just another reference to $scope.items;
+                // so we don't have to switch back (e.g. $scope.items = items)
+
+                // update selectedIndex to the new index
+                $scope.selectedIndex = newIdx;
+            }
+        }],
+
+        //link: function ($scope, element, attrs) {
+
+        //}
+    };
 }]);

@@ -37,7 +37,8 @@ namespace Web.Repositories
 
         public Product GetById(string itemId)
         {
-            return _collection.FindOneById(ObjectId.Parse(itemId));
+            var xx =  _collection.FindOneById(ObjectId.Parse(itemId));
+            return xx;
         }
 
         public void Update(Product item)

@@ -30,7 +30,7 @@
                     <th>Name</th>
                     <th>Type</th>
                     <!--<th>TypeDetails</th>-->
-                    <th>DefaultValue</th>
+                    <th>DefaultValue(s)</th>
                     <th></th>
                 </tr>
             </thead>
@@ -47,7 +47,16 @@
                         <span ng-if="attribute.type=='OptionSet'">{{ attribute.typeDetails.optionSetId}} [{{ attribute.typeDetails.defaultValue}}] </span>
                         <span ng-if="attribute.type=='OptionSet-MultiVal'">{{ attribute.typeDetails.optionSetId}} [<span ng-repeat="item in  attribute.typeDetails.defaultValues">{{item}}<span ng-if="!$last">, </span></span>] </span>
                     </td>-->
-                    <td>{{ attribute.defaultValue }}</td>
+                    <!--<td>{{ attribute.defaultValue }}</td>-->
+
+                    <td ng-switch="attribute.type">
+                        <!--<span ng-switch-when="SingleOption">{{ attribute.defaultValue }}</span>-->
+                        <span ng-switch-when="MultipleOptions" ng-repeat="item in  attribute.defaultValues">
+                            {{item}}<span ng-if="!$last">, </span>
+                        </span>
+                        <span ng-switch-default>{{ attribute.defaultValue }}</span>
+                    </td>
+
                     <td>
                         <a ng-click="delete(attribute)">delete</a>
                     </td>

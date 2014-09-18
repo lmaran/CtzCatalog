@@ -19,7 +19,7 @@ namespace Web
             // ConfigureWebSockets(app);
 
             // JSON.Net configuration (used by AutoMapper)
-            ConfigureJsonNet();
+            //ConfigureJsonNet();
 
             // Web.API configuration
             ConfigureWebApi(app);

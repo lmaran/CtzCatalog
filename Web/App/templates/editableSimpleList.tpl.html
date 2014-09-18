@@ -1,0 +1,60 @@
+﻿<!--<ul><li ng-repeat="item in items">{{item}}</li></ul>-->
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div ng-show="!isVisibleAddNewItem">
+            <a ng-click="isVisibleAddNewItem=true; selectedIndex=-1; newItemValue=''; isFocusOnAddItem=true; isItemInEditMode = false;">Add new item</a>
+            <span class="pull-right">
+                <span ng-if="selectedIndex != -1">
+                    <button type="button" class="btn btn-xs" ng-click="itemDown()"> <span class="glyphicon glyphicon-arrow-down" title="Move item down"></span></button>
+                    <button type="button" class="btn btn-xs" ng-click="itemUp()"> <span class="glyphicon glyphicon-arrow-up" title="Move item up"></span></button>
+                </span>
+            </span>
+        </div>
+
+        <div ng-show="isVisibleAddNewItem">
+            <div>Add new item</div>
+            <div class="input-group">
+                <input ng-model="newItemValue" type="text" class="form-control" my-focus="isFocusOnAddItem" ng-keypress="addItemOnEnter($event)" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary" ng-click="addItem()"> <span class="glyphicon glyphicon-ok" title="Save item"></span></button>
+                    <button type="button" class="btn" ng-click="isVisibleAddNewItem=false"> <span class="glyphicon glyphicon-remove" title="Cancel (hide this input control)"></span></button>
+                </span>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="panel-body" style="max-height:200px; overflow-y:auto;">
+        
+        <div ng-repeat="item in items">
+            <span class="checkbox">
+                <label ng-hide="selectedIndex == $index && isItemInEditMode">
+                    <input type="checkbox" ng-checked="selectedIndex == $index" ng-click="toggleSelection($index)" />
+                    <span>{{item}}</span>
+                </label>
+
+                <span class="pull-right" ng-show="selectedIndex == $index && !isItemInEditMode">
+                    <button type="button" class="btn btn-xs" ng-click="editItem($index, item, $event)"> <span class="glyphicon glyphicon-pencil" title="Edit item"></span></button>
+                    <button type="button" class="btn btn-xs" ng-click="removeItem($index, item, $event)"> <span class="glyphicon glyphicon-trash" style="color:#ff0000" title="Delete item"></span></button>
+                </span>
+
+                <span class="input-group" ng-show="selectedIndex == $index && isItemInEditMode">
+                    <input ng-model="dotObject.modifiedItem" type="text" class="form-control" my-focus="isFocusOnEditItem" ng-keypress="updateItemOnEnter($index, item, $event)" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary" ng-click="updateItem($index, item, $event)"> <span class="glyphicon glyphicon-ok" title="Save item"></span></button>
+                        <button type="button" class="btn" ng-click="cancelItem($index, item, $event)"> <span class="glyphicon glyphicon-remove" title="Cancel"></span></button>
+                    </span>
+                </span>
+
+            </span>
+        </div>
+
+    </div>
+</div>
+
+isFocusOnEditItem: <pre>{{isFocusOnEditItem}}</pre>
+selectedIndex: <pre>{{selectedIndex}}</pre>
+dotObject.modifiedItem: <pre>{{dotObject.modifiedItem}}</pre>
+isItemInEditMode: <pre>{{isItemInEditMode}}</pre>
+items: <pre>{{items | json}}</pre>

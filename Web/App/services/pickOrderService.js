@@ -3,7 +3,7 @@
     var factory = {};
     var rootUrl = '/api/pickOrders/';
 
-    factory.add = function (item) {
+    factory.create = function (item) {
         return $http.post(rootUrl, item);
     };
 

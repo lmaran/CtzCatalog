@@ -47,9 +47,11 @@
         <file>/App/services/optionSetService.js</file>
         <file>/App/services/attributeService.js</file>
         <file>/App/services/attributeSetService.js</file>
-        
         <file>/App/services/dialogService.js</file>
+        
         <file>/App/directives/myFocus.js</file>
+        <file>/App/directives/inPlaceEditText.js</file>
+        <file>/App/directives/editableSimpleList.js</file>
 
     </files>
 </bundle>

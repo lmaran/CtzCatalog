@@ -41,7 +41,7 @@
                 });
             }
 
-            optionSetService.add($scope.optionSet)
+            optionSetService.create($scope.optionSet)
                 .then(function (data) {
                     $location.path('/optionsets');
                 })
