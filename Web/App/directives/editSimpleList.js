@@ -1,24 +1,24 @@
 ﻿// Usage: <editable-simple-list items="attribute.options" />
-app.directive('editableSimpleList', [function () {
+app.directive('editSimpleList', [function () {
     return {
         restrict: 'E',
         scope: { items: '=' },
-        templateUrl: '/App/templates/editableSimpleList.tpl.html',
+        templateUrl: '/App/templates/editSimpleList.tpl.html',
 
 
-        // without this construction Angular throw an "Unknown provider" message when we try to use the $scope variable inside the function
+        // without this construction Angular throw an "Unknown provider" message when we try to use the $scope variable inside the function (only with minified js)
         controller: ['$scope', function ($scope) {
 
             // initialize variables here
             $scope.dotObject = {};
             $scope.dotObject.modifiedItem = '';
+            $scope.dotObject.isFocusOnEditItem = false;
 
             $scope.items = $scope.items || [];
 
             $scope.isVisibleAddNewItem = false;
 
             $scope.isFocusOnAddItem = false;
-            $scope.isFocusOnEditItem = false;
 
             $scope.selectedIndex = -1; //no item selected
 
@@ -76,13 +76,13 @@ app.directive('editableSimpleList', [function () {
             $scope.editItem = function (idx, item, e) {
                 $scope.isItemInEditMode = true;
                 $scope.dotObject.modifiedItem = item;
-                $scope.isFocusOnEditItem = true;
+                $scope.dotObject.isFocusOnEditItem = true;
             };
 
             $scope.cancelItem = function (idx, item, e) {
                 $scope.isItemInEditMode = false;
                 $scope.dotObject.modifiedItem = '';
-                $scope.isFocusOnEditItem = false;
+                //$scope.isFocusOnEditItem = false;
             };
 
             $scope.updateItem = function (idx, item, e) {
@@ -95,8 +95,11 @@ app.directive('editableSimpleList', [function () {
             $scope.removeItem = function (idx, item, e) {
                 $scope.items.splice(idx, 1);
 
-                // instead of clear selection, we are selecting the next item in list (allowing so to easy delete multiple records)
-                $scope.selectedIndex = idx;
+                // instead to clear selection, select the next item in the list (allowing so to easy delete multiple records)
+                if ($scope.items.length > 0 && idx < $scope.items.length)
+                    $scope.selectedIndex = idx;
+                else
+                    $scope.selectedIndex = -1;
             };
 
             $scope.itemUp = function () {

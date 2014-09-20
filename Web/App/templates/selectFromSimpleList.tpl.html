@@ -1,0 +1,44 @@
+﻿<!--<ul><li ng-repeat="item in itemsIn">{{item}}</li></ul>-->
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div ng-show="!isVisibleAddNewItem">
+            <a ng-click="isVisibleAddNewItem=true; selectedIndex=-1; newItemValue=''; isFocusOnAddItem=true; ">Add</a>
+        </div>
+
+        <div ng-show="isVisibleAddNewItem">
+            <div>Add:</div>
+            <div class="input-group">
+                <select class="form-control" ng-model="dotObject.selectedDefaultItem" ng-options="c as c for c in itemsDif" ng-change="addDefaultItem()">
+                    <option value=""></option>
+                </select>
+                <span class="input-group-btn">
+                    <button type="button" class="btn" ng-click="isVisibleAddNewItem=false"> <span class="glyphicon glyphicon-remove" title="Cancel (hide this input control)"></span></button>
+                </span>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="panel-body" style="max-height:200px; overflow-y:auto;">
+        
+        <div ng-repeat="item in itemsOut">
+            <span class="checkbox">
+                <span class="pull-right" ng-if="selectedIndex == $index">
+                    <button type="button" class="btn btn-xs" ng-click="removeItem($index, item, $event)"> <span class="glyphicon glyphicon-trash" style="color:#ff0000" title="Delete item"></span></button>
+                </span>
+
+                <label ng-hide="selectedIndex == $index && isItemInEditMode">
+                    <input type="checkbox" ng-checked="selectedIndex == $index" ng-click="toggleSelection($index)" />
+                    <span>{{item}}</span>
+                </label>
+            </span>
+        </div>
+
+    </div>
+</div>
+
+<!--selectedIndex: <pre>{{selectedIndex}}</pre>
+itemsIn: <pre>{{itemsIn | json}}</pre>
+itemsOut: <pre>{{itemsOut | json}}</pre>
+itemsDif: <pre>{{itemsDif | json}}</pre>-->

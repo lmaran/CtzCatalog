@@ -23,15 +23,15 @@ namespace Web.App_Start
             container.RegisterType<IAttributeRepository, AttributeRepository>();
             container.RegisterType<IAttributeSetRepository, AttributeSetRepository>();
 
-            var connString = ConfigurationManager.ConnectionStrings["CortizoAzureStorage"].ConnectionString;
-            var storageAccount = CloudStorageAccount.Parse(connString);
+            //var connString = ConfigurationManager.ConnectionStrings["CortizoAzureStorage"].ConnectionString;
+            //var storageAccount = CloudStorageAccount.Parse(connString);
 
-            container.RegisterType<IUniqueIdGenerator, UniqueIdGenerator>(
-                new ContainerControlledLifetimeManager(),
-                new InjectionConstructor(
-                    new BlobOptimisticDataStore(storageAccount, "ctz-idgenerator")
-                ),
-                new InjectionProperty("BatchSize", 3));
+            //container.RegisterType<IUniqueIdGenerator, UniqueIdGenerator>(
+            //    new ContainerControlledLifetimeManager(),
+            //    new InjectionConstructor(
+            //        new BlobOptimisticDataStore(storageAccount, "ctz-idgenerator")
+            //    ),
+            //    new InjectionProperty("BatchSize", 3));
 
             config.DependencyResolver = new UnityResolver(container);
         }

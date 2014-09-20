@@ -158,7 +158,8 @@
     <Content Include="App\controllers\optionSetController.js" />
     <Content Include="App\controllers\productController.js" />
     <Content Include="App\controllers\ordersController.js" />
-    <Content Include="App\directives\editableSimpleList.js" />
+    <Content Include="App\directives\selectFromSimpleList.js" />
+    <Content Include="App\directives\editSimpleList.js" />
     <Content Include="App\directives\inPlaceEditText.js" />
     <Content Include="App\directives\myFocus.js" />
     <Content Include="App\services\attributeService.js" />
@@ -168,7 +169,8 @@
     <Content Include="App\services\customerService.js" />
     <Content Include="App\services\optionSetService.js" />
     <Content Include="App\services\productService.js" />
-    <Content Include="App\templates\editableSimpleList.tpl.html" />
+    <Content Include="App\templates\selectFromSimpleList.tpl.html" />
+    <Content Include="App\templates\editSimpleList.tpl.html" />
     <Content Include="App\views\alert.html" />
     <Content Include="App\views\attributes.html" />
     <Content Include="App\views\attribute.html" />

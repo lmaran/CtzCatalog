@@ -51,7 +51,8 @@
         
         <file>/App/directives/myFocus.js</file>
         <file>/App/directives/inPlaceEditText.js</file>
-        <file>/App/directives/editableSimpleList.js</file>
+        <file>/App/directives/editSimpleList.js</file>
+        <file>/App/directives/selectFromSimpleList.js</file>
 
     </files>
 </bundle>

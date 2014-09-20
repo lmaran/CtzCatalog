@@ -43,7 +43,7 @@
             <div class="form-group">
                 <label class="col-md-2 control-label">Options</label>
                 <div class="col-md-4">
-                    <editable-simple-list items="attribute.options"/>
+                    <edit-simple-list items="attribute.options"/>
                 </div>
             </div>
         </div>
@@ -64,12 +64,13 @@
             </div>
         </div>
 
-        <div ng-show="attribute.type=='MultipleOptions'" class="form-group">
+        <div ng-if="attribute.type=='MultipleOptions'" class="form-group">
             <label class="col-md-2 control-label">Default Options</label>
             <div class="col-md-4">
-                <button type="button" class="btn btn-default" ng-model="attribute.defaultValues" data-multiple="1" data-placeholder="Select..." ng-options="c for c in attribute.options" bs-select>
+                <!--<button type="button" class="btn btn-default" ng-model="attribute.defaultValues" data-multiple="1" data-placeholder="Select..." ng-options="c for c in attribute.options" bs-select>
                     <span class="caret"></span>
-                </button>
+                </button>-->
+                <select-from-simple-list items-in="attribute.options" items-out="attribute.defaultValues" />
             </div>
         </div>
 
