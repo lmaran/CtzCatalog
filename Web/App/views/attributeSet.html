@@ -54,7 +54,39 @@
                         </accordion-heading>
                         <strong>Description:</strong> {{attribute.description}}<br />
                         <strong>Type:</strong> {{attribute.type}} <br />
-                        <strong>TypeDetails:</strong> {{attribute.typeDetails}}
+                        <!--<div ng-switch="attribute.type">
+                            <div ng-switch-when="SingleOption">
+                                <strong>Options:</strong>  <span ng-repeat="item in  attribute.options">
+                                    {{item}}<span ng-if="!$last">, </span>
+                                </span>
+                            </div>
+                            <div ng-switch-when="MultipleOptions">
+                                <strong>Options:</strong>  <span ng-repeat="item in  attribute.options">
+                                    {{item}}<span ng-if="!$last">, </span>
+                                </span>
+                            </div>
+                        </div>-->
+                        <div ng-if="attribute.type=='SingleOption' || attribute.type=='MultipleOptions'">
+                            <strong>Options:</strong>  <span ng-repeat="item in  attribute.options">
+                                {{item}}<span ng-if="!$last">, </span>
+                            </span>
+                        </div>
+
+                        <div ng-if="attribute.type=='Text' && attribute.defaultValue">
+                            <strong>DefaultValue:</strong> {{attribute.defaultValue}} <br />
+                        </div>
+                        <div ng-if="attribute.type=='SingleOption' && attribute.defaultValue">
+                            <strong>DefaultOption:</strong> {{attribute.defaultValue}} <br />
+                        </div>
+                        <div ng-if="attribute.type=='MultipleOptions' && attribute.defaultValues">
+                            <strong>DefaultOptions:</strong> <span ng-repeat="item in  attribute.defaultValues">
+                                {{item}}<span ng-if="!$last">, </span>
+                            </span> <br />
+                        </div>
+
+
+
+
                     </accordion-group>
                 </accordion>
 
