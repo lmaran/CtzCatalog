@@ -27,9 +27,16 @@ app.directive('editSimpleList', [function () {
 
             $scope.addItem = function () {
                 var items = $scope.items;
+                var newItem = $scope.newItemValue;
 
-                if ($scope.newItemValue) {
-                    items.push($scope.newItemValue);
+                if (items.indexOf(newItem) != -1) {
+                    alert('This value already exists: ' + newItem);
+                    $scope.isFocusOnAddItem = true; // not necessary when Enter key is used
+                    return;
+                }
+
+                if (newItem) {
+                    items.push(newItem);
                 } else {
                     alert("Enter a value and then press the button!");
                     return;
@@ -82,11 +89,17 @@ app.directive('editSimpleList', [function () {
             $scope.cancelItem = function (idx, item, e) {
                 $scope.isItemInEditMode = false;
                 $scope.dotObject.modifiedItem = '';
-                //$scope.isFocusOnEditItem = false;
             };
 
             $scope.updateItem = function (idx, item, e) {
-                $scope.items[idx] = $scope.dotObject.modifiedItem;
+                var modifiedItem = $scope.dotObject.modifiedItem;
+                if ($scope.items.indexOf(modifiedItem) != -1) {
+                    alert('This value already exists: ' + modifiedItem);
+                    $scope.dotObject.isFocusOnEditItem = true; // not necessary when Enter key is used
+                    return;
+                }
+
+                $scope.items[idx] = modifiedItem;
 
                 $scope.isItemInEditMode = false;
                 $scope.dotObject.modifiedItem = '';
