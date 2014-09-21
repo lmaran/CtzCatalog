@@ -58,9 +58,17 @@ namespace Web.Repositories
         
         public void UpdateAttr(Attribute newAttribute)
         {
+            // http://docs.mongodb.org/manual/reference/operator/update/positional/#update-documents-in-an-array
+
+            //db.AttributeSets.update(
+            //    {"Attributes._id":ObjectId("540df9bebb6023e3cb1e3bf0")},
+            //    {$set:{"Attributes.$.Name":"length22"}},
+            //    {multi:true}
+            //)
+
+
             //var queryAttr = Query<Attribute>.EQ(x => x.Id, newAttribute.Id);
             //var query = Query<AttributeSet>.ElemMatch(x => x.Attributes, builder => queryAttr);
-
             //var update = MongoDB.Driver.Builders.Update.Set("Attributes.$", newAttribute.ToBsonDocument());
             //_collection.Update(query, update, UpdateFlags.Multi);
             
@@ -74,6 +82,29 @@ namespace Web.Repositories
                 {"$set", new BsonDocument("Attributes.$", newAttribute.ToBsonDocument())}
             };
 
+            _collection.Update(query, update, UpdateFlags.Multi);
+        }
+
+
+        public void DeleteAttr(string attributeId)
+        {
+            // http://docs.mongodb.org/manual/reference/operator/update/pull/#remove-items-from-an-array-of-documents
+
+            //db.AttributeSets.update(
+            //    {"Attributes._id":ObjectId("541f113dbb6023e3cb1e3bfd")},
+            //    {$pull:{"Attributes":{"_id" : ObjectId("541f113dbb6023e3cb1e3bfd")}}},
+            //    {multi:true}
+            //)
+            //obs: linia de query(prima linie) putea fi si goala: {}
+
+
+            var query = new QueryDocument { 
+                // {"Attributes._id", ObjectId.Parse(attributeId)} // ok but not necessary in this case
+            };
+
+            var update = new UpdateDocument {
+                {"$pull", new BsonDocument("Attributes", new BsonDocument("_id", ObjectId.Parse(attributeId)))}
+            };
 
             _collection.Update(query, update, UpdateFlags.Multi);
         }
@@ -90,6 +121,7 @@ namespace Web.Repositories
         void Delete(string itemId);
 
         void UpdateAttr(Attribute newAttribute);
+        void DeleteAttr(string itemId);
     }
 
 }

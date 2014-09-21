@@ -11,8 +11,8 @@ namespace Web
     {
         public static void ConfigureDatabase()
         {
-            //var appContext = new MongoContext(ConfigurationManager.AppSettings.Get("Cortizo_Local_URI"));
-            var appContext = new MongoContext(ConfigurationManager.AppSettings.Get("Cortizo_Azure_URI"));
+            var appContext = new MongoContext(ConfigurationManager.AppSettings.Get("Cortizo_Local_URI"));
+            //var appContext = new MongoContext(ConfigurationManager.AppSettings.Get("Cortizo_Azure_URI"));
             MongoContext.RegisterAppContext(appContext);
         }
     }

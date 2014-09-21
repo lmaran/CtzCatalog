@@ -68,6 +68,9 @@ namespace Web.Controllers
         public void Delete(string itemId)
         {
             _repository.Delete(itemId);
+
+            // update AttributeSets
+            _attributeSetRepository.DeleteAttr(itemId);
         }
 
     }
