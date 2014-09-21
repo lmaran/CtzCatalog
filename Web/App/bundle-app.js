@@ -6559,7 +6559,6 @@ app.directive('editSimpleList', [function () {
             $scope.cancelItem = function (idx, item, e) {
                 $scope.isItemInEditMode = false;
                 $scope.dotObject.modifiedItem = '';
-                //$scope.isFocusOnEditItem = false;
             };
 
             $scope.updateItem = function (idx, item, e) {
