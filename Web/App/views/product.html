@@ -34,7 +34,18 @@
             </div>
         </div>
 
-        <!--attributeSets: <pre>{{attributeSets | json}}</pre>-->
+        <div class="form-group" ng-class="{ 'has-error' : form.um.$invalid && submitted }">
+            <label class="col-md-2 control-label">UM</label>
+            <div class="col-md-4">
+                <select name="um" class="form-control" ng-model="product.um" required>
+                    <option value=""></option>
+                    <option value="Buc">Buc</option>
+                    <option value="Set">Set</option>
+                    <option value="Bare">Bare</option>
+                </select>
+                <p ng-show="form.um.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
 
         <div class="form-group" ng-class="{ 'has-error' : form.selectedAttributeSet.$invalid && submitted }">
             <label class="col-md-2 control-label">AttributeSet</label>
@@ -99,9 +110,9 @@
     </form>
 
 
-    <!--dotObject: <pre>{{dotObject | json}}</pre>
+    dotObject: <pre>{{dotObject | json}}</pre>
     product: <pre>{{product | json}}</pre>
-    dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
+    dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>
 
 
 </div>

@@ -9,8 +9,9 @@ namespace Web.Models
     public class Product : Entity
     {
         public string Name { get; set; }
-        public string Description { get; set; }
         public string Code { get; set; }
+        public string Description { get; set; }
+        public string UM { get; set; }
         public string AttributeSetId { get; set; }
         public string AttributeSetName { get; set; }
         public List<ProductAttribute> Attributes { get; set; }

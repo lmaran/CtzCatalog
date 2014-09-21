@@ -2,7 +2,7 @@
     $scope.isEditMode = $route.current.isEditMode;
     $scope.isFocusOnName = $scope.isEditMode ? false : true;
 
-    $scope.product = {};
+    $scope.product = {um:'Buc'};
     $scope.attributeSets = [];
 
     $scope.dotObject = {};
