@@ -1,4 +1,6 @@
-﻿using Web.Helpers;
+﻿using Attribute = Web.Models.Attribute; // Type alias
+
+using Web.Helpers;
 using Web.Models;
 using AutoMapper;
 using Newtonsoft.Json;
@@ -52,6 +54,27 @@ namespace Web.Repositories
             _collection.Remove(query);
         }
 
+        
+        // ***************** services ****************
+        
+        public void UpdateAttrName(Attribute newAttribute)
+        {
+            //var queryAttr = Query<Attribute>.EQ(x => x.Id, newAttribute.Id);
+            //var query = Query<Product>.ElemMatch(x => x.Attributes, builder => queryAttr);
+
+            //var update = MongoDB.Driver.Builders.Update.Set("Attributes.$.Name", newAttribute.Name);
+
+            var query = new QueryDocument { 
+                {"Attributes._id", ObjectId.Parse(newAttribute.Id)}
+            };
+
+            // the positional $ operator acts as a placeholder for the first element that matches the query document
+            var update = new UpdateDocument {
+                {"$set", new BsonDocument("Attributes.$.Name", newAttribute.Name)}
+            };
+
+            _collection.Update(query, update,UpdateFlags.Multi);
+        }
     }
 
 
@@ -62,5 +85,7 @@ namespace Web.Repositories
         Product GetById(string itemId);
         void Update(Product item);
         void Delete(string itemId);
+
+        void UpdateAttrName(Attribute newAttribute);
     }
 }

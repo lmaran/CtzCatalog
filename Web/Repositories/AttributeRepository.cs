@@ -1,4 +1,6 @@
-﻿using Web.Helpers;
+﻿using Attribute = Web.Models.Attribute; // Type alias
+
+using Web.Helpers;
 using Web.Models;
 using AutoMapper;
 using Newtonsoft.Json;
@@ -9,7 +11,6 @@ using System.Net;
 using System.Web;
 using System.Web.Http;
 using System.Linq.Expressions;
-using Attribute = Web.Models.Attribute; // Type alias
 using MongoDB.Driver;
 using Web.Repositories.Mongo;
 using MongoDB.Driver.Builders;

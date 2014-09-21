@@ -14,10 +14,14 @@ namespace Web.Controllers
     public class AttributeController : ApiController
     {
         private readonly IAttributeRepository _repository;
+        private readonly IProductRepository _productRepository;
+        private readonly IAttributeSetRepository _attributeSetRepository;
 
-        public AttributeController(IAttributeRepository repository)
+        public AttributeController(IAttributeRepository repository, IProductRepository productRepository, IAttributeSetRepository attributeSetRepository)
         {
             this._repository = repository;
+            this._productRepository = productRepository;
+            this._attributeSetRepository = attributeSetRepository;
         }
 
 
@@ -42,7 +46,22 @@ namespace Web.Controllers
         [HttpPut, Route]
         public void Update(Attribute item)
         {
+            var oldItem = _repository.GetById(item.Id);
+
             _repository.Update(item);
+
+            var comparer = new AttributeComparer();
+            if (!comparer.Equals(item, oldItem))
+            {
+                // update AttributeSets
+                _attributeSetRepository.UpdateAttr(item);
+
+                if (item.Name != oldItem.Name)
+                {
+                    // update Products
+                    _productRepository.UpdateAttrName(item);
+                }
+            }
         }
 
         [HttpDelete, Route("{itemId}")]
