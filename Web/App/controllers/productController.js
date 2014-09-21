@@ -39,20 +39,9 @@
 
         $q.all([promiseToGetProduct, promiseToGetAttributeSets])
         .then(function (result) {
-            //// remove already used attributes from the list of available attributes
-            //$scope.attributeSet.attributes.forEach(function (attr) {
-            //    var idx = getIndexInArray($scope.attributes, attr.attributeId, "attributeId");
-            //    if (idx != -1) {
-            //        $scope.attributes.splice(idx, 1);
-            //    };
-            //});
 
             // set selected AttributeSet
             $scope.dotObject.selectedAttributeSet = getObject($scope.attributeSets, 'id', $scope.product.attributeSetId);
-
-            //$scope.selectedAttributeSet = $scope.attributeSets[0].attributeSetId;
-
-            //getOptionSets();
 
             // setCurrentValues
             $scope.dotObject.attributes = $scope.product.attributes;
@@ -69,11 +58,7 @@
 
     function getProduct() {
         promiseToGetProduct = productService.getById($route.current.params.id).then(function (data) {
-            $scope.product = data;
-            //$scope.product.attributes = JSON.parse(data.attributes);
-
-            //$scope.selectedAttributeSet = getObject($scope.attributeSets, 'attributeSetId', data.attributeSetId);
-            
+            $scope.product = data;           
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -82,17 +67,7 @@
 
     function getAttributeSets() {
         promiseToGetAttributeSets = attributeSetService.getAll().then(function (data) {
-            //data.forEach(function (attributeSet) {
-            //    attributeSet.attributes.forEach(function (attribute) {
-            //        if (attribute.typeDetails)
-            //            attribute.typeDetails = JSON.parse(attribute.typeDetails);
-            //    });
-            //});
-
-            //alert(JSON.stringify(data, null, 4));
-
             $scope.attributeSets = data;
-            $scope.dotObject.attributeSets = data;
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -112,21 +87,21 @@
             // remove 'unused' attributes (with no value) and add to product
             $scope.product.attributes = [];
             $scope.dotObject.selectedAttributeSet.attributes.forEach(function (node) {
-
                 if (node.value || node.values) {
+
                     // return just some properties
                     var attr = {};
                     attr.id = node.id;
                     attr.name = node.name;
 
                     if (node.value) {
-                        attr.value = node.value; // Text, SingleOption
+                        attr.value = node.value; // Text or SingleOption
                     } else {
                         attr.values = node.values; // MultiOptions
                     };
 
                     $scope.product.attributes.push(attr);
-                };
+                }
             });
 
             // save product
@@ -155,13 +130,14 @@
             $scope.product.attributes = [];
             $scope.dotObject.selectedAttributeSet.attributes.forEach(function (node) {
                 if (node.value || node.values) {
+
                     // return just some properties
                     var attr = {};
                     attr.id = node.id;
                     attr.name = node.name;
 
                     if (node.value) {
-                        attr.value = node.value; // Text, SingleOption
+                        attr.value = node.value; // Text or SingleOption
                     } else {
                         attr.values = node.values; // MultiOptions
                     };
@@ -185,7 +161,6 @@
     };
 
     $scope.cancel = function () {
-        //$location.path('/widgets')
         $window.history.back();
     }
 
@@ -194,68 +169,32 @@
         $scope.dotObject.optionSets = {};
         $scope.dotObject.attributes = {};
 
-        // set selected AttributeSet
-        //$scope.dotObject.selectedAttributeSet = getObject($scope.attributeSets, 'id', $scope.product.attributeSetId);
-
-        //getOptionSets();
         setDefaultAttributeValues();
     }
 
-    //function getOptionSets() {
-    //    // get DDL values for each attribute (for 'optionSet' type only)
-    //    $scope.dotObject.selectedAttributeSet.attributes.forEach(function (attr, idx) {
-    //         if (attr.type == 'OptionSet' || attr.type == 'OptionSet-MultiVal') {
-    //            optionSetService.getById(attr.typeDetails.optionSetId).then(function (data) {
-    //                $scope.dotObject.optionSets[attr.typeDetails.optionSetId] = JSON.parse(data.options);
-    //            })
-    //            .catch(function (err) {
-    //                alert(JSON.stringify(err, null, 4));
-    //            });
-    //        }
-    //    });
-    //}
-
 
     function setDefaultAttributeValues() {
-        // get DDL values for each attribute (for 'optionSet' type only)
+        // set default values for each attribute (field) - every time you change the AttributeSet
         $scope.dotObject.selectedAttributeSet.attributes.forEach(function (attr, idx) {
-            if (attr.type == 'SingleOption' || attr.type == 'MultipleOptions') {
-                // set default value in DDL
-                // TODO - refactor this
-                //if (attr.typeDetails.defaultValue) {
-                //    //$scope.dotObject.attributes[attr.typeDetails.optionSetId] = attr.typeDetails.defaultValue;
-                //    $scope.dotObject.attributes[attr.attributeId] = attr.typeDetails.defaultValue;
-                //}
-
-                //if (attr.typeDetails.defaultValues) {
-                //    //$scope.dotObject.attributes[attr.typeDetails.optionSetId] = attr.typeDetails.defaultValue;
-                //    $scope.dotObject.attributes[attr.attributeId] = attr.typeDetails.defaultValues;
-                //}
-
+            if (attr.type == 'MultipleOptions') {
+                attr.values = attr.defaultValues;
+            } else { // 'Text' or  'SingleOption'
                 attr.value = attr.defaultValue;
             }
         });
     }
 
+
     function setCurrentAttributeValues() {
-        // get DDL values for each attribute (for 'optionSet' type only)
+        // set current values for each attribute (field) - right after load in Edit mode
         $scope.dotObject.selectedAttributeSet.attributes.forEach(function (attr, idx) {
-            if (attr.type == 'SingleOption' || attr.type == 'MultipleOptions') {
-                // set default value in DDL
-
-                var corespondingProductAttribute = getObject($scope.product.attributes, 'id', attr.id);
-                if (corespondingProductAttribute) {
-                    if (attr.type == 'MultipleOptions')
-                        attr.values = corespondingProductAttribute.values;
-                    else
-                        attr.value = corespondingProductAttribute.value;
-                } else {
-                    //attr.value = null;
-                }
-
-                //alert(JSON.stringify(attr, null, 4));
-                
-            }
+            var corespondingProductAttribute = getObject($scope.product.attributes, 'id', attr.id);
+            if (corespondingProductAttribute) {
+                if (attr.type == 'MultipleOptions')
+                    attr.values = corespondingProductAttribute.values;
+                else
+                    attr.value = corespondingProductAttribute.value;
+            } // else attr.value = null;
         });
     }
 

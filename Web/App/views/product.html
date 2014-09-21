@@ -39,7 +39,7 @@
         <div class="form-group" ng-class="{ 'has-error' : form.selectedAttributeSet.$invalid && submitted }">
             <label class="col-md-2 control-label">AttributeSet</label>
             <div class="col-md-4">
-                <select name="selectedAttributeSet" class="form-control" ng-model="dotObject.selectedAttributeSet" ng-options="c as c.name for c in dotObject.attributeSets" ng-change="changeAttributeSet()" required>
+                <select name="selectedAttributeSet" class="form-control" ng-model="dotObject.selectedAttributeSet" ng-options="c as c.name for c in attributeSets" ng-change="changeAttributeSet()" required>
                     <option value=""></option>
                 </select>
                 <p ng-show="form.selectedAttributeSet.$invalid  && submitted" class="help-block">This field is required.</p>
@@ -58,7 +58,7 @@
                 <div class="col-md-4" ng-switch="c.type">
                     <any ng-switch-when="SingleOption">
                         
-                        <select class="form-control" ng-model="c['value']" ng-options="x for x in c.options">
+                        <select class="form-control" ng-model="c.value" ng-options="x for x in c.options">
                             <option value=""></option>
                         </select>
 
@@ -68,7 +68,7 @@
 
                     <any ng-switch-when="MultipleOptions">                       
 
-                        <button type="button" class="btn btn-default" ng-model="c['values']" data-multiple="1" data-placeholder="Select..." ng-options=" x for x in c.options" bs-select>
+                        <button type="button" class="btn btn-default" ng-model="c.values" data-multiple="1" data-placeholder="Select..." ng-options=" x for x in c.options" bs-select>
                             <span class="caret"></span>
                         </button>
 
@@ -76,7 +76,7 @@
                     </any>
 
                     <any ng-switch-default>
-                        <input class="form-control" ng-model="dotObject.attributes[c.name]" type="text" name="name" />
+                        <input class="form-control" ng-model="c.value" type="text" name="name" />
                     </any>
                 </div>
 
@@ -99,9 +99,9 @@
     </form>
 
 
-    <!--dotObject: <pre>{{dotObject | json}}</pre>-->
-    <!--product: <pre>{{product | json}}</pre>-->
-    <!--dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
+    <!--dotObject: <pre>{{dotObject | json}}</pre>
+    product: <pre>{{product | json}}</pre>
+    dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
 
 
 </div>
