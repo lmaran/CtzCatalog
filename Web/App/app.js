@@ -11,8 +11,8 @@ var app = angular.module('ctzCatalog', [
     'monospaced.elastic',
     'mgcrea.ngStrap',
     'ui.bootstrap.accordion',
-    'ui.bootstrap.tpls' // or add only the related templates: 'template/accordion/accordion-group.html', 'template/accordion/accordion.html',
-    
+    'ui.bootstrap.tpls', // or add only the related templates: 'template/accordion/accordion-group.html', 'template/accordion/accordion.html',
+    'angularFileUpload'
 
 ]);
 

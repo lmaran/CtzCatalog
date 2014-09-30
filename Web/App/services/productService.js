@@ -27,6 +27,20 @@
         return $http.delete(rootUrl + encodeURIComponent(itemId));
     };
 
+    // related services
+
+    factory.deleteImage = function (imageName) {
+        // var deleteUrl = rootUrl + encodeURIComponent(productId) + "/images/" + encodeURIComponent(imageId);
+
+        // We need an ending slash "/" because imageId is a file name and contains a dot (".") that prevent us to hit the server 
+        // With dot, the request behaves like a request for a static file, which don't expect to be served by a managed module
+        // Of course, we can also enable managed module for all request, but that implies a performance degradation: http://forums.asp.net/t/1950107.aspx?WebAPI+2+Route+Attribute+with+string+parameter+containing+a+period+doesn+t+bind
+        // return $http.delete(deleteUrl + "/");
+
+        var imageNameWithoutExtension = imageName.substring(0, imageName.indexOf('.'));
+        return $http.delete(rootUrl + "images/" + imageNameWithoutExtension);
+    };
+
 
     return factory;
 }]);

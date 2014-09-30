@@ -1,5 +1,6 @@
-﻿app.controller('productsController', ['$scope', '$location', 'productService', 'dialogService', function ($scope, $location, productService, dialogService) {
+﻿app.controller('productsController', ['$scope', '$location', 'productService', 'dialogService', '$modal', function ($scope, $location, productService, dialogService, $modal) {
     $scope.products = [];
+    //$scope.selectedProduct
     $scope.errors = {};
 
     init();
@@ -40,4 +41,24 @@
             alert(JSON.stringify(err, null, 4));
         });
     };
+
+
+    // Show a basic modal from a controller
+    //var myModal = $modal({ title: 'My Title', content: 'My Content', show: true });
+
+    // Pre-fetch an external template populated with a custom scope
+    var myOtherModal = $modal({ scope: $scope, template: '/App/templates/showImage.tpl.html', show: false, title: "MyTitle" });
+    // Show when some event occurs (use $promise property to ensure the template has been loaded)
+    $scope.showModal = function (product) {
+        //alert(11);
+        //myOtherModal.title = "MyTitle";
+        $scope.selectedProduct = product;
+        $scope.selectedImgIndex = 0;
+        myOtherModal.$promise.then(myOtherModal.show);
+    };
+
+    $scope.displaySelectedImage = function($index){
+        $scope.selectedImgIndex = $index;
+    };
+
 }]);

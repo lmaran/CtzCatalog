@@ -19,6 +19,44 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label class="col-md-2 control-label">Images </label>
+            <div class="col-md-4">
+                <div class="panel panel-default"  ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="file-drag-over" ng-show="dropSupported">
+                    <!--<div class="panel-heading">Panel heading without title</div>-->
+                    <!--<div class="panel-body">-->
+
+
+                    <div class="panel-body">
+                        <span style="color:#a9a9a9">Drop files here or</span>
+                        <div ng-file-select="onFileSelect($files)" data-multiple="true" accept="image/*" title="Select file" onclick="this.value = null" class="btn btn-default btn-xs">
+                            Select Files
+                        </div>
+                        <div ng-file-drop-available="dropSupported=true" ng-show="!dropSupported">
+                            HTML5 Drop File is not supported!
+                        </div>
+                    </div>
+
+                    <div ng-repeat="item in product.images">
+                        <!--<img ng-src="{{item.rootUrl + '/' + item.sizes[0].name}}" class="img-thumbnail" />-->
+                        <div class="media" style="margin:10px;">
+                            <div class="pull-left">
+                                <img ng-src="{{item.rootUrl + '/' + item.sizes[1].name}}" class="img-thumbnail" width="100px;" />
+                            </div>
+                            <div class="media-body">
+                                <span class="pull-right2" >
+                                    <button ng-if="product.images.length > 1" type="button" class="btn btn-xs" ng-click="itemDown($index)"> <span class="glyphicon glyphicon-arrow-down" title="Move item down"></span></button>
+                                    <button ng-if="product.images.length > 1"  type="button" class="btn btn-xs" ng-click="itemUp($index)"> <span class="glyphicon glyphicon-arrow-up" title="Move item up"></span></button>
+                                    <button type="button" class="btn btn-xs" ng-click="deleteImage(item)"> <span class="glyphicon glyphicon-trash" style="color:#ff0000" title="Delete item"></span></button>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group" ng-class="{ 'has-error' : form.code.$invalid && submitted }">
             <label class="col-md-2 control-label">Code </label>
             <div class="col-md-4">
@@ -59,7 +97,6 @@
 
 
         <!--dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
-
         <!--dotObject.optionSets: <pre>{{dotObject.optionSets | json}}</pre>-->
         <!--dotObject.attributes: <pre>{{dotObject.attributes | json}}</pre>-->
 
@@ -68,7 +105,7 @@
                 <label class="col-md-2 control-label">{{c.name}}: </label>
                 <div class="col-md-4" ng-switch="c.type">
                     <any ng-switch-when="SingleOption">
-                        
+
                         <select class="form-control" ng-model="c.value" ng-options="x for x in c.options">
                             <option value=""></option>
                         </select>
@@ -77,7 +114,7 @@
 
                     </any>
 
-                    <any ng-switch-when="MultipleOptions">                       
+                    <any ng-switch-when="MultipleOptions">
 
                         <button type="button" class="btn btn-default" ng-model="c.values" data-multiple="1" data-placeholder="Select..." ng-options=" x for x in c.options" bs-select>
                             <span class="caret"></span>
@@ -110,9 +147,9 @@
     </form>
 
 
-    dotObject: <pre>{{dotObject | json}}</pre>
-    product: <pre>{{product | json}}</pre>
-    dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>
+    <!--dotObject: <pre>{{dotObject | json}}</pre>-->
+    <!--product: <pre>{{product | json}}</pre>-->
+    <!--dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
 
 
 </div>

@@ -169,6 +169,7 @@
     <Content Include="App\services\customerService.js" />
     <Content Include="App\services\optionSetService.js" />
     <Content Include="App\services\productService.js" />
+    <Content Include="App\templates\showImage.tpl.html" />
     <Content Include="App\templates\selectFromSimpleList.tpl.html" />
     <Content Include="App\templates\editSimpleList.tpl.html" />
     <Content Include="App\views\alert.html" />
@@ -186,6 +187,7 @@
     <Content Include="App\views\optionSet.html" />
     <Content Include="App\views\product.html" />
     <Content Include="App\views\optionSets.html" />
+    <Content Include="Content\orange.png" />
     <Content Include="Content\translates\Flags\blank.gif" />
     <Content Include="Content\translates\Flags\flags.css" />
     <Content Include="Content\translates\Flags\flags.png" />
@@ -255,9 +257,21 @@
     <Content Include="Scripts\bower_components\angular-sanitize\angular-sanitize.min.js.map" />
     <Content Include="Scripts\bower_components\angular-sanitize\bower.json" />
     <Content Include="Scripts\bower_components\angular-sanitize\README.md" />
+    <Compile Include="App_Start\Config.cs" />
+    <Compile Include="Controllers\ImageController.cs" />
+    <Compile Include="Helpers\Img.cs" />
+    <Compile Include="Helpers\RemainingTime.cs" />
+    <Compile Include="Helpers\ResizeImage.cs" />
+    <Compile Include="Models\BlobTransportObject.cs" />
     <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\ImageMeta.cs" />
+    <Compile Include="Repositories\Azure\AzureStorageContext.cs" />
     <Compile Include="Repositories\Mongo\MongoConstants.cs" />
     <Compile Include="Repositories\Mongo\MongoContext.Conventions.cs" />
+    <Content Include="Scripts\bower_components\ng-file-upload\.bower.json" />
+    <Content Include="Scripts\bower_components\ng-file-upload\bower.json" />
+    <Content Include="Scripts\bower_components\ng-file-upload\LICENSE" />
+    <Content Include="Scripts\bower_components\ng-file-upload\README.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -289,6 +303,14 @@
     <Content Include="Scripts\bower_components\angular\angular-csp.css" />
     <Content Include="Scripts\bower_components\angular\angular.js" />
     <Content Include="Scripts\bower_components\angular\angular.min.js" />
+    <Content Include="Scripts\bower_components\ng-file-upload\angular-file-upload-html5-shim.js" />
+    <Content Include="Scripts\bower_components\ng-file-upload\angular-file-upload-html5-shim.min.js" />
+    <Content Include="Scripts\bower_components\ng-file-upload\angular-file-upload-shim.js" />
+    <Content Include="Scripts\bower_components\ng-file-upload\angular-file-upload-shim.min.js" />
+    <Content Include="Scripts\bower_components\ng-file-upload\angular-file-upload.js" />
+    <Content Include="Scripts\bower_components\ng-file-upload\angular-file-upload.min.js" />
+    <Content Include="Scripts\bower_components\ng-file-upload\FileAPI.flash.swf" />
+    <Content Include="Scripts\bower_components\ng-file-upload\FileAPI.min.js" />
     <Content Include="Scripts\custom-version\angular-cookies.js" />
     <Content Include="Scripts\custom-version\angular-route.js" />
     <Content Include="Scripts\custom-version\angular-sanitize.js" />

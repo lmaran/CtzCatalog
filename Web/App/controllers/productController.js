@@ -1,4 +1,4 @@
-﻿app.controller('productController', ['$scope', '$window', '$route', 'productService', 'attributeSetService', 'optionSetService', '$location', '$q', function ($scope, $window, $route, productService, attributeSetService, optionSetService, $location, $q) {
+﻿app.controller('productController', ['$scope', '$window', '$route', 'productService', 'attributeSetService', 'optionSetService', '$location', '$q', '$upload', function ($scope, $window, $route, productService, attributeSetService, optionSetService, $location, $q, $upload) {
     $scope.isEditMode = $route.current.isEditMode;
     $scope.isFocusOnName = $scope.isEditMode ? false : true;
 
@@ -172,6 +172,62 @@
         setDefaultAttributeValues();
     }
 
+    $scope.deleteImage = function (image) {
+        // remove image (and all its sizes) from server
+        productService.deleteImage(image.name)
+            .then(function () {
+                // remove image from model
+                var images = $scope.product.images;
+                var length = images.length;
+                for (i = 0; i < length; i++) {
+                    if (images[i].name == image.name) {
+                        images.splice(i, 1);
+                        break;
+                    };
+                };
+            })
+            .catch(function (err) {
+                alert(JSON.stringify(err.data, null, 4));
+            });
+    }
+
+
+    $scope.onFileSelect = function ($files) {
+        //$files: an array of files selected, each file has name, size, and type.
+        for (var i = 0; i < $files.length; i++) {
+            var file = $files[i];
+            $scope.upload = $upload.upload({
+                url: 'api/products/images', //upload.php script, node.js route, or servlet url
+                //method: 'POST' or 'PUT',
+                //headers: {'header-key': 'header-value'},
+                //withCredentials: true,
+                data: { myObj: $scope.myModelObj },
+                file: file, // or list of files ($files) for html5 only
+                //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s)
+                // customize file formData name ('Content-Disposition'), server side file variable name. 
+                //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file' 
+                // customize how data is added to formData. See #40#issuecomment-28612000 for sample code
+                //formDataAppender: function(formData, key, val){}
+            }).progress(function (evt) {
+                console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+            }).success(function (data, status, headers, config) {
+                // file is uploaded successfully
+                if (!$scope.product.images)
+                    $scope.product.images = [];
+                $scope.product.images.push(data);
+                //console.log(data);
+            });
+            //.error(...)
+            //.then(success, error, progress); 
+            // access or attach event listeners to the underlying XMLHttpRequest.
+            //.xhr(function(xhr){xhr.upload.addEventListener(...)})
+        }
+        /* alternative way of uploading, send the file binary with the file's content-type.
+           Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed. 
+           It could also be used to monitor the progress of a normal http post/put request with large data*/
+        // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
+    };
+
 
     function setDefaultAttributeValues() {
         // set default values for each attribute (field) - every time you change the AttributeSet
@@ -199,10 +255,72 @@
     }
 
 
+    $scope.itemUp = function (oldIdx) {
+
+        var items = $scope.product.images;
+        //var oldIdx = $scope.selectedIndex;
+        var newIdx = oldIdx - 1, tmp;
+
+        var itemsLength = items.length;
+
+        if (oldIdx > 0) {
+            tmp = items[newIdx];
+            items[newIdx] = items[oldIdx];
+            items[oldIdx] = tmp;
+        } else { // oldIndex correspond to first position
+            newIdx = itemsLength - 1; // circular list
+            tmp = items[oldIdx];
+
+            // move all remaining items one position up
+            for (var i = 1; i <= itemsLength; i++) {
+                items[i - 1] = items[i];
+            };
+            items[newIdx] = tmp;
+        };
+
+        // <items> is just another reference to $scope.items;
+        // so we don't have to switch back (e.g. $scope.items = items)
+
+        // update selectedIndex to the new index
+        $scope.selectedIndex = newIdx;
+    }
+
+    $scope.itemDown = function (oldIdx) {
+
+        var items = $scope.product.images;;
+        //var oldIdx = $scope.selectedIndex;
+        var newIdx = oldIdx + 1, tmp;
+
+        var itemsLength = items.length;
+
+        if (oldIdx < itemsLength - 1) {
+            tmp = items[newIdx];
+            items[newIdx] = items[oldIdx];
+            items[oldIdx] = tmp;
+        } else { // oldIndex correspond to last position
+            newIdx = 0; // circular list
+            tmp = items[oldIdx];
+
+            // move all remaining items one position down
+            for (var i = (itemsLength - 1) ; i > 0; i--) {
+                items[i] = items[i - 1];
+            };
+            items[newIdx] = tmp;
+        };
+
+        // <items> is just another reference to $scope.items;
+        // so we don't have to switch back (e.g. $scope.items = items)
+
+        // update selectedIndex to the new index
+        $scope.selectedIndex = newIdx;
+    }
+
+
     // find object in array (objects with one level depth)
     function getObject(data, propertyName, propertyValue) {
         var item = undefined;
-        for (i = 0; i < data.length; i++) {
+        var length = data.length;
+        for (i = 0; i < length; i++) {
             if (data[i][propertyName] === propertyValue) {
                 item = data[i];
                 break;

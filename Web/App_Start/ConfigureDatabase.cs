@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
+using Web.Repositories.Azure;
 using Web.Repositories.Mongo;
 
 namespace Web
@@ -14,6 +15,9 @@ namespace Web
             var appContext = new MongoContext(ConfigurationManager.AppSettings.Get("Cortizo_Local_URI"));
             //var appContext = new MongoContext(ConfigurationManager.AppSettings.Get("Cortizo_Azure_URI"));
             MongoContext.RegisterAppContext(appContext);
+
+            var azureStorageContext = new AzureStorageContext(ConfigurationManager.ConnectionStrings["CtzAzureStorage"].ConnectionString);
+            AzureStorageContext.RegisterContext(azureStorageContext);
         }
     }
 }
