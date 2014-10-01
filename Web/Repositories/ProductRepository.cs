@@ -137,29 +137,43 @@ namespace Web.Repositories
             return imageSizes;
         }
 
-        public void DeleteImage(String imageNameWithoutExtension)
+        public void DeleteImageFiles(String imageId)
         {
-            // delete all image sizes from Azure Blobs
+            // delete image (and all its sizes) from Azure Blobs
             // imageSizeName = imageName + label (-q, -s, -l...etc)
             // get all blobs with a specified name prefix - http://gauravmantri.com/2012/11/28/storage-client-library-2-0-migrating-blob-storage-code/
-            //var prefix = Path.GetFileNameWithoutExtension(imageName);
+            var imageNameWithoutExtension = Path.GetFileNameWithoutExtension(imageId);
             IEnumerable<IListBlobItem> blobs = AzureStorageContext.Instance.BlobImgContainer.ListBlobs(imageNameWithoutExtension, false);
             foreach (var blob in blobs)
             {
                 ((CloudBlockBlob)blob).DeleteAsync();
             }
+        }
 
+        public void DeleteImageFromProductModel(String imageId, String productId)
+        {
+            var query = new QueryDocument { 
+                {"_id", ObjectId.Parse(productId)}
+            };
 
-            //// remove from DB (ok, dar nu foloses)
-            //var query = new QueryDocument { 
-            //    {"_id", ObjectId.Parse(productId)}
-            //};
+            var update = new UpdateDocument {
+                {"$pull", new BsonDocument("Images", new BsonDocument("Name", imageId))}
+            };
 
-            //var update = new UpdateDocument {
-            //    {"$pull", new BsonDocument("Images", new BsonDocument("Name", imageId))}
-            //};
+            _collection.Update(query, update);
+        }
 
-            //_collection.Update(query, update);
+        public void AddImageToProductModel(ImageMeta imageMeta, String productId)
+        {
+            var query = new QueryDocument { 
+                {"_id", ObjectId.Parse(productId)}
+            };
+
+            var update = new UpdateDocument {
+                {"$push", new BsonDocument("Images", imageMeta.ToBsonDocument())}
+            };
+
+            _collection.Update(query, update);
         }
 
         private void ResizeAndSaveToBlob(Image originalImg, AvailableImageSize desiredSize, String fileName, ref List<ImageSize> imageSizes)
@@ -190,12 +204,15 @@ namespace Web.Repositories
     {
         void Create(Product item);
         IEnumerable<Product> GetAll();
-        Product GetById(string itemId);
+        Product GetById(String itemId);
         void Update(Product item);
-        void Delete(string itemId);
+        void Delete(String itemId);
 
         void UpdateAttrName(Attribute newAttribute);
         List<ImageSize> SaveImage(String fileName, Stream fileStream);
-        void DeleteImage(String imageNameWithoutExtension);
+        void DeleteImageFiles(String imageId);
+        void DeleteImageFromProductModel(String imageId, String productId);
+
+        void AddImageToProductModel(ImageMeta imageMeta, String productId);
     }
 }

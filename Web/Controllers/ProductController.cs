@@ -55,6 +55,14 @@ namespace Web.Controllers
         [HttpDelete, Route("{itemId}")]
         public void Delete(String itemId)
         {
+            // delete product images
+            var product = _repository.GetById(itemId);
+            foreach (var image in product.Images)
+            {
+                this.DeleteImageFiles(image.Name);
+            }
+
+            // delete product
             _repository.Delete(itemId);
         }
 
@@ -63,6 +71,7 @@ namespace Web.Controllers
         [HttpPost, Route("images")]
         public async Task<HttpResponseMessage> Post()
         {
+            var productId = "";
             if (!Request.Content.IsMimeMultipartContent())
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType); 
@@ -84,7 +93,14 @@ namespace Web.Controllers
                     fileName = RemainingTime.Seconds().ToString().PadLeft(9, '0') + "-" + fileName; // all sizes for the same file have the same prefix
                     fileStream = content.ReadAsStreamAsync().Result;
                 }
-                //else //form field
+                else //form field
+                {
+                    String fieldName = headers.ContentDisposition.Name.Replace("\"", string.Empty);  //this is here because Chrome submits files in quotation marks which get treated as part of the filename and get escaped
+                    String fieldValue = content.ReadAsStringAsync().Result;
+                    if (fieldName == "productId")
+                        productId = fieldValue;  
+
+                }
             }
 
             // save file to Blob
@@ -96,13 +112,27 @@ namespace Web.Controllers
             imageMeta.Name = fileName;
             imageMeta.Sizes = imageSizes;
 
+
+            // if the Product is in EditMode, save also the metadata to the related product
+            if (productId != string.Empty)
+            {
+                _repository.AddImageToProductModel(imageMeta, productId);
+            }
+
             return Request.CreateResponse(HttpStatusCode.OK, imageMeta);
         }
 
-        [HttpDelete, Route("images/{itemId}")] // itemId = 'imageNameWithoutExtension'
-        public void DeleteImage(String itemId)
+        [HttpDelete, Route("images/{imageId}")] // itemId = 'imageNameWithoutExtension'
+        public void DeleteImageFiles(String imageId)
         {
-            _repository.DeleteImage(itemId);
+            _repository.DeleteImageFiles(imageId);
+        }
+
+        [HttpDelete, Route("{productId}/images/{imageId}")] // itemId = 'imageNameWithoutExtension'
+        public void DeleteImageForProduct(String imageId, String productId)
+        {
+            _repository.DeleteImageFiles(imageId);
+            _repository.DeleteImageFromProductModel(imageId, productId);
         }
 
     }

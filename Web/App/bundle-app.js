@@ -5050,7 +5050,7 @@ app.controller('productsController', ['$scope', '$location', 'productService', '
 
 }]);
 ///#source 1 1 /App/controllers/productController.js
-app.controller('productController', ['$scope', '$window', '$route', 'productService', 'attributeSetService', 'optionSetService', '$location', '$q', '$upload', function ($scope, $window, $route, productService, attributeSetService, optionSetService, $location, $q, $upload) {
+app.controller('productController', ['$scope', '$window', '$route', 'productService', 'attributeSetService', 'optionSetService', '$location', '$q', '$upload', 'dialogService', function ($scope, $window, $route, productService, attributeSetService, optionSetService, $location, $q, $upload, dialogService) {
     $scope.isEditMode = $route.current.isEditMode;
     $scope.isFocusOnName = $scope.isEditMode ? false : true;
 
@@ -5224,23 +5224,34 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
         setDefaultAttributeValues();
     }
 
-    $scope.deleteImage = function (image) {
-        // remove image (and all its sizes) from server
-        productService.deleteImage(image.name)
-            .then(function () {
-                // remove image from model
-                var images = $scope.product.images;
-                var length = images.length;
-                for (i = 0; i < length; i++) {
-                    if (images[i].name == image.name) {
-                        images.splice(i, 1);
-                        break;
-                    };
-                };
-            })
-            .catch(function (err) {
-                alert(JSON.stringify(err.data, null, 4));
-            });
+    var removeImageFromProduct = function (itemName) {
+        // remove image from the javascript model
+        var images = $scope.product.images;
+        var length = images.length;
+        for (i = 0; i < length; i++) {
+            if (images[i].name == itemName) {
+                images.splice(i, 1);
+                break;
+            };
+        };
+    }
+
+    $scope.deleteImage = function (item) {
+        dialogService.confirm('Are you sure you want to delete this image?').then(function () {
+            if ($scope.isEditMode) { // remove images (including al sizes) and update product model
+                productService.deleteImageForProduct(item.name, $scope.product.id)
+                .then(removeImageFromProduct(item.name))
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+            } else { // just remove images (including al sizes) - we don't have a product yet
+                productService.DeleteImageFiles(item.name)
+                .then(removeImageFromProduct(item.name))
+                .catch(function (err) {
+                    alert(JSON.stringify(err.data, null, 4));
+                });
+            }
+        });
     }
 
 
@@ -5248,26 +5259,37 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
         //$files: an array of files selected, each file has name, size, and type.
         for (var i = 0; i < $files.length; i++) {
             var file = $files[i];
-            $scope.upload = $upload.upload({
+            
+            var uploadOptions = {
                 url: 'api/products/images', //upload.php script, node.js route, or servlet url
                 //method: 'POST' or 'PUT',
                 //headers: {'header-key': 'header-value'},
                 //withCredentials: true,
-                data: { myObj: $scope.myModelObj },
+                //data: { productId: $scope.product.id},
+                //data: { productId: $scope.isEditMode ? $scope.product.id : undefined},
                 file: file, // or list of files ($files) for html5 only
                 //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s)
                 // customize file formData name ('Content-Disposition'), server side file variable name. 
                 //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file' 
                 // customize how data is added to formData. See #40#issuecomment-28612000 for sample code
                 //formDataAppender: function(formData, key, val){}
-            }).progress(function (evt) {
-                console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-            }).success(function (data, status, headers, config) {
-                // file is uploaded successfully
-                if (!$scope.product.images)
-                    $scope.product.images = [];
-                $scope.product.images.push(data);
-                //console.log(data);
+            };
+
+            if ($scope.isEditMode) {
+                uploadOptions.data = { productId: $scope.product.id};
+            }
+
+            $scope.upload = $upload
+                .upload(uploadOptions)
+                .progress(function (evt) {
+                    //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+                })
+                .success(function (data, status, headers, config) {
+                    // file is uploaded successfully
+                    if (!$scope.product.images)
+                        $scope.product.images = [];
+                    $scope.product.images.push(data);
+                    //console.log(data);
             });
             //.error(...)
             //.then(success, error, progress); 
@@ -6227,18 +6249,25 @@ app.factory('productService', ['$http', function ($http) {
 
     // related services
 
-    factory.deleteImage = function (imageName) {
-        // var deleteUrl = rootUrl + encodeURIComponent(productId) + "/images/" + encodeURIComponent(imageId);
-
+    factory.DeleteImageFiles = function (imageName) {
         // We need an ending slash "/" because imageId is a file name and contains a dot (".") that prevent us to hit the server 
         // With dot, the request behaves like a request for a static file, which don't expect to be served by a managed module
         // Of course, we can also enable managed module for all request, but that implies a performance degradation: http://forums.asp.net/t/1950107.aspx?WebAPI+2+Route+Attribute+with+string+parameter+containing+a+period+doesn+t+bind
         // return $http.delete(deleteUrl + "/");
 
-        var imageNameWithoutExtension = imageName.substring(0, imageName.indexOf('.'));
-        return $http.delete(rootUrl + "images/" + imageNameWithoutExtension);
+        //var imageNameWithoutExtension = imageName.substring(0, imageName.indexOf('.'));
+        return $http.delete(rootUrl + "images/" + imageName + "/");
     };
 
+    factory.deleteImageForProduct = function (imageName, productId) {
+        // We need an ending slash "/" because imageId is a file name and contains a dot (".") that prevent us to hit the server 
+        // With dot, the request behaves like a request for a static file, which don't expect to be served by a managed module
+        // Of course, we can also enable managed module for all request, but that implies a performance degradation: http://forums.asp.net/t/1950107.aspx?WebAPI+2+Route+Attribute+with+string+parameter+containing+a+period+doesn+t+bind
+        // return $http.delete(deleteUrl + "/");
+
+        //var imageNameWithoutExtension = imageName.substring(0, imageName.indexOf('.'));
+        return $http.delete(rootUrl + encodeURIComponent(productId) + "/images/" + encodeURIComponent(imageName) + "/");
+    };
 
     return factory;
 }]);
