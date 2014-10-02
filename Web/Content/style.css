@@ -366,3 +366,8 @@ color: transparent;
     _border-width:1px;
     border-color:orange;
 }
+
+/* Add opacity to modal - http://mgcrea.github.io/angular-strap/##modals*/
+.modal-backdrop.am-fade {
+    opacity: .5;
+}

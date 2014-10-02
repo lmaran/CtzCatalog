@@ -23,16 +23,16 @@ namespace Web.Controllers
         [HttpPost, Route]
         public void Post(Customer item)
         {
-            _repository.Add(item);
+            _repository.Create(item);
         }
 
         [HttpGet, Route]
-        public IEnumerable<Customer> Get() //pk
+        public IEnumerable<Customer> Get()
         {
             return _repository.GetAll();
         }
 
-        [HttpGet, Route]
+        [HttpGet, Route("{itemId}")]
         public Customer Get(string itemId) //pk
         {
             return _repository.GetById(itemId);

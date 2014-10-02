@@ -1,6 +1,6 @@
 ﻿<header id="content-header" ng-class="contentHeaderClass">
     <h1>
-        <i id="content-header-icon" class="glyphicon glyphicon-tags"></i>
+        <i id="content-header-icon" class="glyphicon glyphicon-map-marker"></i>
         Customers
     </h1>
 
@@ -28,6 +28,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Code</th>
                     <th>Address</th>
                     <th>Phone</th>
                     <th></th>
@@ -36,9 +37,10 @@
             <tbody>
                 <tr data-ng-repeat="customer in customers | filter:search">
                     <td>
-                        <a ng-href="/customers/{{customer.customerId}}">{{customer.name}}</a>
+                        <a ng-href="/customers/{{customer.id}}">{{customer.name}}</a>
                         <i class="glyphicon glyphicon-info-sign" ng-if="customer.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{customer.description}}"></i>
                     </td>
+                    <td>{{ customer.code }}</td>
                     <td>{{ customer.address }}</td>
                     <td>{{ customer.phone }}</td>
                     <td>

@@ -4656,12 +4656,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
         .when('/customers/create', {
             controller: 'customerController',
-            templateUrl: 'App/views/customerCreate.html',
+            templateUrl: 'App/views/customer.html',
             title: 'Create Customer'
         })
         .when('/customers/:id', {
             controller: 'customerController',
-            templateUrl: 'App/views/customerEdit.html',
+            templateUrl: 'App/views/customer.html',
             title: 'Edit Customer',
             isEditMode: true
         })
@@ -4987,7 +4987,6 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
 ///#source 1 1 /App/controllers/productsController.js
 app.controller('productsController', ['$scope', '$location', 'productService', 'dialogService', '$modal', function ($scope, $location, productService, dialogService, $modal) {
     $scope.products = [];
-    //$scope.selectedProduct
     $scope.errors = {};
 
     init();
@@ -5030,18 +5029,13 @@ app.controller('productsController', ['$scope', '$location', 'productService', '
     };
 
 
-    // Show a basic modal from a controller
-    //var myModal = $modal({ title: 'My Title', content: 'My Content', show: true });
+    // Show a modal to display images
+    var myModal = $modal({ scope: $scope, template: '/App/templates/showImage.tpl.html', show: false});
 
-    // Pre-fetch an external template populated with a custom scope
-    var myOtherModal = $modal({ scope: $scope, template: '/App/templates/showImage.tpl.html', show: false, title: "MyTitle" });
-    // Show when some event occurs (use $promise property to ensure the template has been loaded)
     $scope.showModal = function (product) {
-        //alert(11);
-        //myOtherModal.title = "MyTitle";
         $scope.selectedProduct = product;
         $scope.selectedImgIndex = 0;
-        myOtherModal.$promise.then(myOtherModal.show);
+        myModal.$promise.then(myModal.show);
     };
 
     $scope.displaySelectedImage = function($index){
@@ -5405,7 +5399,7 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
 
 }]);
 ///#source 1 1 /App/controllers/customersController.js
-app.controller('customersController', ['$scope', '$location', 'customerService', 'dialogService', function ($scope, $location, customerService, dialogService) {
+app.controller('customersController', ['$scope', '$location', 'customerService', 'dialogService', '$modal', function ($scope, $location, customerService, dialogService, $modal) {
     $scope.customers = [];
     $scope.errors = {};
 
@@ -5417,10 +5411,10 @@ app.controller('customersController', ['$scope', '$location', 'customerService',
             // get the index for selected item
             var i = 0;
             for (i in $scope.customers) {
-                if ($scope.customers[i].customerId == item.customerId) break;
+                if ($scope.customers[i].id == item.id) break;
             };
 
-            customerService.delete(item.customerId).then(function () {
+            customerService.delete(item.id).then(function () {
                 $scope.customers.splice(i, 1);
             })
             .catch(function (err) {
@@ -5447,12 +5441,16 @@ app.controller('customersController', ['$scope', '$location', 'customerService',
             alert(JSON.stringify(err, null, 4));
         });
     };
+
 }]);
 ///#source 1 1 /App/controllers/customerController.js
 app.controller('customerController', ['$scope', '$window', '$route', 'customerService', '$location', function ($scope, $window, $route, customerService, $location) {
+    $scope.isEditMode = $route.current.isEditMode;
+    $scope.isFocusOnName = $scope.isEditMode ? false : true;
+
     $scope.customer = {};
 
-    if ($route.current.title == "CustomerEdit") {
+    if ($scope.isEditMode) {
         init();
     }
 
@@ -6333,7 +6331,6 @@ app.factory('customerService', ['$http', function ($http) {
     factory.delete = function (itemId) {
         return $http.delete(rootUrl + encodeURIComponent(itemId));
     };
-
 
     return factory;
 }]);

@@ -27,6 +27,5 @@
         return $http.delete(rootUrl + encodeURIComponent(itemId));
     };
 
-
     return factory;
 }]);

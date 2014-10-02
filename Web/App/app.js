@@ -69,12 +69,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
         .when('/customers/create', {
             controller: 'customerController',
-            templateUrl: 'App/views/customerCreate.html',
+            templateUrl: 'App/views/customer.html',
             title: 'Create Customer'
         })
         .when('/customers/:id', {
             controller: 'customerController',
-            templateUrl: 'App/views/customerEdit.html',
+            templateUrl: 'App/views/customer.html',
             title: 'Edit Customer',
             isEditMode: true
         })

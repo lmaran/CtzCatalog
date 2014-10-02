@@ -182,8 +182,7 @@
     <Content Include="App\views\dialog.confirm.html" />
     <Content Include="App\views\pickOrderEdit.html" />
     <Content Include="App\views\pickOrderCreate.html" />
-    <Content Include="App\views\customerEdit.html" />
-    <Content Include="App\views\customerCreate.html" />
+    <Content Include="App\views\customer.html" />
     <Content Include="App\views\optionSet.html" />
     <Content Include="App\views\product.html" />
     <Content Include="App\views\optionSets.html" />

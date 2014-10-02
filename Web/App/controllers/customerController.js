@@ -1,7 +1,10 @@
 ﻿app.controller('customerController', ['$scope', '$window', '$route', 'customerService', '$location', function ($scope, $window, $route, customerService, $location) {
+    $scope.isEditMode = $route.current.isEditMode;
+    $scope.isFocusOnName = $scope.isEditMode ? false : true;
+
     $scope.customer = {};
 
-    if ($route.current.title == "CustomerEdit") {
+    if ($scope.isEditMode) {
         init();
     }
 

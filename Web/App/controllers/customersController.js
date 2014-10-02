@@ -1,4 +1,4 @@
-﻿app.controller('customersController', ['$scope', '$location', 'customerService', 'dialogService', function ($scope, $location, customerService, dialogService) {
+﻿app.controller('customersController', ['$scope', '$location', 'customerService', 'dialogService', '$modal', function ($scope, $location, customerService, dialogService, $modal) {
     $scope.customers = [];
     $scope.errors = {};
 
@@ -10,10 +10,10 @@
             // get the index for selected item
             var i = 0;
             for (i in $scope.customers) {
-                if ($scope.customers[i].customerId == item.customerId) break;
+                if ($scope.customers[i].id == item.id) break;
             };
 
-            customerService.delete(item.customerId).then(function () {
+            customerService.delete(item.id).then(function () {
                 $scope.customers.splice(i, 1);
             })
             .catch(function (err) {
@@ -40,4 +40,5 @@
             alert(JSON.stringify(err, null, 4));
         });
     };
+
 }]);

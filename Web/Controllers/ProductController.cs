@@ -35,7 +35,7 @@ namespace Web.Controllers
         }
 
         [HttpGet, Route]
-        public IEnumerable<Product> Get() //pk
+        public IEnumerable<Product> Get()
         {
             return _repository.GetAll();
         }

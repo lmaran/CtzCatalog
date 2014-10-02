@@ -1,7 +1,8 @@
-﻿using Web.Helpers;
+﻿using Attribute = Web.Models.Attribute; // Type alias
+
+using Web.Helpers;
 using Web.Models;
 using AutoMapper;
-using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,88 +10,71 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
+using Web.Repositories.Mongo;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Driver.Builders;
+using System.IO;
+using System.Drawing;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Web.App_Start;
+using System.Configuration;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.RetryPolicies;
+using Web.Repositories.Azure;
+using System.Drawing.Imaging;
 
 namespace Web.Repositories
 {
-    public class CustomerRepository : TableStorage<CustomerEntry>, ICustomerRepository
+    public class CustomerRepository : ICustomerRepository
     {
+
+        private readonly MongoCollection<Customer> _collection;
+
         public CustomerRepository()
-            : base(tableName: "Customers")
         {
+            _collection = MongoContext.AppInstance.Database.GetCollection<Customer>(MongoConstants.Collections.Customers);
         }
 
-        public void Add(Customer item)
+
+        public void Create(Customer item)
         {
-            var entity = new DynamicTableEntity();
-
-            entity.Properties["Name"] = new EntityProperty(item.Name);
-            entity.Properties["Address"] = new EntityProperty(item.Address);
-            entity.Properties["Phone"] = new EntityProperty(item.Phone);
-            entity.Properties["Description"] = new EntityProperty(item.Description);
-            entity.PartitionKey = "p";
-            entity.RowKey = Guid.NewGuid().ToString();
-
-            // entity.ETag = "*"; // mandatory for <merge>
-            // var operation = TableOperation.Merge(entity);
-            var operation = TableOperation.Insert(entity);
-            Table.Execute(operation);
+            _collection.Insert(item);
         }
 
         public IEnumerable<Customer> GetAll()
         {
-            var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "p");
-            var entitiesTable = this.ExecuteQuery(filter);
-
-            // automapper: copy "entitiesTable" to "entitiesVM"
-            Mapper.CreateMap<CustomerEntry, Customer>()
-                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.RowKey));
-
-
-            var entitiesVM = Mapper.Map<List<CustomerEntry>, List<Customer>>(entitiesTable.ToList()); //neaparat cu ToList()
-
-            return entitiesVM;
+            return _collection.FindAll();
         }
 
         public Customer GetById(string itemId)
         {
-            var entry = this.Retrieve("p", itemId);
-
-            Mapper.CreateMap<CustomerEntry, Customer>()
-                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.RowKey));
-
-            return Mapper.Map<CustomerEntry, Customer>(entry);
+            return _collection.FindOneById(ObjectId.Parse(itemId));
         }
 
         public void Update(Customer item)
         {
-            Mapper.CreateMap<Customer, CustomerEntry>()
-                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.CustomerId))
-                .ForMember(dest => dest.PartitionKey, opt=> opt.UseValue("p"));
-
-            var entity = Mapper.Map<Customer, CustomerEntry>(item);
-
-            entity.ETag = "*"; // mandatory for <replace>
-            var operation = TableOperation.Replace(entity);
-            Table.Execute(operation);
+            _collection.Save(item);
         }
 
         public void Delete(string itemId)
         {
-            var item = new CustomerEntry();
-            item.PartitionKey = "p";
-            item.RowKey = itemId;
-            this.Delete(item);
+            var query = Query<Customer>.EQ(x => x.Id, itemId);
+            _collection.Remove(query);
         }
+
+
+        // ***************** Related Services ****************
 
     }
 
 
-    public interface ICustomerRepository : ITableStorage<CustomerEntry>
+    public interface ICustomerRepository
     {
-        void Add(Customer item);
+        void Create(Customer item);
         IEnumerable<Customer> GetAll();
-        Customer GetById(string itemId);
+        Customer GetById(String itemId);
         void Update(Customer item);
-        void Delete(string itemId);
+        void Delete(String itemId);
     }
 }
