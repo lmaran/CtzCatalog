@@ -23,6 +23,14 @@
 </head>
 <body>
 
+    <!--<div class="page-container">
+        <div ng-view="" class="page-view" ng-class="pageAnimationClass"></div>
+    </div>-->
+
+    <!--<div class="view-container">
+        <div ng-view class="view-frame"></div>
+    </div>-->
+
     <!--[if lt IE 9]>
         <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -33,7 +41,13 @@
         <nav id="sidebar-wrapper" ng-include="'App/views/navbar.html'" ng-controller="navbarController"></nav>
 
         <!-- Page content -->
-        <div id="page-content-wrapper" class="container2" ng-view=""></div>
+        <div id="page-content-wrapper" ng-view></div>
+
+        <!--<div id="page-content-wrapper" >
+            <div class="view-container">
+                <div ng-view class="view-frame"></div>
+            </div>
+        </div>-->
 
     </div>
 

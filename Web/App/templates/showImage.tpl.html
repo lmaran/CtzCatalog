@@ -1,12 +1,18 @@
 ﻿<div class="modal modal-image" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header" ng-show="title">
+            <!--<div class="modal-header" ng-show="title">
                 <button type="button" class="close" ng-click="$hide()">&times;</button>
-                <!--<h4 class="modal-title" ng-bind="selectedProduct.name"></h4>-->
-            </div>
-            <div class="modal-body" ng-bind2="content">
+                <h4 class="modal-title" ng-bind="selectedProduct.name"></h4>
+            </div>-->
+            <div class="modal-body">
                 <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a class="close" ng-click="$hide()">&times;</a>
+                        </div>
+                    </div>
+                        
                     <div class="row">
                         <div class="col-md-10">
                             <img class="selected-image img-responsive img-dadi" ng-src="{{selectedProduct.images.length > 0 && selectedProduct.images[selectedImgIndex].rootUrl + '/' + selectedProduct.images[selectedImgIndex].sizes[1].name || 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png'}}" />
@@ -16,10 +22,8 @@
                                 <img ng-src="{{item.rootUrl + '/' + item.sizes[0].name}}" class="img-thumbnail img-thumb-select" ng-class="{'active': selectedImgIndex==$index}" ng-click="displaySelectedImage($index)" />
                             </span>
                         </div>
-
-
-
                     </div>
+
                 </div>
             </div>
             <!--<div class="modal-footer">

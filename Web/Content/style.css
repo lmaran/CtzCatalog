@@ -325,7 +325,8 @@ color: transparent;
     border-color:blue;
 }
 
-/* modal dialog for displaying images*/
+/* modal dialog for displaying images
+===============================*/
 
 .modal-image .modal-dialog {
       width: 90%;
@@ -367,7 +368,145 @@ color: transparent;
     border-color:orange;
 }
 
-/* Add opacity to modal - http://mgcrea.github.io/angular-strap/##modals*/
+/* Add opacity to modal - http://mgcrea.github.io/angular-strap/##modals
+===============================*/
+
 .modal-backdrop.am-fade {
     opacity: .5;
 }
+
+/* Add animation (transitions) between views
+===============================*/
+
+/*.view-container {
+position: relative;
+}
+
+.view-frame.ng-enter, .view-frame.ng-leave {
+background: white;
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+}
+
+.view-frame.ng-enter {
+-webkit-animation: 2.5s fade-in;
+-moz-animation: 2.5s fade-in;
+-o-animation: 2.5s fade-in;
+animation: 2.5s fade-in;
+z-index: 100;
+}
+
+.view-frame.ng-leave {
+-webkit-animation: 2.5s fade-out;
+-moz-animation: 2.5s fade-out;
+-o-animation: 2.5s fade-out;
+animation: 2.5s fade-out;
+z-index:99;
+}
+
+@keyframes fade-in {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+@-moz-keyframes fade-in {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+@-webkit-keyframes fade-in {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+
+@keyframes fade-out {
+from { opacity: 1; }
+to { opacity: 0; }
+}
+@-moz-keyframes fade-out {
+from { opacity: 1; }
+to { opacity: 0; }
+}
+@-webkit-keyframes fade-out {
+from { opacity: 1; }
+to { opacity: 0; }
+}*/
+
+
+/*=========== Method 2 ================*/
+
+/* Transitions */
+
+/* Default Enter/Leave */
+/*.ng-enter,
+.ng-leave {
+    transition-timing-function: ease;
+    transition-duration: 250ms;
+    transition-property: opacity;
+}
+
+.ng-enter {
+    opacity: 0;
+}
+
+.ng-enter.ng-enter-active {
+    opacity: 1;
+}
+
+.ng-leave {
+    opacity: 1;
+}
+
+.ng-leave.ng-leave-active {
+    opacity: 0;
+}*/
+
+/* slideRight */
+/*.slideRight {
+    opacity: 1 !important;
+}
+
+.slideRight.ng-enter {
+    transition-property: none;
+    transform: translate3d(-100%,0,0);
+}
+
+.slideRight.ng-enter.ng-enter-active {
+    transition-property: all;
+    transform: translate3d(0,0,0);
+}
+
+.slideRight.ng-leave {
+    transition-property: all;
+    transform: translate3d(0,0,0);
+}
+
+.slideRight.ng-leave.ng-leave-active {
+    transition-property: all;
+    transform: translate3d(100%,0,0);
+}*/
+
+/* slideLeft */
+/*.slideLeft {
+    opacity: 1 !important;
+}
+
+.slideLeft.ng-enter {
+    transition-property: none;
+    transform: translate3d(100%,0,0);
+}
+
+.slideLeft.ng-enter.ng-enter-active {
+    transition-property: all;
+    transform: translate3d(0,0,0);
+}
+
+.slideLeft.ng-leave {
+    transition-property: all;
+    transform: translate3d(0,0,0);
+}
+
+.slideLeft.ng-leave.ng-leave-active {
+    transition-property: all;
+    transform: translate3d(-100%,0,0);
+}*/
