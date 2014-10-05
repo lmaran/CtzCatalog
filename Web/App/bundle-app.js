@@ -4985,7 +4985,7 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
 
 }]);
 ///#source 1 1 /App/controllers/productsController.js
-app.controller('productsController', ['$scope', '$location', 'productService', 'dialogService', '$modal', function ($scope, $location, productService, dialogService, $modal) {
+app.controller('productsController', ['$scope', '$location', 'productService', 'dialogService', '$modal', '$aside', function ($scope, $location, productService, dialogService, $modal, $aside) {
     $scope.products = [];
     $scope.errors = {};
 
@@ -5042,9 +5042,22 @@ app.controller('productsController', ['$scope', '$location', 'productService', '
         $scope.selectedImgIndex = $index;
     };
 
+
+    $scope.aside = {title: 'Title', content: 'Hello Aside2<br />This is a multiline message2!'};
+    //// Show a basic aside from a controller
+    //var myAside = $aside({ title: 'My Title', content: 'My Content', show: true });
+
+    //// Pre-fetch an external template populated with a custom scope
+    //var myOtherAside = $aside({ scope: $scope, template: '/App/templates/demo.tpl.html' });
+    //// Show when some event occurs (use $promise property to ensure the template has been loaded)
+    //myOtherAside.$promise.then(function () {
+    //    myOtherAside.show();
+    //})
+
+
 }]);
 ///#source 1 1 /App/controllers/productController.js
-app.controller('productController', ['$scope', '$window', '$route', 'productService', 'attributeSetService', 'optionSetService', '$location', '$q', '$upload', 'dialogService', function ($scope, $window, $route, productService, attributeSetService, optionSetService, $location, $q, $upload, dialogService) {
+app.controller('productController', ['$scope', '$window', '$route', 'productService', 'attributeSetService', 'optionSetService', '$location', '$q', '$upload', 'dialogService', '$aside', '$timeout', function ($scope, $window, $route, productService, attributeSetService, optionSetService, $location, $q, $upload, dialogService, $aside, $timeout) {
     $scope.isEditMode = $route.current.isEditMode;
     $scope.isFocusOnName = $scope.isEditMode ? false : true;
 
@@ -5119,8 +5132,6 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
             alert(JSON.stringify(err, null, 4));
         });
     }
-
-
 
     $scope.create = function (form) {
         $scope.submitted = true;
@@ -5248,7 +5259,6 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
         });
     }
 
-
     $scope.onFileSelect = function ($files) {
         //$files: an array of files selected, each file has name, size, and type.
         for (var i = 0; i < $files.length; i++) {
@@ -5296,7 +5306,6 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
         // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
     };
 
-
     function setDefaultAttributeValues() {
         // set default values for each attribute (field) - every time you change the AttributeSet
         $scope.dotObject.selectedAttributeSet.attributes.forEach(function (attr, idx) {
@@ -5307,7 +5316,6 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
             }
         });
     }
-
 
     function setCurrentAttributeValues() {
         // set current values for each attribute (field) - right after load in Edit mode
@@ -5321,7 +5329,6 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
             } // else attr.value = null;
         });
     }
-
 
     $scope.itemUp = function (oldIdx) {
 
@@ -5383,7 +5390,6 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
         $scope.selectedIndex = newIdx;
     }
 
-
     // find object in array (objects with one level depth)
     function getObject(data, propertyName, propertyValue) {
         var item = undefined;
@@ -5395,6 +5401,146 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
             };
         };
         return item;
+    }
+
+    //$scope.aside = { title: 'Title', content: 'Hello Aside2<br />This is a multiline message2!' };
+    // Show a basic aside from a controller
+    //var myAside = $aside({ title: 'My Title', content: 'My Content', show: false });
+
+    // Pre-fetch an external template populated with a custom scope
+    //var myOtherAside = $aside({ scope: $scope, template: '/App/templates/demo.tpl.html', show: false, placement: 'right', animation: 'am-slide-right', container: 'body', title: 'Select Products'});
+    
+    //var myOtherAside;
+
+    // Show when some event occurs (use $promise property to ensure the template has been loaded)
+    //myOtherAside.$promise.then(function () {
+    //    myOtherAside.show();
+    //})
+
+    //console.log($aside.scope);
+
+    $scope.products = [];
+    $scope.errors = {};
+
+    $scope.selectProduct = function (item) {
+        //alert('Selected: ' + item.name);
+        //myOtherAside.hide;
+        if (!$scope.product.relatedProducts)
+            $scope.product.relatedProducts = [];
+        $scope.product.relatedProducts.push(item);
+        //$scope.test = 'mmm';
+        //$scope.$hide();
+        //alert($scope.test);
+    };
+
+
+
+
+
+    var promiseToGetProducts;
+    function getProducts() {
+        promiseToGetProducts = productService.getAll().then(function (data) {
+            $scope.products = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
+        });
+    };
+
+    $scope.refresh = function () {
+        getProducts();
+    }
+
+    //$scope.$on('aside.hide', function () {
+    //    alert('closed aside: ' + $scope.test);
+    //});
+
+    //$scope.$on('aside.show', function () {
+    //    //$scope.test = 'kkk';
+    //    //getProducts();
+    //    //$scope.$apply();
+    //    //console.log($scope);
+
+    //    alert('show aside: ' + $scope.test);
+    //});
+
+    //$scope.testF = function () {
+    //    alert('btn: ' + $scope.test);
+    //}
+
+    //getProducts();
+    $scope.test = 'bbbb';
+    //$q.when(promiseToGetProducts).then(function () {
+    //    $scope.test = 'mmm';
+    //});
+    //var newScope = $scope.$new(true);
+    //var newScope = $scope.$new();
+    //newScope.test = 'xxx';
+
+    var myOtherAside = $aside({ scope: $scope, template: '/App/templates/demo.tpl.html', show: false, placement: 'right', animation: 'am-slide-right', container: 'body', title: 'Select Products' });
+
+    $scope.showAside = function () {
+        //myAside.$promise.then(myAside.show);
+
+        //$q.all([promiseToGetProducts, myOtherAside])
+        //.then(function (result) {
+        //    //alert(22);
+        //    //myOtherAside.show;
+
+        //    myOtherAside.$promise.then(myOtherAside.show);
+        //    alert(33);
+        //}, function (reason) {
+        //    alert('failure');
+        //});
+
+        //getProducts();
+
+        //$q.when(promiseToGetProducts).then(function () {
+        //    //alert(1);
+        //    //alert($scope.products.length);
+
+        //    $scope.test = 'aaa';
+        //    //$scope.$apply();
+        //    myOtherAside.$promise.then(myOtherAside.show);
+        //    //alert(44);
+        //});
+
+        //$scope.$parent.test = 'aaa';
+        //$scope.$apply();
+        
+        //alert(JSON.stringify(newScope.test, null, 4));
+
+        $scope.test = 'ggg';             
+        getProducts();
+        $q.when(promiseToGetProducts).then(function () {
+            myOtherAside.$promise.then(myOtherAside.show);
+        });
+
+        
+    };
+
+    
+    $scope.deleteRelatedProduct = function (itemId) {
+        //alert(itemId);
+        deleteItemInArray($scope.product.relatedProducts, 'id', itemId);
+    }
+
+    // helper functions
+    function getIndexInArray(myArray, property, value) {
+        var length = myArray.length;
+        for (var i = 0, len = length; i < len; i++) {
+            if (myArray[i][property] === value) return i;
+        }
+        return -1;
+    }
+
+    function deleteItemInArray(myArray, property, value) {
+        var idx = getIndexInArray(myArray, property, value);
+        //alert(idx);
+        if (idx != -1)
+            myArray.splice(idx, 1);
+        else
+            alert("Can't delete! Key or value not found");
     }
 
 }]);
@@ -6508,21 +6654,28 @@ app.directive('myFocus', ['$timeout', function($timeout) {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-            scope.$watch(attrs.myFocus, function (newValue, oldValue) {
+
+            if (attrs.myFocus == "true" || attrs.myFocus == "") { //set focus without using a scope variable (Ex: 'my-focus="true"' or simply 'my-focus')
                 $timeout(function () {
-                    if (newValue) { element[0].focus(); }
+                    element[0].focus();
                 }, 0);
-            });
-            element.bind("blur", function(e) {
-                $timeout(function() {
-                    scope.$apply(attrs.myFocus + "=false");
-                }, 0);
-            });
-            element.bind("focus", function(e) {
-                $timeout(function() {
-                    scope.$apply(attrs.myFocus + "=true");
-                }, 0);
-            })
+            } else {
+                scope.$watch(attrs.myFocus, function (newValue, oldValue) {
+                    $timeout(function () {
+                        if (newValue) { element[0].focus(); }
+                    }, 0);
+                });
+                element.bind("blur", function (e) {
+                    $timeout(function () {
+                        scope.$apply(attrs.myFocus + "=false");
+                    }, 0);
+                });
+                element.bind("focus", function (e) {
+                    $timeout(function () {
+                        scope.$apply(attrs.myFocus + "=true");
+                    }, 0);
+                })
+            }
         }
 
 

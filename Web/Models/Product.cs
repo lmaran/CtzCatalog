@@ -16,6 +16,7 @@ namespace Web.Models
         public string AttributeSetName { get; set; }
         public List<ProductAttribute> Attributes { get; set; }
         public List<ImageMeta> Images { get; set; }
+        public List<Product> RelatedProducts { get; set; }
     }
 
     public class ProductAttribute : Entity

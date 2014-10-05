@@ -1,4 +1,4 @@
-﻿app.controller('productsController', ['$scope', '$location', 'productService', 'dialogService', '$modal', function ($scope, $location, productService, dialogService, $modal) {
+﻿app.controller('productsController', ['$scope', '$location', 'productService', 'dialogService', '$modal', '$aside', function ($scope, $location, productService, dialogService, $modal, $aside) {
     $scope.products = [];
     $scope.errors = {};
 
@@ -54,5 +54,18 @@
     $scope.displaySelectedImage = function($index){
         $scope.selectedImgIndex = $index;
     };
+
+
+    $scope.aside = {title: 'Title', content: 'Hello Aside2<br />This is a multiline message2!'};
+    //// Show a basic aside from a controller
+    //var myAside = $aside({ title: 'My Title', content: 'My Content', show: true });
+
+    //// Pre-fetch an external template populated with a custom scope
+    //var myOtherAside = $aside({ scope: $scope, template: '/App/templates/demo.tpl.html' });
+    //// Show when some event occurs (use $promise property to ensure the template has been loaded)
+    //myOtherAside.$promise.then(function () {
+    //    myOtherAside.show();
+    //})
+
 
 }]);

@@ -6,7 +6,7 @@
     
 </header>
 
-<div id="content-body" class="container-fluid">
+<div class="container-fluid">
 
     <form ng-submit="isEditMode ? update(form) : create(form)" name="form" class="form-horizontal max-width" role="form" novalidate>
         <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
@@ -14,22 +14,26 @@
         <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
             <label class="col-md-2 control-label">Name </label>
             <div class="col-md-4">
-                <input class="form-control" ng-model="product.name" type="text" name="name" required />
+                <input class="form-control" ng-model="product.name" type="text" name="name" my-focus="isFocusOnName" required />
                 <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Description</label>
+            <div class="col-md-4">
+                <textarea class="form-control" ng-model="product.description" name="description" msd-elastic></textarea>
             </div>
         </div>
 
         <div class="form-group">
             <label class="col-md-2 control-label">Images </label>
             <div class="col-md-4">
-                <div class="panel panel-default"  ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="file-drag-over" ng-show="dropSupported">
-                    <!--<div class="panel-heading">Panel heading without title</div>-->
-                    <!--<div class="panel-body">-->
-
+                <div class="panel panel-default" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="file-drag-over" ng-show="dropSupported">
 
                     <div class="panel-body">
                         <span style="color:#a9a9a9">Drop files here or</span>
-                        <div ng-file-select="onFileSelect($files)" data-multiple="true" accept="image/*" title="Select file" onclick="this.value = null" class="btn btn-default btn-xs">
+                        <div ng-file-select="onFileSelect($files)" data-multiple="true" accept="image/*" title="Select file" onclick="this.value = null" class="btn btn-primary btn-xs">
                             Select Files
                         </div>
                         <div ng-file-drop-available="dropSupported=true" ng-show="!dropSupported">
@@ -44,9 +48,9 @@
                                 <img ng-src="{{item.rootUrl + '/' + item.sizes[0].name}}" class="img-thumbnail" width="75px;" />
                             </div>
                             <div class="media-body">
-                                <span class="pull-right2" >
+                                <span class="pull-right2">
                                     <button ng-if="product.images.length > 1" type="button" class="btn btn-xs" ng-click="itemDown($index)"> <span class="glyphicon glyphicon-arrow-down" title="Move item down"></span></button>
-                                    <button ng-if="product.images.length > 1"  type="button" class="btn btn-xs" ng-click="itemUp($index)"> <span class="glyphicon glyphicon-arrow-up" title="Move item up"></span></button>
+                                    <button ng-if="product.images.length > 1" type="button" class="btn btn-xs" ng-click="itemUp($index)"> <span class="glyphicon glyphicon-arrow-up" title="Move item up"></span></button>
                                     <button type="button" class="btn btn-xs" ng-click="deleteImage(item)"> <span class="glyphicon glyphicon-trash" style="color:#ff0000" title="Delete item"></span></button>
                                 </span>
                             </div>
@@ -62,13 +66,6 @@
             <div class="col-md-4">
                 <input class="form-control" ng-model="product.code" type="text" name="code" required />
                 <p ng-show="form.code.$invalid  && submitted" class="help-block">This field is required.</p>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-2 control-label">Description </label>
-            <div class="col-md-4">
-                <input class="form-control" ng-model="product.description" type="text" name="description" />
             </div>
         </div>
 
@@ -95,46 +92,70 @@
             </div>
         </div>
 
-
-        <!--dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
-        <!--dotObject.optionSets: <pre>{{dotObject.optionSets | json}}</pre>-->
-        <!--dotObject.attributes: <pre>{{dotObject.attributes | json}}</pre>-->
-
         <div ng-repeat="c in dotObject.selectedAttributeSet.attributes">
             <div class="form-group">
-                <label class="col-md-2 control-label">{{c.name}}: </label>
+                <label class="col-md-2 control-label">{{c.name}} </label>
                 <div class="col-md-4" ng-switch="c.type">
-                    <any ng-switch-when="SingleOption">
 
+                    <any ng-switch-when="SingleOption">
                         <select class="form-control" ng-model="c.value" ng-options="x for x in c.options">
                             <option value=""></option>
                         </select>
-
-                        <!--dotObject.selectedAttributeSet.attributes[{{c.name}}]: <pre>{{c | json}}</pre>-->
-
                     </any>
 
                     <any ng-switch-when="MultipleOptions">
-
                         <button type="button" class="btn btn-default" ng-model="c.values" data-multiple="1" data-placeholder="Select..." ng-options=" x for x in c.options" bs-select>
                             <span class="caret"></span>
                         </button>
-
-                        <!--dotObject.selectedAttributeSet.attributes[{{c.name}}]: <pre>{{c | json}}</pre>-->
                     </any>
 
                     <any ng-switch-default>
                         <input class="form-control" ng-model="c.value" type="text" name="name" />
                     </any>
+
                 </div>
+            </div>
+        </div>
 
-                <!--c: <pre>{{c | json}}</pre>-->
-                <!--dotObject.attributes[c.name]: <pre>{{dotObject.attributes[c.name] | json}}</pre>-->
 
+        <!--related products-->
+        <div class="form-group">
+            <label class="col-md-2 control-label">Related products</label>
+            <div class="col-md-10">
+                <div class="panel panel-default">
 
+                    <div class="panel-heading">
+                        <a ng-click="showAside()">Add related product</a>
+                    </div>
+
+                    <div class="panel-body" style="max-height:200px; overflow-y:auto; padding:0;">
+                        <table class="table table-responsive table-hover table-condensed borderless" style="margin-bottom:0">
+                            <tbody>
+                                <tr data-ng-repeat="product in product.relatedProducts | filter:search">
+                                    <!--<td>
+                                        <img ng-click="showModal(product)" ng-src="{{product.images.length > 0 && product.images[0].rootUrl + '/' + product.images[0].sizes[0].name || 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png'}}" width="40" />
+                                    </td>-->
+                                    <td>{{ product.attributeSetName }}</td>
+                                    <td>{{ product.code }}</td>
+                                    <td>
+                                        <a ng-href="/products/{{product.id}}">{{product.name}}</a>
+                                        <!--<span ng-if="product.description" class="glyphicon glyphicon-info-sign" data-placement="top" data-trigger="hover" html="true" data-content="{{product.attributes}}" bs-popover></span>-->
+                                        <i class="glyphicon glyphicon-info-sign" ng-if="product.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{product.description}}"></i>
+                                    </td>
+
+                                    <td>
+                                        <a ng-click="deleteRelatedProduct(product.id)">delete</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div> <!--end panel-->
 
             </div>
         </div>
+        <!--end related products-->
 
 
         <div class="form-group">
@@ -146,10 +167,8 @@
 
     </form>
 
-
     <!--dotObject: <pre>{{dotObject | json}}</pre>-->
-    <!--product: <pre>{{product | json}}</pre>-->
+    <!--product: <pre>{{product.relatedProducts | json}}</pre>-->
     <!--dotObject.selectedAttributeSet: <pre>{{dotObject.selectedAttributeSet | json}}</pre>-->
-
 
 </div>

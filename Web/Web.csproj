@@ -169,6 +169,7 @@
     <Content Include="App\services\customerService.js" />
     <Content Include="App\services\optionSetService.js" />
     <Content Include="App\services\productService.js" />
+    <Content Include="App\templates\demo.tpl.html" />
     <Content Include="App\templates\showImage.tpl.html" />
     <Content Include="App\templates\selectFromSimpleList.tpl.html" />
     <Content Include="App\templates\editSimpleList.tpl.html" />
@@ -187,6 +188,9 @@
     <Content Include="App\views\product.html" />
     <Content Include="App\views\optionSets.html" />
     <Content Include="Content\orange.png" />
+    <Content Include="Content\style.min.css">
+      <DependentUpon>style.css</DependentUpon>
+    </Content>
     <Content Include="Content\translates\Flags\blank.gif" />
     <Content Include="Content\translates\Flags\flags.css" />
     <Content Include="Content\translates\Flags\flags.png" />
@@ -199,6 +203,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\translates\es.json" />
+    <Content Include="Content\style.less" />
     <None Include="Properties\PublishProfiles\Azure-WebFarmLM1.pubxml" />
     <Content Include="Scripts\angular-translate-loader-static-files.js" />
     <Content Include="Scripts\angular-translate-storage-cookie.js" />
