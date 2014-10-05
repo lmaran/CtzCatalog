@@ -1,4 +1,4 @@
-﻿app.controller('productController', ['$scope', '$window', '$route', 'productService', 'attributeSetService', 'optionSetService', '$location', '$q', '$upload', 'dialogService', '$aside', '$timeout', function ($scope, $window, $route, productService, attributeSetService, optionSetService, $location, $q, $upload, dialogService, $aside, $timeout) {
+﻿app.controller('productController', ['$scope', '$window', '$route', 'productService', 'attributeSetService', 'optionSetService', '$location', '$q', '$upload', 'dialogService', '$modal', '$aside', '$timeout', function ($scope, $window, $route, productService, attributeSetService, optionSetService, $location, $q, $upload, dialogService, $modal, $aside, $timeout) {
     $scope.isEditMode = $route.current.isEditMode;
     $scope.isFocusOnName = $scope.isEditMode ? false : true;
 
@@ -359,6 +359,20 @@
     //})
 
     //console.log($aside.scope);
+
+    // Show a modal to display images
+    var myModal = $modal({ scope: $scope, template: '/App/templates/showImage.tpl.html', show: false });
+
+    $scope.showModal = function (product) {
+        $scope.selectedProduct = product;
+        $scope.selectedImgIndex = 0;
+        myModal.$promise.then(myModal.show);
+    };
+
+    $scope.displaySelectedImage = function ($index) {
+        $scope.selectedImgIndex = $index;
+    };
+
 
     $scope.products = [];
     $scope.errors = {};
