@@ -169,7 +169,7 @@
     <Content Include="App\services\customerService.js" />
     <Content Include="App\services\optionSetService.js" />
     <Content Include="App\services\productService.js" />
-    <Content Include="App\templates\demo.tpl.html" />
+    <Content Include="App\templates\selectRelatedProducts.tpl.html" />
     <Content Include="App\templates\showImage.tpl.html" />
     <Content Include="App\templates\selectFromSimpleList.tpl.html" />
     <Content Include="App\templates\editSimpleList.tpl.html" />

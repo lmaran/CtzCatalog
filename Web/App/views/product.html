@@ -125,26 +125,26 @@
                 <div class="panel panel-default">
 
                     <div class="panel-heading">
-                        <a ng-click="showAside()">Add related product</a>
+                        <a ng-click="showRelatedProductsAside()">Add related product</a>
                     </div>
 
                     <div class="panel-body" style="max-height:200px; overflow-y:auto; padding:0;">
                         <table class="table table-responsive table-hover table-condensed borderless" style="margin-bottom:0">
                             <tbody>
                                 <tr data-ng-repeat="product in product.relatedProducts | filter:search">
-                                    <!--<td>
+                                    <td>
                                         <img ng-click="showModal(product)" ng-src="{{product.images.length > 0 && product.images[0].rootUrl + '/' + product.images[0].sizes[0].name || 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png'}}" width="40" />
-                                    </td>-->
+                                    </td>
                                     <td>{{ product.attributeSetName }}</td>
                                     <td>{{ product.code }}</td>
                                     <td>
-                                        <a ng-href="/products/{{product.id}}">{{product.name}}</a>
+                                        <a target="_blank" ng-href="/products/{{product.id}}">{{product.name}}</a>
                                         <!--<span ng-if="product.description" class="glyphicon glyphicon-info-sign" data-placement="top" data-trigger="hover" html="true" data-content="{{product.attributes}}" bs-popover></span>-->
                                         <i class="glyphicon glyphicon-info-sign" ng-if="product.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{product.description}}"></i>
                                     </td>
 
                                     <td>
-                                        <a ng-click="deleteRelatedProduct(product.id)">delete</a>
+                                        <a ng-click="deleteRelatedProduct(product)">delete</a>
                                     </td>
                                 </tr>
                             </tbody>

@@ -45,7 +45,7 @@
                                 </tr>
                             </thead>-->
                             <tbody>
-                                <tr data-ng-repeat="product in products | filter:search">
+                                <tr data-ng-repeat="product in availableRelatedProducts | filter:search">
                                     <td>
                                         <img ng-click="showModal(product)" ng-src="{{product.images.length > 0 && product.images[0].rootUrl + '/' + product.images[0].sizes[0].name || 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png'}}" width="40" />
                                     </td>
@@ -58,7 +58,7 @@
                                     </td>
 
                                     <td>
-                                        <a ng-click="selectProduct(product)">select</a>
+                                        <button type="button" class="btn btn-primary btn-xs" ng-click="selectRelatedProduct(product)"> Select </button>
                                     </td>
                                 </tr>
                             </tbody>

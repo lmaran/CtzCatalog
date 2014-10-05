@@ -9,8 +9,9 @@
     $scope.dotObject.attributes = {}; // default or selected attribute values
     $scope.dotObject.optionSets = {};
 
-    var promiseToGetProduct, promiseToGetAttributeSets;
+    var promiseToGetProduct, promiseToGetAttributeSets, promiseToGetAvailableRelatedProducts;
     
+    $scope.availableRelatedProducts = [];
 
     // we need an object (dotObject) to be able to use two-way data binding for ng-models in Select elements
     // otherwise ue need to send the ng-model value of select control as parameter to a ng-change() function
@@ -41,7 +42,7 @@
         .then(function (result) {
 
             // set selected AttributeSet
-            $scope.dotObject.selectedAttributeSet = getObject($scope.attributeSets, 'id', $scope.product.attributeSetId);
+            $scope.dotObject.selectedAttributeSet = getItemInArray($scope.attributeSets, 'id', $scope.product.attributeSetId);
 
             // setCurrentValues
             $scope.dotObject.attributes = $scope.product.attributes;
@@ -54,7 +55,6 @@
 
 
     }
-
 
     function getProduct() {
         promiseToGetProduct = productService.getById($route.current.params.id).then(function (data) {
@@ -207,17 +207,7 @@
             
             var uploadOptions = {
                 url: 'api/products/images', //upload.php script, node.js route, or servlet url
-                //method: 'POST' or 'PUT',
-                //headers: {'header-key': 'header-value'},
-                //withCredentials: true,
-                //data: { productId: $scope.product.id},
-                //data: { productId: $scope.isEditMode ? $scope.product.id : undefined},
-                file: file, // or list of files ($files) for html5 only
-                //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s)
-                // customize file formData name ('Content-Disposition'), server side file variable name. 
-                //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file' 
-                // customize how data is added to formData. See #40#issuecomment-28612000 for sample code
-                //formDataAppender: function(formData, key, val){}
+                file: file // or list of files ($files) for html5 only
             };
 
             if ($scope.isEditMode) {
@@ -230,21 +220,11 @@
                     //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
                 })
                 .success(function (data, status, headers, config) {
-                    // file is uploaded successfully
                     if (!$scope.product.images)
                         $scope.product.images = [];
                     $scope.product.images.push(data);
-                    //console.log(data);
             });
-            //.error(...)
-            //.then(success, error, progress); 
-            // access or attach event listeners to the underlying XMLHttpRequest.
-            //.xhr(function(xhr){xhr.upload.addEventListener(...)})
         }
-        /* alternative way of uploading, send the file binary with the file's content-type.
-           Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed. 
-           It could also be used to monitor the progress of a normal http post/put request with large data*/
-        // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
     };
 
     function setDefaultAttributeValues() {
@@ -261,7 +241,7 @@
     function setCurrentAttributeValues() {
         // set current values for each attribute (field) - right after load in Edit mode
         $scope.dotObject.selectedAttributeSet.attributes.forEach(function (attr, idx) {
-            var corespondingProductAttribute = getObject($scope.product.attributes, 'id', attr.id);
+            var corespondingProductAttribute = getItemInArray($scope.product.attributes, 'id', attr.id);
             if (corespondingProductAttribute) {
                 if (attr.type == 'MultipleOptions')
                     attr.values = corespondingProductAttribute.values;
@@ -331,34 +311,6 @@
         $scope.selectedIndex = newIdx;
     }
 
-    // find object in array (objects with one level depth)
-    function getObject(data, propertyName, propertyValue) {
-        var item = undefined;
-        var length = data.length;
-        for (i = 0; i < length; i++) {
-            if (data[i][propertyName] === propertyValue) {
-                item = data[i];
-                break;
-            };
-        };
-        return item;
-    }
-
-    //$scope.aside = { title: 'Title', content: 'Hello Aside2<br />This is a multiline message2!' };
-    // Show a basic aside from a controller
-    //var myAside = $aside({ title: 'My Title', content: 'My Content', show: false });
-
-    // Pre-fetch an external template populated with a custom scope
-    //var myOtherAside = $aside({ scope: $scope, template: '/App/templates/demo.tpl.html', show: false, placement: 'right', animation: 'am-slide-right', container: 'body', title: 'Select Products'});
-    
-    //var myOtherAside;
-
-    // Show when some event occurs (use $promise property to ensure the template has been loaded)
-    //myOtherAside.$promise.then(function () {
-    //    myOtherAside.show();
-    //})
-
-    //console.log($aside.scope);
 
     // Show a modal to display images
     var myModal = $modal({ scope: $scope, template: '/App/templates/showImage.tpl.html', show: false });
@@ -374,128 +326,91 @@
     };
 
 
-    $scope.products = [];
-    $scope.errors = {};
 
-    $scope.selectProduct = function (item) {
-        //alert('Selected: ' + item.name);
-        //myOtherAside.hide;
-        if (!$scope.product.relatedProducts)
-            $scope.product.relatedProducts = [];
-        $scope.product.relatedProducts.push(item);
-        //$scope.test = 'mmm';
-        //$scope.$hide();
-        //alert($scope.test);
-    };
+    // Show an aside to select relatd products
+    var relatedProductsAside = $aside({ scope: $scope, template: '/App/templates/selectRelatedProducts.tpl.html', show: false, placement: 'right', animation: 'am-slide-right', title: 'Select Products' });
 
-
-
-
-
-    var promiseToGetProducts;
-    function getProducts() {
-        promiseToGetProducts = productService.getAll().then(function (data) {
-            $scope.products = data;
+    function getAvailableRelatedProducts() {
+        promiseToGetAvailableRelatedProducts = productService.getAll().then(function (data) {
+            $scope.availableRelatedProducts = getDifRelatedProducts(data);
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
-        });
+        })
     };
 
-    $scope.refresh = function () {
-        getProducts();
+    function getDifRelatedProducts(allProducts) {
+        // difRelatedProducts = AllProducts - AlreadySelectedProducts - ProductItself
+        var result = [];
+        var relatedProducts = $scope.product.relatedProducts;
+
+        if (!relatedProducts || relatedProducts.length == 0) {
+            result = allProducts;
+        } else {
+            allProducts.forEach(function (item) {
+                if (getIndexInArray($scope.product.relatedProducts, 'id', item.id) == -1) {
+                    result.push(item);
+                }
+            });
+        }
+
+        // remove also the current element itself from this list
+        deleteItemInArray(result, 'id', $scope.product.id);
+
+        return result;
     }
 
-    //$scope.$on('aside.hide', function () {
-    //    alert('closed aside: ' + $scope.test);
-    //});
-
-    //$scope.$on('aside.show', function () {
-    //    //$scope.test = 'kkk';
-    //    //getProducts();
-    //    //$scope.$apply();
-    //    //console.log($scope);
-
-    //    alert('show aside: ' + $scope.test);
-    //});
-
-    //$scope.testF = function () {
-    //    alert('btn: ' + $scope.test);
-    //}
-
-    //getProducts();
-    $scope.test = 'bbbb';
-    //$q.when(promiseToGetProducts).then(function () {
-    //    $scope.test = 'mmm';
-    //});
-    //var newScope = $scope.$new(true);
-    //var newScope = $scope.$new();
-    //newScope.test = 'xxx';
-
-    var myOtherAside = $aside({ scope: $scope, template: '/App/templates/demo.tpl.html', show: false, placement: 'right', animation: 'am-slide-right', container: 'body', title: 'Select Products' });
-
-    $scope.showAside = function () {
-        //myAside.$promise.then(myAside.show);
-
-        //$q.all([promiseToGetProducts, myOtherAside])
-        //.then(function (result) {
-        //    //alert(22);
-        //    //myOtherAside.show;
-
-        //    myOtherAside.$promise.then(myOtherAside.show);
-        //    alert(33);
-        //}, function (reason) {
-        //    alert('failure');
-        //});
-
-        //getProducts();
-
-        //$q.when(promiseToGetProducts).then(function () {
-        //    //alert(1);
-        //    //alert($scope.products.length);
-
-        //    $scope.test = 'aaa';
-        //    //$scope.$apply();
-        //    myOtherAside.$promise.then(myOtherAside.show);
-        //    //alert(44);
-        //});
-
-        //$scope.$parent.test = 'aaa';
-        //$scope.$apply();
-        
-        //alert(JSON.stringify(newScope.test, null, 4));
-
-        $scope.test = 'ggg';             
-        getProducts();
-        $q.when(promiseToGetProducts).then(function () {
-            myOtherAside.$promise.then(myOtherAside.show);
+    $scope.showRelatedProductsAside = function () {         
+        getAvailableRelatedProducts();
+        $q.when(promiseToGetAvailableRelatedProducts).then(function () {
+            relatedProductsAside.$promise.then(relatedProductsAside.show);
         });
+    };   
 
-        
+    $scope.selectRelatedProduct = function (item) {
+        if (!$scope.product.relatedProducts)
+            $scope.product.relatedProducts = [];
+        $scope.product.relatedProducts.push(item);
+
+        deleteItemInArray($scope.availableRelatedProducts, 'id', item.id);
+        //myOtherAside.hide(); // if you want to hide the aside after each selection
     };
 
-    
-    $scope.deleteRelatedProduct = function (itemId) {
-        //alert(itemId);
-        deleteItemInArray($scope.product.relatedProducts, 'id', itemId);
+    $scope.deleteRelatedProduct = function (item) {
+        deleteItemInArray($scope.product.relatedProducts, 'id', item.id);
+        $scope.availableRelatedProducts.push(item);
     }
+
+    // events on show/hide Aside
+    //$scope.$on('aside.hide', function () {});
+    //$scope.$on('aside.show', function () {});
+
+
 
     // helper functions
-    function getIndexInArray(myArray, property, value) {
-        var length = myArray.length;
+    function getIndexInArray(array, property, value) {
+        var length = array.length;
         for (var i = 0, len = length; i < len; i++) {
-            if (myArray[i][property] === value) return i;
+            if (array[i][property] === value) return i;
         }
         return -1;
     }
 
-    function deleteItemInArray(myArray, property, value) {
-        var idx = getIndexInArray(myArray, property, value);
-        //alert(idx);
+    function deleteItemInArray(array, property, value) {
+        var idx = getIndexInArray(array, property, value);
         if (idx != -1)
-            myArray.splice(idx, 1);
+            array.splice(idx, 1);
         else
             alert("Can't delete! Key or value not found");
+    }
+
+    function getItemInArray(array, property, value) {
+        // find object in array (objects with one level depth)
+        var item = undefined;
+        var idx = getIndexInArray(array, property, value)
+        if (idx != -1)
+            item = array[idx];
+        return item;
     }
 
 }]);
