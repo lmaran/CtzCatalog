@@ -1,4 +1,4 @@
-﻿app.controller('productController', ['$scope', '$window', '$route', 'productService', 'attributeSetService', 'optionSetService', '$location', '$q', '$upload', 'dialogService', '$modal', '$aside', '$timeout', function ($scope, $window, $route, productService, attributeSetService, optionSetService, $location, $q, $upload, dialogService, $modal, $aside, $timeout) {
+﻿app.controller('productController', ['$scope', '$window', '$route', 'productService', 'attributeSetService', 'optionSetService', '$location', '$q', '$upload', 'dialogService', '$modal', '$aside', 'helper', function ($scope, $window, $route, productService, attributeSetService, optionSetService, $location, $q, $upload, dialogService, $modal, $aside, helper) {
     $scope.isEditMode = $route.current.isEditMode;
     $scope.isFocusOnName = $scope.isEditMode ? false : true;
 
@@ -42,7 +42,7 @@
         .then(function (result) {
 
             // set selected AttributeSet
-            $scope.dotObject.selectedAttributeSet = getItemInArray($scope.attributeSets, 'id', $scope.product.attributeSetId);
+            $scope.dotObject.selectedAttributeSet = helper.getItemInArray($scope.attributeSets, 'id', $scope.product.attributeSetId);
 
             // setCurrentValues
             $scope.dotObject.attributes = $scope.product.attributes;
@@ -241,7 +241,7 @@
     function setCurrentAttributeValues() {
         // set current values for each attribute (field) - right after load in Edit mode
         $scope.dotObject.selectedAttributeSet.attributes.forEach(function (attr, idx) {
-            var corespondingProductAttribute = getItemInArray($scope.product.attributes, 'id', attr.id);
+            var corespondingProductAttribute = helper.getItemInArray($scope.product.attributes, 'id', attr.id);
             if (corespondingProductAttribute) {
                 if (attr.type == 'MultipleOptions')
                     attr.values = corespondingProductAttribute.values;
@@ -348,19 +348,19 @@
             result = allProducts;
         } else {
             allProducts.forEach(function (item) {
-                if (getIndexInArray($scope.product.relatedProducts, 'id', item.id) == -1) {
+                if (helper.getIndexInArray($scope.product.relatedProducts, 'id', item.id) == -1) {
                     result.push(item);
                 }
             });
         }
 
         // remove also the current element itself from this list
-        deleteItemInArray(result, 'id', $scope.product.id);
+        helper.deleteItemInArray(result, 'id', $scope.product.id);
 
         return result;
     }
 
-    $scope.showRelatedProductsAside = function () {         
+    $scope.showRelatedProductsAside = function () {
         getAvailableRelatedProducts();
         $q.when(promiseToGetAvailableRelatedProducts).then(function () {
             relatedProductsAside.$promise.then(relatedProductsAside.show);
@@ -372,12 +372,12 @@
             $scope.product.relatedProducts = [];
         $scope.product.relatedProducts.push(item);
 
-        deleteItemInArray($scope.availableRelatedProducts, 'id', item.id);
+        helper.deleteItemInArray($scope.availableRelatedProducts, 'id', item.id);
         //myOtherAside.hide(); // if you want to hide the aside after each selection
     };
 
     $scope.deleteRelatedProduct = function (item) {
-        deleteItemInArray($scope.product.relatedProducts, 'id', item.id);
+        helper.deleteItemInArray($scope.product.relatedProducts, 'id', item.id);
         $scope.availableRelatedProducts.push(item);
     }
 
@@ -386,65 +386,18 @@
     //$scope.$on('aside.show', function () {});
 
 
-    // todo - extract common helpers into a service
     $scope.getPrimaryThumbImageUrl = function (images) {
-        if (!images || images.length == 0)
-            return 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png';
-
-        var image = images[0]; // primary image
-        if (!image.sizes || image.sizes.length == 0)
-            return 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png';
-
-        var fileNameWithoutExtension = image.name.substring(0, image.name.indexOf('.'));
-        var fileExtensionWithDot = image.name.substring(image.name.indexOf('.'));
-        var sizeLabel = image.sizes[0];
-        return image.rootUrl + '/' + fileNameWithoutExtension + '-' + sizeLabel + fileExtensionWithDot;
+        return helper.getPrimaryThumbImageUrl(images);
     }
 
     $scope.getThumbImageUrl = function (image) {
-        if (!image || !image.sizes || image.sizes.length == 0)
-            return 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png';
-
-        var fileNameWithoutExtension = image.name.substring(0, image.name.indexOf('.'));
-        var fileExtensionWithDot = image.name.substring(image.name.indexOf('.'));
-        var sizeLabel = image.sizes[0];
-        return image.rootUrl + '/' + fileNameWithoutExtension + '-' + sizeLabel + fileExtensionWithDot;
+        return helper.getThumbImageUrl(image);
     }
 
     $scope.getLargeImageUrl = function (image) {
-        if (!image || !image.sizes || image.sizes.length == 0)
-            return 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png';
-
-        var fileNameWithoutExtension = image.name.substring(0, image.name.indexOf('.'));
-        var fileExtensionWithDot = image.name.substring(image.name.indexOf('.'));
-        var sizeLabel = image.sizes.length > 1 ? image.sizes[1] : image.sizes[0];
-        return image.rootUrl + '/' + fileNameWithoutExtension + '-' + sizeLabel + fileExtensionWithDot;
+        return helper.getLargeImageUrl(image);
     }
 
-    // helper functions
-    function getIndexInArray(array, property, value) {
-        var length = array.length;
-        for (var i = 0, len = length; i < len; i++) {
-            if (array[i][property] === value) return i;
-        }
-        return -1;
-    }
 
-    function deleteItemInArray(array, property, value) {
-        var idx = getIndexInArray(array, property, value);
-        if (idx != -1)
-            array.splice(idx, 1);
-        else
-            alert("Can't delete! Key or value not found");
-    }
-
-    function getItemInArray(array, property, value) {
-        // find object in array (objects with one level depth)
-        var item = undefined;
-        var idx = getIndexInArray(array, property, value)
-        if (idx != -1)
-            item = array[idx];
-        return item;
-    }
 
 }]);

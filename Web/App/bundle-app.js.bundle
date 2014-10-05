@@ -48,6 +48,7 @@
         <file>/App/services/attributeService.js</file>
         <file>/App/services/attributeSetService.js</file>
         <file>/App/services/dialogService.js</file>
+        <file>/App/services/helper.js</file>
         
         <file>/App/directives/myFocus.js</file>
         <file>/App/directives/inPlaceEditText.js</file>
