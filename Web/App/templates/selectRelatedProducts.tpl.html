@@ -47,7 +47,7 @@
                             <tbody>
                                 <tr data-ng-repeat="product in availableRelatedProducts | filter:search">
                                     <td>
-                                        <img ng-click="showModal(product)" ng-src="{{product.images.length > 0 && product.images[0].rootUrl + '/' + product.images[0].sizes[0].name || 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png'}}" width="40" />
+                                        <img ng-click="showModal(product)" ng-src="{{getPrimaryThumbImageUrl(product.images)}}" width="40" />
                                     </td>
                                     <td>{{ product.attributeSetName }}</td>
                                     <td>{{ product.code }}</td>

@@ -84,36 +84,16 @@ namespace Web.Repositories
             _collection.Update(query, update,UpdateFlags.Multi);
         }
 
-
-        public ImageSize SaveStreamToBlob(String fileName, Stream stream, String label)
+        public List<String> SaveImage(String fileName, Stream stream)
         {
-            var blobName = fileName.AppendSizeSufix(label); // 989754642-copac-pe-masina-o.jpg ("-o" from "original")
-            CloudBlockBlob blob = AzureStorageContext.Instance.BlobImgContainer.GetBlockBlobReference(blobName);
-            blob.Properties.ContentType = "image/" + Path.GetExtension(fileName).Replace(".", "");  //alfel Azure foloseste default "application/octet-stream"
-
-            // Reset the Stream to the Beginning before upload ...altfel scrie un stream gol //http://social.msdn.microsoft.com/Forums/en-HK/windowsazuredata/thread/a9f8dae4-5636-43d0-b177-e631d9c8d92c
-            stream.Seek(0, SeekOrigin.Begin);
-            blob.UploadFromStream(stream);
-            //stream.Close(); //nu uita sa inchizi stream-ul ...de fapt mai am nevoi de el...il inchid la final
-
-            return new ImageSize()
-            {
-                Name = blob.Name,
-                Size = blob.Properties.Length
-            };
-        }
-
-
-        public List<ImageSize> SaveImage(String fileName, Stream stream)
-        {
-            var imageSizes = new List<ImageSize>();
+            var imageSizes = new List<String>();
 
             // convert stream to image
             Image originalImg = Image.FromStream(stream);
             var originalImgMaxSize = Math.Max(originalImg.Width, originalImg.Height);
 
             // for each defined size
-            foreach (var desiredSize in Img.GetAvailableImageSizes().OrderBy(x=>x.MaxSize)) 
+            foreach (var desiredSize in Img.GetAvailableImageSizes().OrderBy(x => x.MaxSize))
             {
                 // resize only if originalImg is bigger than the currentDefinedSize
                 if (originalImgMaxSize > desiredSize.MaxSize)
@@ -126,7 +106,7 @@ namespace Web.Repositories
             var maxAvailableSize = Img.GetAvailableImageSizes().OrderBy(x => x.MaxSize).Last();
             if (originalImgMaxSize < maxAvailableSize.MaxSize)
             {
-                var originalDesiredSize = new AvailableImageSize() { MaxSize = originalImgMaxSize, Label = "o", IsSquare=false };
+                var originalDesiredSize = new AvailableImageSize() { MaxSize = originalImgMaxSize, Label = "o", IsSquare = false };
                 ResizeAndSaveToBlob(originalImg, originalDesiredSize, fileName, ref imageSizes);
             }
 
@@ -136,6 +116,48 @@ namespace Web.Repositories
             return imageSizes;
         }
 
+        private void ResizeAndSaveToBlob(Image originalImg, AvailableImageSize desiredSize, String fileName, ref List<String> imageSizes)
+        {
+            // 1. resize image
+            using (Image imageResized = ResizeImage.ResizeFromImage(originalImg, desiredSize))
+            using (MemoryStream output = new MemoryStream())
+            {
+                imageResized.Save(output, ImageFormat.Jpeg); // converteste din imagine in stream http://stackoverflow.com/questions/7548028/stream-to-image-and-back
+
+                // 2. save resized image to blob
+                //var blobObjResult = SaveStreamToBlob(fileName, output, desiredSize.Label);
+                SaveStreamToBlob(fileName, output, desiredSize.Label);
+
+                //imageSizes.Add(new ImageSize()
+                //{
+                //    Name = blobObjResult.Name,
+                //    Label = desiredSize.Label,
+                //    Width = imageResized.Width.ToString(),
+                //    Height = imageResized.Height.ToString(),
+                //    Size = blobObjResult.Size// output.Length //sau blobObjResult.Size...cele 2 valori tb. sa fie identice
+                //});
+                imageSizes.Add(desiredSize.Label);
+            }
+        }
+
+        public void SaveStreamToBlob(String fileName, Stream stream, String label)
+        {
+            var blobName = fileName.AppendSizeSufix(label); // 989754642-copac-pe-masina-o.jpg ("-o" from "original")
+            CloudBlockBlob blob = AzureStorageContext.Instance.BlobImgContainer.GetBlockBlobReference(blobName);
+            blob.Properties.ContentType = "image/" + Path.GetExtension(fileName).Replace(".", "");  //alfel Azure foloseste default "application/octet-stream"
+
+            // Reset the Stream to the Beginning before upload ...altfel scrie un stream gol //http://social.msdn.microsoft.com/Forums/en-HK/windowsazuredata/thread/a9f8dae4-5636-43d0-b177-e631d9c8d92c
+            stream.Seek(0, SeekOrigin.Begin);
+            blob.UploadFromStream(stream);
+            //stream.Close(); //nu uita sa inchizi stream-ul ...de fapt mai am nevoi de el...il inchid la final
+
+            //return new ImageSize()
+            //{
+            //    Name = blob.Name,
+            //    Size = blob.Properties.Length
+            //};
+        }
+        
         public void DeleteImageFiles(String imageId)
         {
             // delete image (and all its sizes) from Azure Blobs
@@ -174,28 +196,6 @@ namespace Web.Repositories
 
             _collection.Update(query, update);
         }
-
-        private void ResizeAndSaveToBlob(Image originalImg, AvailableImageSize desiredSize, String fileName, ref List<ImageSize> imageSizes)
-        {
-            // 1. resize image
-            using (Image imageResized = ResizeImage.ResizeFromImage(originalImg, desiredSize))
-            using (MemoryStream output = new MemoryStream())
-            {
-                imageResized.Save(output, ImageFormat.Jpeg); // converteste din imagine in stream http://stackoverflow.com/questions/7548028/stream-to-image-and-back
-
-                // 2. save resized image to blob
-                var blobObjResult = SaveStreamToBlob(fileName, output, desiredSize.Label);
-
-                imageSizes.Add(new ImageSize()
-                {
-                    Name = blobObjResult.Name,
-                    Label = desiredSize.Label,
-                    Width = imageResized.Width.ToString(),
-                    Height = imageResized.Height.ToString(),
-                    Size = blobObjResult.Size// output.Length //sau blobObjResult.Size...cele 2 valori tb. sa fie identice
-                });
-            }
-        }
     }
 
 
@@ -208,7 +208,7 @@ namespace Web.Repositories
         void Delete(String itemId);
 
         void UpdateAttrName(Attribute newAttribute);
-        List<ImageSize> SaveImage(String fileName, Stream fileStream);
+        List<string> SaveImage(String fileName, Stream fileStream);
         void DeleteImageFiles(String imageId);
         void DeleteImageFromProductModel(String imageId, String productId);
 

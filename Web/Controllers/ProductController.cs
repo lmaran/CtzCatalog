@@ -104,7 +104,7 @@ namespace Web.Controllers
             }
 
             // save file to Blob
-            List<ImageSize> imageSizes = _repository.SaveImage(fileName, fileStream);
+            List<String> imageSizes = _repository.SaveImage(fileName, fileStream);
 
             // create metadata
             var imageMeta = new ImageMeta();

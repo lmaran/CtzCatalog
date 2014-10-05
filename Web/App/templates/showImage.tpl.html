@@ -15,11 +15,11 @@
                         
                     <div class="row">
                         <div class="col-md-10">
-                            <img class="selected-image img-responsive img-dadi" ng-src="{{selectedProduct.images.length > 0 && selectedProduct.images[selectedImgIndex].rootUrl + '/' + selectedProduct.images[selectedImgIndex].sizes[1].name || 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png'}}" />
+                            <img class="selected-image img-responsive img-dadi" ng-src={{getLargeImageUrl(selectedProduct.images[selectedImgIndex])}} />
                         </div>
                         <div class="col-md-2">
                             <span ng-repeat="item in selectedProduct.images" class="pull-left2">
-                                <img ng-src="{{item.rootUrl + '/' + item.sizes[0].name}}" class="img-thumbnail img-thumb-select" ng-class="{'active': selectedImgIndex==$index}" ng-click="displaySelectedImage($index)" />
+                                <img ng-src="{{getThumbImageUrl(item)}}" class="img-thumbnail img-thumb-select" ng-class="{'active': selectedImgIndex==$index}" ng-click="displaySelectedImage($index)" />
                             </span>
                         </div>
                     </div>

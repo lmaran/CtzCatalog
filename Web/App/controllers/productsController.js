@@ -56,16 +56,38 @@
     };
 
 
-    $scope.aside = {title: 'Title', content: 'Hello Aside2<br />This is a multiline message2!'};
-    //// Show a basic aside from a controller
-    //var myAside = $aside({ title: 'My Title', content: 'My Content', show: true });
+    // todo - extract common helpers into a service
+    $scope.getPrimaryThumbImageUrl = function (images) {
+        if (!images || images.length == 0)
+            return 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png';
 
-    //// Pre-fetch an external template populated with a custom scope
-    //var myOtherAside = $aside({ scope: $scope, template: '/App/templates/demo.tpl.html' });
-    //// Show when some event occurs (use $promise property to ensure the template has been loaded)
-    //myOtherAside.$promise.then(function () {
-    //    myOtherAside.show();
-    //})
+        var image = images[0]; // primary image
+        if (!image.sizes || image.sizes.length == 0)
+            return 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png';
 
+        var fileNameWithoutExtension = image.name.substring(0, image.name.indexOf('.'));
+        var fileExtensionWithDot = image.name.substring(image.name.indexOf('.'));
+        var sizeLabel = image.sizes[0];
+        return image.rootUrl + '/' + fileNameWithoutExtension + '-' + sizeLabel + fileExtensionWithDot;
+    }
 
+    $scope.getThumbImageUrl = function (image) {
+        if (!image || !image.sizes || image.sizes.length == 0)
+            return 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png';
+
+        var fileNameWithoutExtension = image.name.substring(0, image.name.indexOf('.'));
+        var fileExtensionWithDot = image.name.substring(image.name.indexOf('.'));
+        var sizeLabel = image.sizes[0];
+        return image.rootUrl + '/' + fileNameWithoutExtension + '-' + sizeLabel + fileExtensionWithDot;
+    }
+
+    $scope.getLargeImageUrl = function (image) {
+        if (!image || !image.sizes || image.sizes.length == 0)
+            return 'http://appstudio.blob.core.windows.net/share/no-image-available-q.png';
+
+        var fileNameWithoutExtension = image.name.substring(0, image.name.indexOf('.'));
+        var fileExtensionWithDot = image.name.substring(image.name.indexOf('.'));
+        var sizeLabel = image.sizes.length > 1 ? image.sizes[1] : image.sizes[0];
+        return image.rootUrl + '/' + fileNameWithoutExtension + '-' + sizeLabel + fileExtensionWithDot;
+    }
 }]);
