@@ -36,9 +36,14 @@ namespace Web.Repositories
         }
 
 
-        public void Create(Product item)
+        public String Create(Product item)
         {
             _collection.Insert(item);
+
+            // requires this line in Mongo Conventions file: 
+            // cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance);
+            // otherwise, Id remains null
+            return item.Id;
         }
 
         public IEnumerable<Product> GetAll()
@@ -201,12 +206,40 @@ namespace Web.Repositories
         {
             return _collection.FindAllAs<RelatedProduct>();
         }
+
+        public void AddCurrentProductToChild(String childItemId, RelatedProduct currentItem)
+        {
+            var query = new QueryDocument { 
+                {"_id", ObjectId.Parse(childItemId)}
+            };
+
+            var update = new UpdateDocument {
+                {"$push", new BsonDocument("RelatedProducts", currentItem.ToBsonDocument())}
+            };
+
+            _collection.Update(query, update);
+        }
+
+        public void RemoveCurrentProductFromChild(String childItemId, String currentItemId)
+        {
+            var query = new QueryDocument { 
+                {"_id", ObjectId.Parse(childItemId)}
+            };
+
+            var update = new UpdateDocument {
+                {"$pull", new BsonDocument("RelatedProducts", new BsonDocument("_id", ObjectId.Parse(currentItemId)))}
+            };
+
+            _collection.Update(query, update);
+        }
+
+
     }
 
 
     public interface IProductRepository
     {
-        void Create(Product item);
+        String Create(Product item);
         IEnumerable<Product> GetAll();
         Product GetById(String itemId);
         void Update(Product item);
@@ -220,5 +253,8 @@ namespace Web.Repositories
         void AddImageToProductModel(ImageMeta imageMeta, String productId);
 
         IEnumerable<RelatedProduct> GetAllAsRelated();
+
+        void AddCurrentProductToChild(String childItemId, RelatedProduct currentItem);
+        void RemoveCurrentProductFromChild(String childItemId, String currentItemId);
     }
 }

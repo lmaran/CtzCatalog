@@ -31,7 +31,13 @@ namespace Web.Controllers
         [HttpPost, Route]
          public void Post(Product item)
         {
-            _repository.Create(item);
+            // create Product
+            item.Id = _repository.Create(item);
+
+            // update RelatedProducts (add child to product ==> add product to child, too)
+            if (item.RelatedProducts != null)
+                foreach (var childItem in item.RelatedProducts)
+                    _repository.AddCurrentProductToChild(childItem.Id, item.ConvertToRelatedProduct());
         }
 
         [HttpGet, Route]
@@ -49,21 +55,53 @@ namespace Web.Controllers
         [HttpPut, Route]
         public void Update(Product item)
         {
+
+            var oldRelProducts = _repository.GetById(item.Id).RelatedProducts;
+            if (oldRelProducts == null) oldRelProducts = new List<RelatedProduct>();
+
+            // update current product
             _repository.Update(item);
+
+            // update RelatedProducts (add child to product ==> add product to child, too)
+            var newRelProducts = item.RelatedProducts;
+            if (newRelProducts == null) newRelProducts = new List<RelatedProduct>();
+
+            var comparer = new RelatedProductComparer();
+
+            var shouldBeAddedAt = newRelProducts.Except(oldRelProducts, comparer);
+            var shouldBeremovedFrom = oldRelProducts.Except(newRelProducts, comparer);
+
+            foreach (var childItem in shouldBeAddedAt)
+            {
+                _repository.AddCurrentProductToChild(childItem.Id, item.ConvertToRelatedProduct());
+            }
+
+            foreach (var childItem in shouldBeremovedFrom)
+            {
+                _repository.RemoveCurrentProductFromChild(childItem.Id, item.Id);
+            }
+
         }
 
         [HttpDelete, Route("{itemId}")]
         public void Delete(String itemId)
         {
-            // delete product images
-            var product = _repository.GetById(itemId);
-            foreach (var image in product.Images)
-            {
-                this.DeleteImageFiles(image.Name);
-            }
+            var item = _repository.GetById(itemId);
 
             // delete product
             _repository.Delete(itemId);
+
+            // delete product images
+            if (item.Images != null)
+                foreach (var image in item.Images)
+                {
+                    this.DeleteImageFiles(image.Name);
+                }
+
+            // delete the reference in Related Products
+            if (item.RelatedProducts != null)
+                foreach (var childItem in item.RelatedProducts)
+                    _repository.RemoveCurrentProductFromChild(childItem.Id, item.Id);
         }
 
         // *************** Related actions ******************

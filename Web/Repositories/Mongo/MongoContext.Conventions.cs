@@ -33,7 +33,7 @@ namespace Web.Repositories.Mongo
 
                 // http://stackoverflow.com/a/24351900/2726725
                 cm.IdMemberMap.SetRepresentation(BsonType.ObjectId);
-                //cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance);
+                cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance); // useful if you need to return an Id after 'Insert' (see Create method in ProductRepo)
 
                 // Ignore Extra Elements
                 cm.SetIgnoreExtraElements(true);

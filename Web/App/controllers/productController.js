@@ -355,7 +355,9 @@
         }
 
         // remove also the current element itself from this list
-        helper.deleteItemInArray(result, 'id', $scope.product.id);
+        if ($scope.isEditMode) {
+            helper.deleteItemInArray(result, 'id', $scope.product.id);
+        }
 
         return result;
     }
