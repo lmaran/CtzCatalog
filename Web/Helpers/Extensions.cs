@@ -48,7 +48,7 @@ namespace Web.Helpers
         // In URL-ul unei resurse web (poza, document etc) vrei sa pastreze punctul din fata extensiei
         public static string GenerateSlugForFilename(this string fileName)
         {
-            return Path.GetFileNameWithoutExtension(fileName).GenerateSlug() + Path.GetExtension(fileName);
+            return Path.GetFileNameWithoutExtension(fileName).GenerateSlug() + Path.GetExtension(fileName).ToLower();
         }
 
         public static string AppendSizeSufix(this string fileName, string sizeCode)
