@@ -5389,7 +5389,7 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
     var relatedProductsAside = $aside({ scope: $scope, template: '/App/templates/selectRelatedProducts.tpl.html', show: false, placement: 'right', animation: 'am-slide-right', title: 'Select Products' });
 
     function getAvailableRelatedProducts() {
-        promiseToGetAvailableRelatedProducts = productService.getAll().then(function (data) {
+        promiseToGetAvailableRelatedProducts = productService.getAllAsRelated().then(function (data) {
             $scope.availableRelatedProducts = getDifRelatedProducts(data);
         })
         .catch(function (err) {
@@ -6326,6 +6326,12 @@ app.factory('productService', ['$http', function ($http) {
 
         //var imageNameWithoutExtension = imageName.substring(0, imageName.indexOf('.'));
         return $http.delete(rootUrl + encodeURIComponent(productId) + "/images/" + encodeURIComponent(imageName) + "/");
+    };
+
+    factory.getAllAsRelated = function () {
+        return $http.get('/api/productsasrelated/').then(function (result) {
+            return result.data;
+        });
     };
 
     return factory;

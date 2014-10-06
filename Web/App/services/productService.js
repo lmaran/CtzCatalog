@@ -49,5 +49,11 @@
         return $http.delete(rootUrl + encodeURIComponent(productId) + "/images/" + encodeURIComponent(imageName) + "/");
     };
 
+    factory.getAllAsRelated = function () {
+        return $http.get('/api/productsasrelated/').then(function (result) {
+            return result.data;
+        });
+    };
+
     return factory;
 }]);

@@ -196,6 +196,11 @@ namespace Web.Repositories
 
             _collection.Update(query, update);
         }
+
+        public IEnumerable<RelatedProduct> GetAllAsRelated()
+        {
+            return _collection.FindAllAs<RelatedProduct>();
+        }
     }
 
 
@@ -213,5 +218,7 @@ namespace Web.Repositories
         void DeleteImageFromProductModel(String imageId, String productId);
 
         void AddImageToProductModel(ImageMeta imageMeta, String productId);
+
+        IEnumerable<RelatedProduct> GetAllAsRelated();
     }
 }

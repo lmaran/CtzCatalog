@@ -331,7 +331,7 @@
     var relatedProductsAside = $aside({ scope: $scope, template: '/App/templates/selectRelatedProducts.tpl.html', show: false, placement: 'right', animation: 'am-slide-right', title: 'Select Products' });
 
     function getAvailableRelatedProducts() {
-        promiseToGetAvailableRelatedProducts = productService.getAll().then(function (data) {
+        promiseToGetAvailableRelatedProducts = productService.getAllAsRelated().then(function (data) {
             $scope.availableRelatedProducts = getDifRelatedProducts(data);
         })
         .catch(function (err) {

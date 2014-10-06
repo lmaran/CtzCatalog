@@ -135,6 +135,13 @@ namespace Web.Controllers
             _repository.DeleteImageFromProductModel(imageId, productId);
         }
 
+
+        [HttpGet, Route("~/api/productsasrelated")] // Use a tilde (~) to override the route prefix
+        public IEnumerable<RelatedProduct> GetAllAsRelated()
+        {
+            return _repository.GetAllAsRelated();
+        }
+
     }
 
 
