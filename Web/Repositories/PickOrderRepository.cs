@@ -1,7 +1,8 @@
-﻿using Web.Helpers;
+﻿using Attribute = Web.Models.Attribute; // Type alias
+
+using Web.Helpers;
 using Web.Models;
 using AutoMapper;
-using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,89 +10,76 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
+using Web.Repositories.Mongo;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Driver.Builders;
+using System.IO;
+using System.Drawing;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Web.App_Start;
+using System.Configuration;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.RetryPolicies;
+using Web.Repositories.Azure;
+using System.Drawing.Imaging;
 
 namespace Web.Repositories
 {
-    public class PickOrderRepository : TableStorage<PickOrderEntry>, IPickOrderRepository
+    public class PickOrderRepository : IPickOrderRepository
     {
+
+        private readonly MongoCollection<PickOrder> _collection;
+
         public PickOrderRepository()
-            : base(tableName: "PickOrders")
         {
+            _collection = MongoContext.AppInstance.Database.GetCollection<PickOrder>(MongoConstants.Collections.PickOrders);
         }
 
-        public void Add(PickOrder item)
+
+        public String Create(PickOrder item)
         {
-            var entity = new DynamicTableEntity();
+            _collection.Insert(item);
 
-            entity.Properties["Name"] = new EntityProperty(item.Name);
-            entity.Properties["CreatedOn"] = new EntityProperty(item.CreatedOn);
-            entity.Properties["CustomerId"] = new EntityProperty(item.CustomerId);
-            entity.Properties["CustomerName"] = new EntityProperty(item.CustomerName);
-            entity.PartitionKey = "p";
-            entity.RowKey = Guid.NewGuid().ToString();
-
-            // entity.ETag = "*"; // mandatory for <merge>
-            // var operation = TableOperation.Merge(entity);
-            var operation = TableOperation.Insert(entity);
-            Table.Execute(operation);
+            // requires this line in Mongo Conventions file: 
+            // cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance);
+            // otherwise, Id remains null
+            return item.Id;
         }
 
         public IEnumerable<PickOrder> GetAll()
         {
-            var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "p");
-            var entitiesTable = this.ExecuteQuery(filter);
-
-            // automapper: copy "entitiesTable" to "entitiesVM"
-            Mapper.CreateMap<PickOrderEntry, PickOrder>()
-                //.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.PartitionKey))
-                .ForMember(dest => dest.PickOrderId, opt => opt.MapFrom(src => src.RowKey));
-
-
-            var entitiesVM = Mapper.Map<List<PickOrderEntry>, List<PickOrder>>(entitiesTable.ToList()); //neaparat cu ToList()
-
-            return entitiesVM;
+            return _collection.FindAll();
         }
 
         public PickOrder GetById(string itemId)
         {
-            var entry = this.Retrieve("p", itemId);
-
-            Mapper.CreateMap<PickOrderEntry, PickOrder>()
-                .ForMember(dest => dest.PickOrderId, opt => opt.MapFrom(src => src.RowKey));
-
-            return Mapper.Map<PickOrderEntry, PickOrder>(entry);
+            return _collection.FindOneById(ObjectId.Parse(itemId));
         }
 
         public void Update(PickOrder item)
         {
-            Mapper.CreateMap<PickOrder, PickOrderEntry>()
-                .ForMember(dest => dest.RowKey, opt => opt.MapFrom(src => src.PickOrderId))
-                .ForMember(dest => dest.PartitionKey, opt => opt.UseValue("p"));
-
-            var entity = Mapper.Map<PickOrder, PickOrderEntry>(item);
-
-            entity.ETag = "*"; // mandatory for <replace>
-            var operation = TableOperation.Replace(entity);
-            Table.Execute(operation);
+            _collection.Save(item);
         }
 
         public void Delete(string itemId)
         {
-            var item = new PickOrderEntry();
-            item.PartitionKey = "p";
-            item.RowKey = itemId;
-            this.Delete(item);
+            var query = Query<PickOrder>.EQ(x => x.Id, itemId);
+            _collection.Remove(query);
         }
+
+
+        // ***************** Related Services ****************
 
     }
 
 
-    public interface IPickOrderRepository : ITableStorage<PickOrderEntry>
+    public interface IPickOrderRepository
     {
-        void Add(PickOrder item);
+        String Create(PickOrder item);
         IEnumerable<PickOrder> GetAll();
-        PickOrder GetById(string itemId);
+        PickOrder GetById(String itemId);
         void Update(PickOrder item);
-        void Delete(string itemId);
+        void Delete(String itemId);
     }
 }

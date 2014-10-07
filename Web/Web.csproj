@@ -182,12 +182,19 @@
     <Content Include="App\views\attributeSet.html" />
     <Content Include="App\views\dialog.alert.html" />
     <Content Include="App\views\dialog.confirm.html" />
-    <Content Include="App\views\pickOrderEdit.html" />
-    <Content Include="App\views\pickOrderCreate.html" />
+    <Content Include="App\views\pickOrder.html" />
     <Content Include="App\views\customer.html" />
     <Content Include="App\views\optionSet.html" />
     <Content Include="App\views\product.html" />
     <Content Include="App\views\optionSets.html" />
+    <Content Include="Content\angular-motion.css" />
+    <Content Include="Content\bootstrap-additions.css" />
+    <Content Include="Content\bundle-applib.css">
+      <DependentUpon>bundle-applib.css.bundle</DependentUpon>
+    </Content>
+    <Content Include="Content\bundle-applib.min.css">
+      <DependentUpon>bundle-applib.css</DependentUpon>
+    </Content>
     <Content Include="Content\orange.png" />
     <Content Include="Content\style.min.css">
       <DependentUpon>style.css</DependentUpon>
@@ -205,6 +212,7 @@
     </Content>
     <Content Include="Content\translates\es.json" />
     <Content Include="Content\style.less" />
+    <Content Include="Content\bundle-applib.css.bundle" />
     <None Include="Properties\PublishProfiles\Azure-WebFarmLM1.pubxml" />
     <Content Include="Scripts\angular-translate-loader-static-files.js" />
     <Content Include="Scripts\angular-translate-storage-cookie.js" />

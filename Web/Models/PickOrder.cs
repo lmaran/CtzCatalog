@@ -6,17 +6,17 @@ using System.Web;
 
 namespace Web.Models
 {
-    public class PickOrder
+    public class PickOrder:Entity
     {
         public PickOrder()
         {
             this.CreatedOn = DateTime.UtcNow;
         }
 
-        public string PickOrderId { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public DateTime CreatedOn { get; set; }
-        public string CustomerId { get; set; }
-        public string CustomerName { get; set; }
+        public Customer Customer { get; set; }
+
     }
 }

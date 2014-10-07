@@ -30,8 +30,7 @@
     if ($scope.isEditMode) {
         $scope.pageTitle = 'Edit product';
         init();
-    }
-    else { // create mode
+    } else { // create mode
         $scope.pageTitle = 'Add new product';
     }
 

@@ -35,9 +35,9 @@
             </thead>
             <tbody>
                 <tr data-ng-repeat="pickOrder in pickOrders | filter:search">
-                    <td><a ng-href="/pickOrders/{{pickOrder.pickOrderId}}">{{pickOrder.name}}</a></td>
+                    <td><a ng-href="/pickOrders/{{pickOrder.id}}">{{pickOrder.name}}</a></td>
                     <td>{{ pickOrder.createdOn }}</td>
-                    <td>{{ pickOrder.customerName }}</td>
+                    <td>{{ pickOrder.customer.name }}</td>
                     <td>
                         <a ng-click="delete(pickOrder)">delete</a>
                     </td>

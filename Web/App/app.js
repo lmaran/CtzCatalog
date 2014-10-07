@@ -33,12 +33,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
         .when('/pickOrders/create', {
             controller: 'pickOrderController',
-            templateUrl: 'App/views/pickOrderCreate.html',
+            templateUrl: 'App/views/pickOrder.html',
             title: 'Create PickOrder'
         })
         .when('/pickOrders/:id', {
             controller: 'pickOrderController',
-            templateUrl: 'App/views/pickOrderEdit.html',
+            templateUrl: 'App/views/pickOrder.html',
             title: 'Edit PickOrder',
             isEditMode: true
         })
@@ -158,6 +158,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
 }]);
 
 
+app.config(function ($modalProvider) {
+    angular.extend($modalProvider.defaults, {
+        //animation: '',
+        //backdropAnimation: ''
+    });
+})
 
 //app.config(['$httpProvider', function ($httpProvider) {
 //    $httpProvider.interceptors.push('authInterceptor');

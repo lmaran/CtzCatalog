@@ -23,11 +23,11 @@ namespace Web.Controllers
         [HttpPost, Route]
         public void Post(PickOrder item)
         {
-            _repository.Add(item);
+            _repository.Create(item);
         }
 
         [HttpGet, Route]
-        public IEnumerable<PickOrder> Get() //pk
+        public IEnumerable<PickOrder> Get()
         {
             return _repository.GetAll();
         }

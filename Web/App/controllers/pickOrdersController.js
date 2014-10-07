@@ -10,10 +10,10 @@
             // get the index for selected item
             var i = 0;
             for (i in $scope.pickOrders) {
-                if ($scope.pickOrders[i].pickOrderId == item.pickOrderId) break;
+                if ($scope.pickOrders[i].id == item.id) break;
             };
 
-            pickOrderService.delete(item.pickOrderId).then(function () {
+            pickOrderService.delete(item.id).then(function () {
                 $scope.pickOrders.splice(i, 1);
             })
             .catch(function (err) {

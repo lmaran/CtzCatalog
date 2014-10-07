@@ -4620,12 +4620,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
         .when('/pickOrders/create', {
             controller: 'pickOrderController',
-            templateUrl: 'App/views/pickOrderCreate.html',
+            templateUrl: 'App/views/pickOrder.html',
             title: 'Create PickOrder'
         })
         .when('/pickOrders/:id', {
             controller: 'pickOrderController',
-            templateUrl: 'App/views/pickOrderEdit.html',
+            templateUrl: 'App/views/pickOrder.html',
             title: 'Edit PickOrder',
             isEditMode: true
         })
@@ -4745,6 +4745,12 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
 }]);
 
 
+app.config(function ($modalProvider) {
+    angular.extend($modalProvider.defaults, {
+        //animation: '',
+        //backdropAnimation: ''
+    });
+})
 
 //app.config(['$httpProvider', function ($httpProvider) {
 //    $httpProvider.interceptors.push('authInterceptor');
@@ -4863,10 +4869,10 @@ app.controller('pickOrdersController', ['$scope', '$location', 'pickOrderService
             // get the index for selected item
             var i = 0;
             for (i in $scope.pickOrders) {
-                if ($scope.pickOrders[i].pickOrderId == item.pickOrderId) break;
+                if ($scope.pickOrders[i].id == item.id) break;
             };
 
-            pickOrderService.delete(item.pickOrderId).then(function () {
+            pickOrderService.delete(item.id).then(function () {
                 $scope.pickOrders.splice(i, 1);
             })
             .catch(function (err) {
@@ -4891,27 +4897,47 @@ app.controller('pickOrdersController', ['$scope', '$location', 'pickOrderService
     };
 }]);
 ///#source 1 1 /App/controllers/pickOrderController.js
-app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrderService', 'customerService', '$location', function ($scope, $window, $route, pickOrderService, customerService, $location) {
+app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrderService', 'customerService', '$location', '$q', function ($scope, $window, $route, pickOrderService, customerService, $location, $q) {
+    $scope.isEditMode = $route.current.isEditMode;
+    $scope.isFocusOnName = $scope.isEditMode ? false : true;
+
     $scope.pickOrder = {};
     $scope.customers = [];
+
+    var promiseToGetPickOrder, promiseToGetCustomers;
     
     getCustomers();
-    if ($route.current.title == "PickOrderEdit") {
+
+    if ($scope.isEditMode) {
+        $scope.pageTitle = 'Edit product';
         init();
+    } else { // create mode
+        $scope.pageTitle = 'Add new product';
     }
 
     function init() {
         getPickOrder();
         
+        // need it only for initial customer selection
+        // http://odetocode.com/blogs/scott/archive/2013/06/19/using-ngoptions-in-angularjs.aspx
+        // it seems that with the last version of Angular, you can use 'track by' to substitute this manual loop:
+        // https://github.com/angular/angular.js/issues/6564 (comment from jeffbcross - 07.10.2014)
+        $q.all([promiseToGetPickOrder, promiseToGetCustomers])
+            .then(function (result) {
+                for (var i = 0; i < $scope.customers.length; i++) {
+                    if ($scope.customers[i].id == $scope.pickOrder.customer.id) {
+                        $scope.pickOrder.customer = $scope.customers[i];
+                        break;
+                    }
+                }
+            }, function (reason) {
+                alert('failure');
+            });
     }
 
     function getPickOrder() {
-        pickOrderService.getById($route.current.params.id).then(function (data) {
-            //$scope.pickOrder = data;
-            $scope.pickOrder.pickOrderId = data.pickOrderId;
-            $scope.pickOrder.name = data.name;
-            $scope.pickOrder.createdOn = data.createdOn;
-            $scope.pickOrder.customer = {customerId:data.customerId, name:data.customerName};
+        promiseToGetPickOrder = pickOrderService.getById($route.current.params.id).then(function (data) {
+            $scope.pickOrder = data;
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -4919,7 +4945,7 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
     }
 
     function getCustomers() {
-        customerService.getAll().then(function (data) {
+        promiseToGetCustomers = customerService.getAll().then(function (data) {
             $scope.customers = data;
         });
     }
@@ -4928,16 +4954,16 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
         $scope.submitted = true;
         if (form.$valid) {
 
-            var pickOrder = {};
-            pickOrder.name = $scope.pickOrder.name;
-            pickOrder.createdOn = $scope.pickOrder.createdOn;
-            pickOrder.customerId = $scope.pickOrder.customer.customerId;
-            pickOrder.customerName = $scope.pickOrder.customer.name;
+            //var pickOrder = {};
+            //pickOrder.name = $scope.pickOrder.name;
+            //pickOrder.createdOn = $scope.pickOrder.createdOn;
+            //pickOrder.customerId = $scope.pickOrder.customer.customerId;
+            //pickOrder.customerName = $scope.pickOrder.customer.name;
 
             //alert(JSON.stringify(pickOrder));
             //return false;
 
-            pickOrderService.create(pickOrder)
+            pickOrderService.create($scope.pickOrder)
                 .then(function (data) {
                     $location.path('/pickOrders');
                     //Logger.info("Widget created successfully");
@@ -4955,18 +4981,9 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
         $scope.submitted = true;
         if (form.$valid) {
 
-            var pickOrder = {};
-            pickOrder.pickOrderId = $scope.pickOrder.pickOrderId;
-            pickOrder.name = $scope.pickOrder.name;
-            pickOrder.createdOn = $scope.pickOrder.createdOn;
-            pickOrder.customerId = $scope.pickOrder.customer.customerId;
-            pickOrder.customerName = $scope.pickOrder.customer.name;
-
-            //alert(JSON.stringify(pickOrder));
-            pickOrderService.update(pickOrder)
+            pickOrderService.update($scope.pickOrder)
                 .then(function (data) {
                     $location.path('/pickOrders');
-                    //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -4978,7 +4995,6 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
     };
 
     $scope.cancel = function () {
-        //$location.path('/widgets')
         $window.history.back();
     }
 
@@ -5088,8 +5104,7 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
     if ($scope.isEditMode) {
         $scope.pageTitle = 'Edit product';
         init();
-    }
-    else { // create mode
+    } else { // create mode
         $scope.pageTitle = 'Add new product';
     }
 
@@ -5875,21 +5890,6 @@ app.controller('attributesController', ['$scope', '$rootScope', '$route', '$loca
     function init() {
         attributeService.getAll().then(function (data) {
             $scope.attributes = data;
-
-            // optional --> convert typeDetails from string to object
-            // only if you want to display them  in List view
-            //data.forEach(function (item) {
-            //    try {
-            //        if (item.typeDetails == '')
-            //            item.typeDetails = [];
-            //        else
-            //            item.typeDetails = JSON.parse(item.typeDetails)
-            //    }
-            //    catch (err) {
-            //        item.typeDetails = [];
-            //        alert(err + ' for Options property of entity ' + item.name);
-            //    };
-            //});
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));

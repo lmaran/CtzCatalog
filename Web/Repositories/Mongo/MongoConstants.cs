@@ -13,6 +13,7 @@ namespace Web.Repositories.Mongo
             public const string AttributeSets = "AttributeSets";
             public const string Products = "Products";
             public const string Customers = "Customers";
+            public const string PickOrders = "PickOrders";
         }
     }
 }
