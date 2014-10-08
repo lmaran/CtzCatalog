@@ -4720,6 +4720,24 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
             isEditMode: true
         })
 
+        // *** ums ***
+        .when('/ums', {
+            controller: 'umsController',
+            templateUrl: 'App/views/ums.html',
+            title: 'Customers'
+        })
+        .when('/ums/create', {
+            controller: 'umController',
+            templateUrl: 'App/views/um.html',
+            title: 'Create UM'
+        })
+        .when('/ums/:id', {
+            controller: 'umController',
+            templateUrl: 'App/views/um.html',
+            title: 'Edit UM',
+            isEditMode: true
+        })
+
         .otherwise({ redirectTo: '/' });
 
     // use the HTML5 History API - http://scotch.io/quick-tips/js/angular/pretty-urls-in-angularjs-removing-the-hashtag
@@ -4794,6 +4812,9 @@ app.controller('navbarController', ['$scope', '$rootScope', '$location', '$trans
     }, {
         'title': 'AttributeSets',
         'link': '/attributesets'
+    }, {
+        'title': 'UMs',
+        'link': '/ums'
     }];
 
     // http://stackoverflow.com/a/18562339
@@ -6278,6 +6299,51 @@ app.controller('attributeSetController', ['$scope', '$window', '$route', 'attrib
     }
 
 }]);
+///#source 1 1 /App/controllers/umsController.js
+app.controller('umsController', ['$scope', '$location', 'umService', 'dialogService', '$modal', function ($scope, $location, umService, dialogService, $modal) {
+    $scope.ums = [];
+    $scope.errors = {};
+
+    init();
+
+    $scope.delete = function (item) {
+        dialogService.confirm('Are you sure you want to delete this item?', item.name).then(function () {
+
+            // get the index for selected item
+            var i = 0;
+            for (i in $scope.ums) {
+                if ($scope.ums[i].id == item.id) break;
+            };
+
+            umService.delete(item.id).then(function () {
+                $scope.ums.splice(i, 1);
+            })
+            .catch(function (err) {
+                $scope.errors = JSON.stringify(err.data, null, 4);
+                alert($scope.errors);
+            });
+
+        });
+    };
+
+    $scope.create = function () {
+        $location.path('/ums/create');
+    }
+
+    $scope.refresh = function () {
+        init();
+    };
+
+    function init() {
+        umService.getAll().then(function (data) {
+            $scope.ums = data;
+        })
+        .catch(function (err) {
+            alert(JSON.stringify(err, null, 4));
+        });
+    };
+
+}]);
 ///#source 1 1 /App/services/productService.js
 app.factory('productService', ['$http', function ($http) {
 
@@ -6639,6 +6705,38 @@ app.factory('helper', [function () {
         }
         return -1;
     }
+
+    return factory;
+}]);
+///#source 1 1 /App/services/umService.js
+app.factory('umService', ['$http', function ($http) {
+
+    var factory = {};
+    var rootUrl = '/api/ums/';
+
+    factory.create = function (item) {
+        return $http.post(rootUrl, item);
+    };
+
+    factory.getAll = function () {
+        return $http.get(rootUrl).then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.getById = function (itemId) {
+        return $http.get(rootUrl + encodeURIComponent(itemId)).then(function (result) {
+            return result.data;
+        });
+    };
+
+    factory.update = function (item) {
+        return $http.put(rootUrl, item);
+    };
+
+    factory.delete = function (itemId) {
+        return $http.delete(rootUrl + encodeURIComponent(itemId));
+    };
 
     return factory;
 }]);

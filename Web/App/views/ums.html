@@ -1,0 +1,59 @@
+﻿<header id="content-header" ng-class="contentHeaderClass">
+    <h1>
+        <i id="content-header-icon" class="glyphicon glyphicon-map-marker"></i>
+        Unit of Measures
+    </h1>
+
+</header>
+
+<div class="container-fluid">
+    <div class="row toolbar">
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new um </button>
+            <button type="button" class="btn" ng-click="refresh()"> <span class="glyphicon glyphicon-refresh"></span> </button>
+        </div>
+
+        <div class="col-md-3 pull-right">
+            <div class="input-group">
+                <input ng-model="search" name="newEmail" type="text" class="form-control" placeholder="Search">
+                <span class="input-group-btn"><button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-search"></span></button></span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table table-responsive table-hover table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>DefaultBaseUM</th>
+                    <th>Values</th>
+                    <th>DefaultValue</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="um in ums | filter:search">
+                    <td>
+                        <a ng-href="/ums/{{um.id}}">{{um.name}}</a>
+                        <!--<i class="glyphicon glyphicon-info-sign" ng-if="um.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{um.description}}"></i>-->
+                    </td>
+                    <td>{{ um.type }}</td>
+                    <td>{{ um.defaultBaseUM.name }}</td>
+                    <td>
+                        <span ng-repeat="item in  um.values">
+                            {{item}}<span ng-if="!$last">, </span>
+                        </span>
+                    </td>
+                    <td>{{ um.defaultValue }}</td>
+                    <td>
+                        <a ng-click="delete(um)">delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

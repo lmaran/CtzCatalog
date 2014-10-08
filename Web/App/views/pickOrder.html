@@ -35,6 +35,46 @@
             </div>
         </div>
 
+        <!--embedded products-->
+        <div class="form-group">
+            <label class="col-md-2 control-label">Products</label>
+            <div class="col-md-10">
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <a ng-click="showRelatedProductsAside()">Add products</a>
+                    </div>
+
+                    <div class="panel-body" style="max-height:200px; overflow-y:auto; padding:0;">
+                        <table class="table table-responsive table-hover table-condensed borderless" style="margin-bottom:0">
+                            <tbody>
+                                <tr data-ng-repeat="product in product.relatedProducts | filter:search">
+                                    <td>
+                                        <img ng-click="showModal(product)" ng-src="{{getPrimaryThumbImageUrl(product.images)}}" width="40" />
+                                    </td>
+                                    <td>{{ product.attributeSetName }}</td>
+                                    <td>{{ product.code }}</td>
+                                    <td>
+                                        <a target="_blank" ng-href="/products/{{product.id}}">{{product.name}}</a>
+                                        <!--<span ng-if="product.description" class="glyphicon glyphicon-info-sign" data-placement="top" data-trigger="hover" html="true" data-content="{{product.attributes}}" bs-popover></span>-->
+                                        <i class="glyphicon glyphicon-info-sign" ng-if="product.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{product.description}}"></i>
+                                    </td>
+
+                                    <td>
+                                        <a ng-click="deleteRelatedProduct(product)">delete</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div> <!--end panel-->
+
+            </div>
+        </div>
+        <!--end embedded products-->
+
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button type="submit" class="btn btn-primary"> <span class="glyphicon glyphicon-floppy-disk"></span> {{'GlobalButtons.Save' | translate}} </button>

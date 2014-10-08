@@ -6,7 +6,8 @@
         "Customers": "Customers",
         "OptionSets": "OptionSets",
         "Attributes": "Attributes",
-        "AttributeSets": "AttributeSets"
+        "AttributeSets": "AttributeSets",
+        "UMs": "UMs"
     },
  
     "Navbar":

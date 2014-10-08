@@ -18,6 +18,9 @@
     }, {
         'title': 'AttributeSets',
         'link': '/attributesets'
+    }, {
+        'title': 'UMs',
+        'link': '/ums'
     }];
 
     // http://stackoverflow.com/a/18562339

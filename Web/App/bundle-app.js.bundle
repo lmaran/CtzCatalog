@@ -39,7 +39,8 @@
         <file>/App/controllers/attributesController.js</file>
         <file>/App/controllers/attributeController.js</file>
         <file>/App/controllers/attributeSetsController.js</file>
-        <file>/App/controllers/attributeSetController.js</file>        
+        <file>/App/controllers/attributeSetController.js</file>
+        <file>/App/controllers/umsController.js</file>
 
         <file>/App/services/productService.js</file>
         <file>/App/services/pickOrderService.js</file>
@@ -49,6 +50,7 @@
         <file>/App/services/attributeSetService.js</file>
         <file>/App/services/dialogService.js</file>
         <file>/App/services/helper.js</file>
+        <file>/App/services/umService.js</file>
         
         <file>/App/directives/myFocus.js</file>
         <file>/App/directives/inPlaceEditText.js</file>

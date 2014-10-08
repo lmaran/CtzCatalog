@@ -6,7 +6,8 @@
         "Customers": "Clientes",
         "OptionSets": "Grupos de Opciones",
         "Attributes": "Atributos",
-        "AttributeSets": "Grupos de Atributos"
+        "AttributeSets": "Grupos de Atributos",
+        "UMs": "UMs"
     },
  
     "Navbar":

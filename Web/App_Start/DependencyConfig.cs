@@ -22,6 +22,7 @@ namespace Web.App_Start
             container.RegisterType<IOptionSetRepository, OptionSetRepository>();
             container.RegisterType<IAttributeRepository, AttributeRepository>();
             container.RegisterType<IAttributeSetRepository, AttributeSetRepository>();
+            container.RegisterType<IUMRepository, UMRepository>();
 
             //var connString = ConfigurationManager.ConnectionStrings["CortizoAzureStorage"].ConnectionString;
             //var storageAccount = CloudStorageAccount.Parse(connString);

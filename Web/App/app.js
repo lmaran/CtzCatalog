@@ -133,6 +133,24 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
             isEditMode: true
         })
 
+        // *** ums ***
+        .when('/ums', {
+            controller: 'umsController',
+            templateUrl: 'App/views/ums.html',
+            title: 'Customers'
+        })
+        .when('/ums/create', {
+            controller: 'umController',
+            templateUrl: 'App/views/um.html',
+            title: 'Create UM'
+        })
+        .when('/ums/:id', {
+            controller: 'umController',
+            templateUrl: 'App/views/um.html',
+            title: 'Edit UM',
+            isEditMode: true
+        })
+
         .otherwise({ redirectTo: '/' });
 
     // use the HTML5 History API - http://scotch.io/quick-tips/js/angular/pretty-urls-in-angularjs-removing-the-hashtag

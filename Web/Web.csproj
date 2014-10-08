@@ -152,6 +152,7 @@
     <Content Include="App\controllers\confirmController.js" />
     <Content Include="App\controllers\attributeSetsController.js" />
     <Content Include="App\controllers\attributeSetController.js" />
+    <Content Include="App\controllers\umsController.js" />
     <Content Include="App\controllers\optionSetsController.js" />
     <Content Include="App\controllers\pickOrderController.js" />
     <Content Include="App\controllers\customerController.js" />
@@ -163,6 +164,7 @@
     <Content Include="App\directives\inPlaceEditText.js" />
     <Content Include="App\directives\myFocus.js" />
     <Content Include="App\services\attributeService.js" />
+    <Content Include="App\services\umService.js" />
     <Content Include="App\services\dialogService.js" />
     <Content Include="App\services\attributeSetService.js" />
     <Content Include="App\services\pickOrderService.js" />
@@ -180,6 +182,7 @@
     <Content Include="App\views\confirm.html" />
     <Content Include="App\views\attributeSets.html" />
     <Content Include="App\views\attributeSet.html" />
+    <Content Include="App\views\ums.html" />
     <Content Include="App\views\dialog.alert.html" />
     <Content Include="App\views\dialog.confirm.html" />
     <Content Include="App\views\pickOrder.html" />
@@ -271,14 +274,17 @@
     <Content Include="Scripts\bower_components\angular-sanitize\bower.json" />
     <Content Include="Scripts\bower_components\angular-sanitize\README.md" />
     <Compile Include="App_Start\Config.cs" />
+    <Compile Include="Controllers\UMController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Helpers\Img.cs" />
     <Compile Include="Helpers\RemainingTime.cs" />
     <Compile Include="Helpers\ResizeImage.cs" />
+    <Compile Include="Models\UM.cs" />
     <Compile Include="Models\BlobTransportObject.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\ImageMeta.cs" />
     <Compile Include="Repositories\Azure\AzureStorageContext.cs" />
+    <Compile Include="Repositories\UMRepository.cs" />
     <Compile Include="Repositories\Mongo\MongoConstants.cs" />
     <Compile Include="Repositories\Mongo\MongoContext.Conventions.cs" />
     <Content Include="Scripts\bower_components\ng-file-upload\.bower.json" />

@@ -14,6 +14,7 @@ namespace Web.Repositories.Mongo
             public const string Products = "Products";
             public const string Customers = "Customers";
             public const string PickOrders = "PickOrders";
+            public const string UMs = "UMs";
         }
     }
 }
