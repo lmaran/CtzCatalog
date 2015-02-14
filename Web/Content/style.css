@@ -219,23 +219,7 @@ body:after {
   width: 100%;
   z-index: 9999;
 }
-/*     drop-down country flags 
-===============================*/
-.dropdown-menu {
-  left: 20px;
-  _min-width: 100px;
-}
-.dropdown-menu > li {
-  text-indent: 10px;
-  cursor: pointer;
-}
-.dropdown-menu > li > a {
-  padding-left: 0px;
-}
-.dropdown-menu img {
-  margin-right: 5px;
-  margin-bottom: 3px;
-}
+
 /*     miscellaneous 
 ===============================*/
 .container-fluid {

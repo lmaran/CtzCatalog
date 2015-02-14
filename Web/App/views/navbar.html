@@ -11,21 +11,7 @@
 
 <ul class="sidebar-nav">
 
-    <li class="dropdown">
-        <!--<a class="dropdown-toggle" data-toggle="dropdown">{{'Navbar.Language'|translate}} <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li><a ng-click="changeLanguage('en')"><img src="Content/translates/Flags/blank.gif" class="flag flag-gb" alt="English" />{{'Navbar.Language.English'|translate}}</a></li>
-            <li><a ng-click="changeLanguage('ro')"><img src="Content/translates/Flags/blank.gif" class="flag flag-ro" alt="Romanian" />{{'Navbar.Language.Romanian'|translate}}</a></li>
-            <li><a ng-click="changeLanguage('es')"><img src="Content/translates/Flags/blank.gif" class="flag flag-es" alt="Spanish" />{{'Navbar.Language.Spanish'|translate}}</a></li>
-        </ul>-->
-
-        <!--<a class="dropdown-toggle" bs-dropdown >{{'Navbar.Language'|translate}} <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li><a ng-click="changeLanguage('en')"><img src="Content/translates/Flags/blank.gif" class="flag flag-gb" alt="English" />{{'Navbar.Language.English'|translate}}</a></li>
-            <li><a ng-click="changeLanguage('ro')"><img src="Content/translates/Flags/blank.gif" class="flag flag-ro" alt="Romanian" />{{'Navbar.Language.Romanian'|translate}}</a></li>
-            <li><a ng-click="changeLanguage('es')"><img src="Content/translates/Flags/blank.gif" class="flag flag-es" alt="Spanish" />{{'Navbar.Language.Spanish'|translate}}</a></li>
-        </ul>-->
-
+    <!--<li class="dropdown">
         <a class="dropdown-toggle" bs-dropdown="dropdown" html="true" data-template="dropdownbody">{{'Navbar.Language'|translate}} <b class="caret"></b></a>
         <script type="text/ng-template" id="dropdownbody">
             <ul class="dropdown-menu">
@@ -34,7 +20,20 @@
                 <li><a ng-click="changeLanguage('es')"><img src="Content/translates/Flags/blank.gif" class="flag flag-es" alt="Spanish" />{{'Navbar.Language.Spanish'|translate}}</a></li>
             </ul>
         </script>
-</li>
+    </li>-->
+
+    
+    <li class="dropdown" dropdown>
+        <a href class="dropdown-toggle" dropdown-toggle>
+            {{'Navbar.Language'|translate}}<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" style="margin-left: 20px;">
+            <li><a ng-click="changeLanguage('en')" style="padding:3px 0"><img src="Content/translates/Flags/blank.gif" class="flag flag-gb" alt="English" /> {{'Navbar.Language.English'|translate}}</a></li>
+            <li><a ng-click="changeLanguage('ro')" style="padding:3px 0"><img src="Content/translates/Flags/blank.gif" class="flag flag-ro" alt="Romanian" /> {{'Navbar.Language.Romanian'|translate}}</a></li>
+            <li><a ng-click="changeLanguage('es')" style="padding:3px 0"><img src="Content/translates/Flags/blank.gif" class="flag flag-es" alt="Spanish" /> {{'Navbar.Language.Spanish'|translate}}</a></li>
+        </ul>
+    </li>
+    
 
     <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
         <a ng-href=" {{item.link}}">{{'Menu.' + item.title | translate}}</a>

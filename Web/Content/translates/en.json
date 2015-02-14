@@ -7,7 +7,8 @@
         "OptionSets": "OptionSets",
         "Attributes": "Attributes",
         "AttributeSets": "AttributeSets",
-        "UMs": "UMs"
+        "UMs": "UMs",
+        "TechSpecs": "TechSpecs"
     },
  
     "Navbar":

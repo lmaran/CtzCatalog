@@ -15,6 +15,9 @@
     <file>/Content/translates/Flags/flags.css</file>
     <file>/Content/angular-motion.css</file>
     <file>/Content/bootstrap-additions.css</file>
-    <file>/Content/style.css</file>
+	<file>/Scripts/bower_components/ng-sortable/dist/ng-sortable.css</file>
+    <file>/Scripts/bower_components/ng-sortable/dist/ng-sortable.style.css</file>
+
+      <file>/Content/style.css</file>
   </files>
 </bundle>

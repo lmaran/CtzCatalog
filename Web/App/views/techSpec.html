@@ -1,0 +1,171 @@
+﻿<style>
+    #my-glyphicon {
+    -webkit-transform: scaleY(-1) rotate(60deg); /* Chrome 4+, Op 15+, Saf 3.1, iOS Saf 3.2+ */
+       -moz-transform: scaleY(-1) rotate(60deg); /* Fx 3.5-15 */
+        -ms-transform: scaleY(-1) rotate(60deg); /* IE 9 */
+         -o-transform: scaleY(-1) rotate(60deg); /* Op 10.5-12 */
+            transform: scaleY(-1) rotate(60deg); /* Fx 16+, IE 10+ */
+    }
+
+    [contenteditable] {
+        border: 2px dotted #ccc;
+        background-color: #eee;
+        padding: 2px;
+    }
+
+</style>
+
+<header id="content-header" ng-class="contentHeaderClass">
+    <h1>
+        <i id="content-header-icon" class="glyphicon glyphicon-tags"></i>
+        TechSpecs / {{pageTitle}}
+    </h1>
+    
+</header>
+
+<div class="container-fluid">
+
+    <form ng-submit="isEditMode ? update(form) : create(form)" name="form" class="form-horizontal max-width" role="form" novalidate>
+        <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+
+        <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && submitted }">
+            <label class="col-md-2 control-label">Name</label>
+            <div class="col-md-4">
+                <input class="form-control" ng-model="techSpec.name" type="text" name="name" my-focus="isFocusOnName" required />
+                <p ng-show="form.name.$invalid  && submitted" class="help-block">This field is required.</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Description</label>
+            <div class="col-md-4">
+                <textarea class="form-control" ng-model="techSpec.description" name="description" msd-elastic></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Specifications:</label>
+            <div class="col-md-4">
+
+                <button ng-if="false" type="button" class="btn btn-link" style="padding-left:0;">Add new section</button>
+
+
+                <div class="panel panel-default" ng-repeat="section in techSpec.sections">
+
+                    <!--panel header-->
+                    <div class="panel-heading">
+
+                        <!--standard header section-->
+                        <div ng-show="!dotObject.isVisibleAddNewItem">
+                            <a ng-if="false">{{section.name}}</a>
+                            <a ng-click="initAddSpecItemMode()">Add</a>
+                            <!--<span class="pull-right">
+                                <span ng-if="selectedIndex != -1">
+                                    <button type="button" class="btn btn-xs" ng-click="itemDown()"> <span class="glyphicon glyphicon-arrow-down" title="Move item down"></span></button>
+                                    <button type="button" class="btn btn-xs" ng-click="itemUp()"> <span class="glyphicon glyphicon-arrow-up" title="Move item up"></span></button>
+                                </span>
+                            </span>-->
+                        </div>
+
+                        <!--add new specItem section-->
+                        <div ng-show="dotObject.isVisibleAddNewItem">
+                            <div>Type:</div>
+                            <select class="form-control" ng-model="newSpecItem.type" ng-options="v for v in newSpecItem.types" ng-change="dotObject.isFocusOnAddItem = true" style="padding-left:8px"></select>
+
+                            <div>Name:</div>
+                            <div class="input-group">
+                                <input ng-model="newSpecItem.name" type="text" class="form-control" my-focus="dotObject.isFocusOnAddItem" ng-keypress="addSpecItemOnEnter(section, newSpecItem, $event)" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-primary" ng-click="addSpecItem(section, newSpecItem)"> <span class="glyphicon glyphicon-ok" title="Add item"></span></button>
+                                    <button type="button" class="btn" ng-click="dotObject.isVisibleAddNewItem=false"> <span class="glyphicon glyphicon-remove" title="Cancel (hide this input control)"></span></button>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div> <!--end panel header-->
+                    <!--panel body-->
+                    <div class="panel-body">
+
+                        <div class="panel-group" as-sortable="sortableOptions" ng-model="section.specItems">
+                            <div ng-repeat="specItem in section.specItems" as-sortable-item>
+
+                                <!--<div ng-if="!dotObject.isRenameMode[specItem.name]" as-sortable-item-handle class=" panel panel-default">-->
+
+                                <div ng-if="dotObject.renamedItamName != specItem.name" class=" panel panel-default">
+
+                                    <div as-sortable-item-handle class="panel-heading" style="padding:5px 10px">
+                                        <span class="glyphicon glyphicon-hand-up" style="color:lightgray"></span>
+
+                                        <a ng-click=" toogleCollapse(specItem.name)" style="color:#000">
+                                            {{specItem.name}}
+                                        </a>
+
+                                        <span ng-if="specItem.type != 'Text'" class="badge" style="background-color:gray">{{specItem.options.length}}</span>
+
+                                        <span class="pull-right">
+
+                                            <span class="dropdown" dropdown on-toggle="toggled(open)">
+                                                <a href class="dropdown-toggle" dropdown-toggle>
+                                                    <span class="glyphicon glyphicon-cog"></span><span class="caret"></span>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li><a ng-click="initRenameMode(specItem)">Rename</a></li>
+                                                    <li><a href="#">Change Type</a></li>
+                                                    <li><a ng-click="removeSpecItem(section, specItem)">Delete</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">View options</a></li>
+                                                </ul>
+                                            </span>
+
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="panel-collapse collapse" collapse="specItem.name != dotObject.expandedItemName" style2="border-top:1px solid #ddd; ">
+                                        <div class="panel-body">
+
+                                            Default option(s):<i class="glyphicon glyphicon-info-sign" bs-tooltip data-animation="am-fade-and-scale" title="Use 'Enter' key to add multiple options"></i>
+                                            <textarea class="form-control" ng-model="specItem.defaultOptions" split-array msd-elastic> </textarea>
+                                            <br />
+                                            Available options:
+                                            <textarea class="form-control"  ng-model="specItem.options" split-array msd-elastic> </textarea>
+
+                                        </div>
+                                    </div>
+
+                                    <div ng-if="dotObject.renamedItamName == specItem.name">
+
+                                        <div class="input-group">
+                                            <input ng-model="dotObject.specItemName" type="text" class="form-control" my-focus="dotObject.isFocusOnRenameItem" ng-keypress2="addItemOnEnter($event)" />
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-primary" ng-click="renameSpecItem(specItem)"> <span class="glyphicon glyphicon-ok" title="Add item"></span></button>
+                                                <button type="button" class="btn" ng-click="dotObject.renamedItamName=null"> <span class="glyphicon glyphicon-remove" title="Cancel (hide this input control)"></span></button>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div> <!--end panel body-->
+
+                    </div> <!--end panel-->
+
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-primary"> <span class="glyphicon glyphicon-floppy-disk"></span> {{'GlobalButtons.Save' | translate}} </button>
+                    <button type="button" class="btn" ng-click="cancel()"> <span class="glyphicon glyphicon-remove"></span> {{'GlobalButtons.Cancel' | translate}} </button>
+                </div>
+            </div>
+
+    </form>
+
+    <pre>{{techSpec | json}}</pre>
+
+</div>

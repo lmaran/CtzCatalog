@@ -1461,6 +1461,62 @@
   border-bottom-color: #000000;
   left: 90%;
 }
+/* ************************************** */
+/* Mandatory CSS required for ng-sortable */
+/* ************************************** */
+
+.as-sortable-item {
+    -ms-touch-action: none;
+    touch-action: none;
+}
+
+.as-sortable-item-handle {
+    cursor: move;
+}
+
+.as-sortable-placeholder {
+}
+
+.as-sortable-drag {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.as-sortable-hidden {
+    display: none !important;
+}
+/* ******************************************* */
+/* Optional CSS, default style for ng-sortable */
+/* ******************************************* */
+
+.as-sortable-item, .as-sortable-placeholder {
+    min-height: 20px;
+    margin: 1px 2px 5px 1px;
+    border-radius: 4px;
+}
+
+.as-sortable-item {
+    _border: solid 1px darkgrey;
+    background-color: #ffffff;
+}
+
+.as-sortable-item-handle {
+}
+
+.as-sortable-placeholder {
+    border: 1px dashed darkgrey;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: #dbdbdb;
+}
+
+.as-sortable-drag {
+    opacity: .8;
+}
+
+.as-sortable-hidden {
+}
 /*      wrappers
 ===============================*/
 #wrapper {
@@ -1682,23 +1738,7 @@ body:after {
   width: 100%;
   z-index: 9999;
 }
-/*     drop-down country flags 
-===============================*/
-.dropdown-menu {
-  left: 20px;
-  _min-width: 100px;
-}
-.dropdown-menu > li {
-  text-indent: 10px;
-  cursor: pointer;
-}
-.dropdown-menu > li > a {
-  padding-left: 0px;
-}
-.dropdown-menu img {
-  margin-right: 5px;
-  margin-bottom: 3px;
-}
+
 /*     miscellaneous 
 ===============================*/
 .container-fluid {

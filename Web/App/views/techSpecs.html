@@ -1,0 +1,54 @@
+﻿<header id="content-header" ng-class="contentHeaderClass">
+    <h1>
+        <i id="content-header-icon" class="glyphicon glyphicon-tags"></i>
+        TechSpecs
+    </h1>
+
+</header>
+
+<div class="container-fluid">
+    <div class="row toolbar">
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary" ng-click="create()"> <span class="glyphicon glyphicon-plus"></span> Add new techSpec </button>
+            <button type="button" class="btn" ng-click="refresh()"> <span class="glyphicon glyphicon-refresh"></span> </button>
+        </div>
+
+        <div class="col-md-3 pull-right">
+            <div class="input-group">
+                <input ng-model="search" name="newEmail" type="text" class="form-control" placeholder="Search">
+                <span class="input-group-btn"><button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-search"></span></button></span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table table-responsive table-hover table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Attributes</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="techSpec in techSpecs | filter:search">
+                    <td>
+                        <a ng-href="/techspecs/{{techSpec.id}}">{{techSpec.name}}</a>
+                        <i class="glyphicon glyphicon-info-sign" ng-if="techSpec.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{techSpec.description}}"></i>
+                    </td>
+                    <td>
+                        <span>[<span ng-repeat="item in  techSpec.sections[0].specItems">{{item.name}}<span ng-if="!$last">, </span></span>] </span>
+                    </td>
+                    <td>
+                        <a ng-click="delete(techSpec)">delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--<pre>{{techSpecs | json}}</pre>-->
+
+</div>

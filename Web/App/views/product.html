@@ -81,7 +81,7 @@
             </div>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.selectedAttributeSet.$invalid && submitted }">
+        <!--<div class="form-group" ng-class="{ 'has-error' : form.selectedAttributeSet.$invalid && submitted }">
             <label class="col-md-2 control-label">AttributeSet</label>
             <div class="col-md-4">
                 <select name="selectedAttributeSet" class="form-control" ng-model="dotObject.selectedAttributeSet" ng-options="c as c.name for c in attributeSets" ng-change="changeAttributeSet()" required>
@@ -114,7 +114,95 @@
 
                 </div>
             </div>
+        </div>-->
+
+
+
+        <!--attributes-->
+        <div class="form-group">
+            <label class="col-md-2 control-label">Attribute Set</label>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <!--<a ng-click="showRelatedProductsAside()">{{dotObject.selectedAttributeSet.name}}</a>-->
+                        <div class="form-group" ng-class="{ 'has-error' : form.selectedAttributeSet.$invalid && submitted }">
+                            <!--<label class="col-md-2 control-label">AttributeSet</label>-->
+                            <div class="col-md-6">
+                                <select name="selectedAttributeSet" class="form-control" ng-model="dotObject.selectedAttributeSet" ng-options="c as c.name for c in attributeSets" ng-change="changeAttributeSet()" required>
+                                    <option value=""></option>
+                                </select>
+                                <p ng-show="form.selectedAttributeSet.$invalid  && submitted" class="help-block">This field is required.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-body" style="overflow-y:auto; padding:0;">
+                        <table class="table table-responsive table-hover table-condensed borderless" style="margin-bottom:0">
+                            <tbody>
+                                <tr ng-repeat="c in dotObject.selectedAttributeSet.attributes">
+
+                                    <!--<td>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label">{{c.name}} </label>
+                                            <div class="col-md-4" ng-switch="c.type">
+
+                                                <any ng-switch-when="SingleOption">
+                                                    <select class="form-control" ng-model="c.value" ng-options="x for x in c.options">
+                                                        <option value=""></option>
+                                                    </select>
+                                                </any>
+
+                                                <any ng-switch-when="MultipleOptions">
+                                                    <button type="button" class="btn btn-default" ng-model="c.values" data-multiple="1" data-placeholder="Select..." ng-options=" x for x in c.options" bs-select>
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                </any>
+
+                                                <any ng-switch-default>
+                                                    <input class="form-control" ng-model="c.value" type="text" name="name" />
+                                                </any>
+
+                                            </div>
+                                        </div>
+
+                                    </td>-->
+                                    <td>
+                                        {{c.name}}
+                                    </td>
+                                    <td>
+                                        <div class="col-md-12" ng-switch="c.type">
+
+                                            <any ng-switch-when="SingleOption">
+                                                <select class="form-control" ng-model="c.value" ng-options="x for x in c.options">
+                                                    <option value=""></option>
+                                                </select>
+                                            </any>
+
+                                            <any ng-switch-when="MultipleOptions">
+                                                <button type="button" class="btn btn-default" ng-model="c.values" data-multiple="1" data-placeholder="Select..." ng-options=" x for x in c.options" bs-select>
+                                                    <span class="caret"></span>
+                                                </button>
+                                            </any>
+
+                                            <any ng-switch-default>
+                                                <input class="form-control" ng-model="c.value" type="text" name="name" />
+                                            </any>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div> <!--end panel-->
+
+            </div>
         </div>
+        <!--end attributes-->
+
 
 
         <!--related products-->
@@ -130,7 +218,7 @@
                     <div class="panel-body" style="max-height:200px; overflow-y:auto; padding:0;">
                         <table class="table table-responsive table-hover table-condensed borderless" style="margin-bottom:0">
                             <tbody>
-                                <tr data-ng-repeat="product in product.relatedProducts | filter:search">
+                                <tr ng-repeat="product in product.relatedProducts | filter:search">
                                     <td>
                                         <img ng-click="showModal(product)" ng-src="{{getPrimaryThumbImageUrl(product.images)}}" width="40" />
                                     </td>

@@ -17,7 +17,8 @@
 	    <file>/Scripts/bower_components/angular-cookies/angular-cookies.js</file>      
 	    <file>/Scripts/bower_components/angular-route/angular-route.js</file>
         <file>/Scripts/bower_components/angular-elastic/elastic.js</file>
-
+	    <file>/Scripts/bower_components/ng-sortable/dist/ng-sortable.js</file>
+        
         <file>/Scripts/angular-translate.js</file>
         <file>/Scripts/angular-translate-loader-static-files.js</file>
         <file>/Scripts/angular-translate-storage-cookie.js</file>
@@ -41,6 +42,8 @@
         <file>/App/controllers/attributeSetsController.js</file>
         <file>/App/controllers/attributeSetController.js</file>
         <file>/App/controllers/umsController.js</file>
+        <file>/App/controllers/techSpecsController.js</file>
+        <file>/App/controllers/techSpecController.js</file>        
 
         <file>/App/services/productService.js</file>
         <file>/App/services/pickOrderService.js</file>
@@ -51,6 +54,7 @@
         <file>/App/services/dialogService.js</file>
         <file>/App/services/helper.js</file>
         <file>/App/services/umService.js</file>
+        <file>/App/services/techSpecService.js</file>
         
         <file>/App/directives/myFocus.js</file>
         <file>/App/directives/inPlaceEditText.js</file>

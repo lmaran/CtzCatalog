@@ -21,6 +21,9 @@
     }, {
         'title': 'UMs',
         'link': '/ums'
+    }, {
+        'title': 'TechSpecs',
+        'link': '/techspecs'
     }];
 
     // http://stackoverflow.com/a/18562339

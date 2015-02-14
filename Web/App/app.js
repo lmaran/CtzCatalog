@@ -11,9 +11,10 @@ var app = angular.module('ctzCatalog', [
     'monospaced.elastic',
     'mgcrea.ngStrap',
     'ui.bootstrap.accordion',
+    'ui.bootstrap.dropdown',
     'ui.bootstrap.tpls', // or add only the related templates: 'template/accordion/accordion-group.html', 'template/accordion/accordion.html',
-    'angularFileUpload'
-
+    'angularFileUpload',
+    'ui.sortable'
 ]);
 
 app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$tooltipProvider', function ($routeProvider, $locationProvider, $translateProvider, $tooltipProvider) {
@@ -148,6 +149,24 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
             controller: 'umController',
             templateUrl: 'App/views/um.html',
             title: 'Edit UM',
+            isEditMode: true
+        })
+
+        // *** techSpecs ***
+        .when('/techspecs', {
+            controller: 'techSpecsController',
+            templateUrl: 'App/views/techSpecs.html',
+            title: 'Customers'
+        })
+        .when('/ums/create', {
+            controller: 'techSpecController',
+            templateUrl: 'App/views/techSpec.html',
+            title: 'Create TechSpec'
+        })
+        .when('/techspecs/:id', {
+            controller: 'techSpecController',
+            templateUrl: 'App/views/techSpec.html',
+            title: 'Edit TechSpec',
             isEditMode: true
         })
 

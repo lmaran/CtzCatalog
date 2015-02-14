@@ -154,6 +154,8 @@
     <Content Include="App\controllers\alertController.js" />
     <Content Include="App\controllers\attributeController.js" />
     <Content Include="App\controllers\attributesController.js" />
+    <Content Include="App\controllers\techSpecController.js" />
+    <Content Include="App\controllers\techSpecsController.js" />
     <Content Include="App\controllers\confirmController.js" />
     <Content Include="App\controllers\attributeSetsController.js" />
     <Content Include="App\controllers\attributeSetController.js" />
@@ -169,6 +171,7 @@
     <Content Include="App\directives\inPlaceEditText.js" />
     <Content Include="App\directives\myFocus.js" />
     <Content Include="App\services\attributeService.js" />
+    <Content Include="App\services\techSpecService.js" />
     <Content Include="App\services\umService.js" />
     <Content Include="App\services\dialogService.js" />
     <Content Include="App\services\attributeSetService.js" />
@@ -184,6 +187,8 @@
     <Content Include="App\views\alert.html" />
     <Content Include="App\views\attributes.html" />
     <Content Include="App\views\attribute.html" />
+    <Content Include="App\views\techSpec.html" />
+    <Content Include="App\views\techSpecs.html" />
     <Content Include="App\views\confirm.html" />
     <Content Include="App\views\attributeSets.html" />
     <Content Include="App\views\attributeSet.html" />
@@ -279,24 +284,63 @@
     <Content Include="Scripts\bower_components\angular-sanitize\bower.json" />
     <Content Include="Scripts\bower_components\angular-sanitize\README.md" />
     <Compile Include="App_Start\Config.cs" />
+    <Compile Include="Controllers\TechSpecController.cs" />
     <Compile Include="Controllers\UMController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Helpers\Img.cs" />
     <Compile Include="Helpers\RemainingTime.cs" />
     <Compile Include="Helpers\ResizeImage.cs" />
+    <Compile Include="Models\TechSpec.cs" />
     <Compile Include="Models\UM.cs" />
     <Compile Include="Models\BlobTransportObject.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\ImageMeta.cs" />
     <Compile Include="Repositories\Azure\AzureStorageContext.cs" />
+    <Compile Include="Repositories\TechSpecRepository.cs" />
     <Compile Include="Repositories\UMRepository.cs" />
     <Compile Include="Repositories\Mongo\MongoConstants.cs" />
     <Compile Include="Repositories\Mongo\MongoContext.Conventions.cs" />
+    <Content Include="Scripts\bower_components\lodash\LICENSE.txt" />
+    <Content Include="Scripts\bower_components\lodash\lodash.js" />
+    <Content Include="Scripts\bower_components\lodash\lodash.min.js" />
     <Content Include="Scripts\bower_components\ng-file-upload\.bower.json" />
     <Content Include="Scripts\bower_components\ng-file-upload\bower.json" />
     <Content Include="Scripts\bower_components\ng-file-upload\LICENSE" />
     <Content Include="Scripts\bower_components\ng-file-upload\README.md" />
     <None Include="Properties\PublishProfiles\cortizo.pubxml" />
+    <Content Include="Scripts\bower_components\lodash\.bower.json" />
+    <Content Include="Scripts\bower_components\lodash\bower.json" />
+    <Content Include="Scripts\bower_components\ng-sortable\.bower.json" />
+    <Content Include="Scripts\bower_components\ng-sortable\bower.json" />
+    <Content Include="Scripts\bower_components\ng-sortable\LICENSE" />
+    <Content Include="Scripts\bower_components\ng-sortable\README.md" />
+    <Content Include="Scripts\bower_components\angular-translate-loader-static-files\angular-translate-loader-static-files.min.js.map">
+      <DependentUpon>angular-translate-loader-static-files.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\bower_components\angular-translate\angular-translate.min.js.map">
+      <DependentUpon>angular-translate.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\bower_components\angular-translate-storage-cookie\angular-translate-storage-cookie.min.js.map">
+      <DependentUpon>angular-translate-storage-cookie.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\bower_components\angular-translate-storage-local\angular-translate-storage-local.min.js.map">
+      <DependentUpon>angular-translate-storage-local.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\bower_components\ng-sortable\dist\ng-sortable.min.js.map">
+      <DependentUpon>ng-sortable.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\bower_components\lodash\lodash.min.js.map">
+      <DependentUpon>lodash.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\bower_components\ng-file-upload\angular-file-upload-html5-shim.min.js.map">
+      <DependentUpon>angular-file-upload-html5-shim.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\bower_components\ng-file-upload\angular-file-upload-shim.min.js.map">
+      <DependentUpon>angular-file-upload-shim.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\bower_components\ng-file-upload\angular-file-upload.min.js.map">
+      <DependentUpon>angular-file-upload.min.js</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -336,6 +380,12 @@
     <Content Include="Scripts\bower_components\ng-file-upload\angular-file-upload.min.js" />
     <Content Include="Scripts\bower_components\ng-file-upload\FileAPI.flash.swf" />
     <Content Include="Scripts\bower_components\ng-file-upload\FileAPI.min.js" />
+    <Content Include="Scripts\bower_components\ng-sortable\dist\ng-sortable.css" />
+    <Content Include="Scripts\bower_components\ng-sortable\dist\ng-sortable.js" />
+    <Content Include="Scripts\bower_components\ng-sortable\dist\ng-sortable.min.css" />
+    <Content Include="Scripts\bower_components\ng-sortable\dist\ng-sortable.min.js" />
+    <Content Include="Scripts\bower_components\ng-sortable\dist\ng-sortable.style.css" />
+    <Content Include="Scripts\bower_components\ng-sortable\dist\ng-sortable.style.min.css" />
     <Content Include="Scripts\custom-version\angular-cookies.js" />
     <Content Include="Scripts\custom-version\angular-route.js" />
     <Content Include="Scripts\custom-version\angular-sanitize.js" />
@@ -399,16 +449,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>32755</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:1975/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
