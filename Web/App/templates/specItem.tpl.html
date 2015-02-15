@@ -1,0 +1,49 @@
+﻿<div ng-if="dotObject.renamedItamName != specItem.name" class=" panel panel-default">
+
+    <div as-sortable-item-handle class="panel-heading" style="padding:5px 10px">
+        <span class="glyphicon glyphicon-hand-up" style="color:lightgray"></span>
+
+        <a ng-click=" toogleCollapse(specItem.name)" style="color:#000">{{specItem.name}}</a>
+
+        <span class="pull-right">
+            <span class="dropdown" dropdown on-toggle="toggled(open)">
+                <a href class="dropdown-toggle" dropdown-toggle>
+                    <span class="glyphicon glyphicon-cog"></span><span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a ng-click="initRenameMode(specItem)">Rename</a></li>
+                    <li><a href="#">Change Type</a></li>
+                    <li><a ng-click="removeSpecItem(section, specItem)">Delete</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">View options</a></li>
+                </ul>
+            </span>
+        </span>
+    </div>
+
+
+    <div class="panel-collapse collapse" collapse="specItem.name != dotObject.expandedItemName">
+        <div class="panel-body">
+
+            Default option(s):<i class="glyphicon glyphicon-info-sign" bs-tooltip data-animation="am-fade-and-scale" title="Use 'Enter' key to add multiple options"></i>
+            <textarea class="form-control" ng-model="specItem.defaultOptions" split-array msd-elastic> </textarea>
+            <br />
+            Available options:
+            <textarea class="form-control" ng-model="specItem.options" split-array msd-elastic> </textarea>
+
+        </div>
+    </div>
+
+
+    <div ng-if="dotObject.renamedItamName == specItem.name">
+
+        <div class="input-group">
+            <input ng-model="dotObject.specItemName" type="text" class="form-control" my-focus="dotObject.isFocusOnRenameItem" ng-keypress2="addItemOnEnter($event)" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-primary" ng-click="renameSpecItem(specItem)"> <span class="glyphicon glyphicon-ok" title="Add item"></span></button>
+                <button type="button" class="btn" ng-click="dotObject.renamedItamName=null"> <span class="glyphicon glyphicon-remove" title="Cancel (hide this input control)"></span></button>
+            </span>
+        </div>
+    </div>
+
+</div>

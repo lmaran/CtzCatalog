@@ -8044,30 +8044,37 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
     $scope.dotObject = {};
     $scope.dotObject.isRenameMode = {};
 
-    $scope.newSpecItem = {
-        "type": "Text",
-        "types": ["Text", "SingleOption", "MultipleOptions"],
-        "name": ""
-    };
+
+    $scope.selectedSpecItem = {};
+    $scope.newSpecItem = {};
+    $scope.selectedSection = {};
+
 
     $scope.optionBtnAreVisible = false;
 
     $scope.initAddSpecItemMode = function () {
         $scope.dotObject.isVisibleAddNewItem = true;
         $scope.selectedIndex = -1;
-        $scope.newSpecItem.type = 'Text';
         $scope.newSpecItem.name = '';
         $scope.dotObject.isFocusOnAddItem = true;
         $scope.isItemInEditMode = false;
     }
 
-    $scope.initRenameMode = function (specItem) {
-        // collapse any expanded accordion items (if exists)
-        //$scope.dotObject.expandedItemName = null;
+    $scope.initAddSectionMode = function () {
+        $scope.dotObject.isVisibleAddNewSection = true;
+        //$scope.selectedIndex = -1;
+        $scope.newSectionName = '';
+        $scope.dotObject.isFocusOnAddSection = true;
+        $scope.isSectionInEditMode = false;
+    }
 
-        $scope.dotObject.renamedItamName = specItem.name;
-        $scope.dotObject.specItemName = specItem.name;
+    $scope.initRenameSpecItemMode = function (currentSpecItem) {
+        //$scope.dotObject.renamedItamName = currentSpecItem.name;
+        $scope.selectedSpecItem.name = currentSpecItem.name;
+
+        $scope.dotObject.specItemName = currentSpecItem.name;
         $scope.dotObject.isFocusOnRenameItem = true;
+
     }
 
     if ($scope.isEditMode) {
@@ -8085,6 +8092,9 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
     function getTechspec() {
         techSpecService.getById($route.current.params.id).then(function (data) {
             $scope.techSpec = data;
+
+            // set first section as expanded
+            $scope.dotObject.expandedSectionName = $scope.techSpec.sections[0].name;
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -8102,7 +8112,7 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
     $scope.addSpecItem = function (currentSection, newSpecItem) {
         var items = currentSection.specItems;
 
-        if (newSpecItem == undefined || newSpecItem.name == '') {
+        if (newSpecItem.name == '') {
             alert("Enter a value and then press the button!");
             $scope.dotObject.isFocusOnAddItem = true; // not necessary when Enter key is used
             return;
@@ -8114,9 +8124,30 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
             return;
         }
 
-        items.push({ name: newSpecItem.name, type: newSpecItem.type });
+        items.push({ name: newSpecItem .name});
 
         $scope.dotObject.isVisibleAddNewItem = false;
+        //$scope.newSpecItem = {}; //reset value
+    }
+
+    $scope.addSection = function (sectionName) {
+        var items = $scope.techSpec.sections;
+
+        if (sectionName == '') {
+            alert("Enter a value and then press the button!");
+            $scope.dotObject.isFocusOnAddSection = true; // not necessary when Enter key is used
+            return;
+        }
+
+        if (_.findIndex(items, { 'name': sectionName }) != -1) {
+            alert('This value already exists: ' + sectionName);
+            $scope.dotObject.isFocusOnAddSection = true; // not necessary when Enter key is used
+            return;
+        }
+
+        items.push({ name: sectionName, specItems: [{options:[], defaultOptions:[]}]});
+
+        $scope.dotObject.isVisibleAddNewSection = false;
         //$scope.newSpecItem = {}; //reset value
     }
 
@@ -8129,13 +8160,6 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
     $scope.create = function (form) {
         $scope.submitted = true;
         if (form.$valid) {
-
-            //// remove description property if it has no value --> shorter JSON result
-            //if ($scope.techSpec.options) {
-            //    $scope.techSpec.options.forEach(function (item) {
-            //        if (item.description == '') delete item.description;
-            //    });
-            //}
 
             techSpecService.create($scope.techSpec)
                 .then(function (data) {
@@ -8196,6 +8220,12 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
         // met.3 - use 'track by' in ng-repeat (I use that method because it is faster: http://www.codelord.net/2014/04/15/improving-ng-repeat-performance-with-track-by/)
         // and don't have to clean up the object later on
 
+    };
+
+    $scope.removeSection = function (currentSection) {
+        _.remove($scope.techSpec.sections, function (currentItem) {
+            return currentItem.name == currentSection.name;
+        });
     };
 
     $scope.removeSpecItem = function (currentSection, specItem) {
@@ -8286,6 +8316,21 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
         //return data.map(function (e) { return e[propertyName]; }).indexOf(propertyValue);
     }
 
+    $scope.sortableOptions1 = {
+        accept: function (sourceItemHandleScope, destSortableScope) {
+            //return true;
+            // do not allow moving between specItems (parent) and options (child)
+            return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
+        },
+        itemMoved: function (event) { },
+        orderChanged: function (event) { },
+        dragStart: function (event) {
+            // collapse any expanded accordion items
+            //$scope.dotObject.expandedItemName = null;
+        }
+        //containment: '#board'
+    };
+
     $scope.sortableOptions = {
         accept: function (sourceItemHandleScope, destSortableScope) {
             //return true;
@@ -8301,27 +8346,19 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
         containment: '#board'
     };
 
-    $scope.isCollapsed = true;
-    $scope.collapsedItemName = 'aaa';
-
-    $scope.colapseAll = function () {
-        //var myEl = angular.element(document.getElementById('myId1'));
-        //var myScope = angular.element(myEl).scope();
-
-        //var rootScope = myScope.$root;
-        //myScope.$apply(function () {
-        //    rootScope.$broadcast('myEvent', {aa:123});
-        //    //console.log(myScope);
-        //});
-        //console.log(123321);
-
-        //angular.forEach($scope.techSpec.sections[0].specItems, function (key) {
-        //    console.log(key);
-        //});
-    }
 
     $scope.toogleCollapse = function (specItemName) {
+
+
         $scope.dotObject.expandedItemName = $scope.dotObject.expandedItemName == specItemName ? null : specItemName;
+
+        //$event.preventDefault();
+        //$event.stopPropagation();
+    };
+
+
+    $scope.toogleSection = function (sectionName) {
+        $scope.dotObject.expandedSectionName = $scope.dotObject.expandedSectionName == sectionName ? null : sectionName;
     };
 
     $scope.status = {
@@ -8377,6 +8414,8 @@ app.directive('splitArray', function () {
             }
 
             function toUser(array) {
+                if (array == undefined)
+                    return null;
                 return array.join("\n");
             }
 

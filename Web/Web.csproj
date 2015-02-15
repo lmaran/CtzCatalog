@@ -184,6 +184,7 @@
     <Content Include="App\templates\showImage.tpl.html" />
     <Content Include="App\templates\selectFromSimpleList.tpl.html" />
     <Content Include="App\templates\editSimpleList.tpl.html" />
+    <Content Include="App\templates\specItem.tpl.html" />
     <Content Include="App\views\alert.html" />
     <Content Include="App\views\attributes.html" />
     <Content Include="App\views\attribute.html" />
