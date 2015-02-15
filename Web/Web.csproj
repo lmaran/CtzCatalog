@@ -170,6 +170,7 @@
     <Content Include="App\directives\editSimpleList.js" />
     <Content Include="App\directives\inPlaceEditText.js" />
     <Content Include="App\directives\myFocus.js" />
+    <Content Include="App\directives\splitArray.js" />
     <Content Include="App\services\attributeService.js" />
     <Content Include="App\services\techSpecService.js" />
     <Content Include="App\services\umService.js" />

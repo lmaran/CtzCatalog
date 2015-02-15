@@ -60,6 +60,7 @@
         <file>/App/directives/inPlaceEditText.js</file>
         <file>/App/directives/editSimpleList.js</file>
         <file>/App/directives/selectFromSimpleList.js</file>
+        <file>/App/directives/splitArray.js</file>
 
     </files>
 </bundle>

@@ -51,19 +51,19 @@
                     <!--<div class="panel-heading">Panel heading</div>-->
 
                     <div class="panel-body" style="padding-right:5px">
-                        <div class="panel-group" as-sortable="sortableOptions1" ng-model="techSpec.sections" style="margin-bottom:0">
+                        <div class="panel-group" as-sortable="sortableOptionsForSection" ng-model="techSpec.sections" style="margin-bottom:0">
                             <div ng-repeat="section in techSpec.sections" as-sortable-item>
-                                <div class="panel panel-default">
+                                <div ng-if="selectedSection.name != section.name" class="panel panel-default">
                                     <div as-sortable-item-handle class="panel-heading" style="padding:5px 10px">
                                         <span class="glyphicon glyphicon-hand-up" style="color:lightgray"></span>
                                         <a ng-click=" toogleSection(section.name)" style="color:#333; font-weight2: bold;">{{section.name}}</a>
                                         <span class="pull-right">
-                                            <span class="dropdown" dropdown on-toggle="toggled(open)">
+                                            <span class="dropdown" dropdown >
                                                 <a href class="dropdown-toggle" dropdown-toggle>
                                                     <span class="glyphicon glyphicon-cog"></span><span class="caret"></span>
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-right">
-                                                    <li><a ng-click="initRenameMode(specItem)">Rename</a></li>
+                                                    <li><a ng-click="initRenameModeForSection(section)">Rename</a></li>
                                                     <li><a ng-click="removeSection(section)">Delete</a></li>
                                                     <li class="divider"></li>
                                                     <li><a href="#">View options</a></li>
@@ -75,25 +75,24 @@
 
 
                                         <div class="panel-body" style="padding-right:5px">
-                                            <div panel-group as-sortable="sortableOptions" ng-model="section.specItems">
+                                            <div panel-group as-sortable="sortableOptionsForSpecItem" ng-model="section.specItems">
                                                 <div ng-repeat="specItem in section.specItems" as-sortable-item>
                                                     <!-- ==================================================================== -->
-                                                    
-                                                    <!--<div ng-if="dotObject.renamedItamName != specItem.name" class=" panel panel-default">-->
+
                                                     <div ng-if="selectedSpecItem.name != specItem.name" class=" panel panel-default">
 
                                                         <div as-sortable-item-handle class="panel-heading" style="padding:5px 10px">
                                                             <span class="glyphicon glyphicon-hand-up" style="color:lightgray"></span>
 
-                                                            <a ng-click=" toogleCollapse(specItem.name)" style="color:#333;">{{specItem.name}}</a>
+                                                            <a ng-click=" toogleSpecItem(specItem.name)" style="color:#333;">{{specItem.name}}</a>
 
                                                             <span class="pull-right">
-                                                                <span class="dropdown" dropdown on-toggle="toggled(open)">
+                                                                <span class="dropdown" dropdown>
                                                                     <a href class="dropdown-toggle" dropdown-toggle>
                                                                         <span class="glyphicon glyphicon-cog"></span><span class="caret"></span>
                                                                     </a>
                                                                     <ul class="dropdown-menu dropdown-menu-right">
-                                                                        <li><a ng-click="initRenameSpecItemMode(specItem)">Rename</a></li>
+                                                                        <li><a ng-click="initRenameModeForSpecItem(specItem)">Rename</a></li>
                                                                         <li><a ng-click="removeSpecItem(section, specItem)">Delete</a></li>
                                                                     </ul>
                                                                 </span>
@@ -101,7 +100,7 @@
                                                         </div>
 
 
-                                                        <div class="panel-collapse collapse" collapse="specItem.name != dotObject.expandedItemName">
+                                                        <div class="panel-collapse collapse" collapse="specItem.name != dotObject.expandedSpecItemName">
                                                             <div class="panel-body" style="padding-right:5px">
 
                                                                 Default option(s):<i class="glyphicon glyphicon-info-sign" bs-tooltip data-animation="am-fade-and-scale" title="Use 'Enter' key to add multiple options"></i>
@@ -119,9 +118,9 @@
                                                     <!--rename specItem-->
                                                     <div ng-if="selectedSpecItem.name == specItem.name">
                                                         <div class="input-group">
-                                                            <input ng-model="dotObject.specItemName" type="text" class="form-control" my-focus="dotObject.isFocusOnRenameItem" ng-keypress2="addItemOnEnter($event)" />
+                                                            <input ng-model="newSpecItem.name" type="text" class="form-control" my-focus="dotObject.isFocusOnRenameSpecItem" ng-keypress2="addItemOnEnter($event)" />
                                                             <span class="input-group-btn">
-                                                                <button type="button" class="btn btn-primary" ng-click="renameSpecItem(specItem)"> <span class="glyphicon glyphicon-ok" title="Add item"></span></button>
+                                                                <button type="button" class="btn btn-primary" ng-click="renameSpecItem(section, specItem, newSpecItem)"> <span class="glyphicon glyphicon-ok" title="Add item"></span></button>
                                                                 <button type="button" class="btn" ng-click="selectedSpecItem.name=null"> <span class="glyphicon glyphicon-remove" title="Cancel (hide this input control)"></span></button>
                                                             </span>
                                                         </div>
@@ -131,18 +130,18 @@
                                                 </div>
                                             </div> <!--end panel group-->
 
-                                            <div ng-show="!dotObject.isVisibleAddNewItem">
-                                                <a ng-click="initAddSpecItemMode()">Add new spec</a>
+                                            <div ng-show="!dotObject.isVisibleAddNewSpecItem">
+                                                <a ng-click="initAddModeForSpecItem()">Add new spec</a>
                                             </div>
 
                                             <!--add new specItem-->
-                                            <div ng-show="dotObject.isVisibleAddNewItem">
-                                                <div>Name:</div>
+                                            <div ng-show="dotObject.isVisibleAddNewSpecItem">
+                                                <div>Spec name:</div>
                                                 <div class="input-group">
                                                     <input ng-model="newSpecItem.name" type="text" class="form-control" my-focus="dotObject.isFocusOnAddItem" ng-keypress="addSpecItemOnEnter(section, newSpecItem, $event)" />
                                                     <span class="input-group-btn">
                                                         <button type="button" class="btn btn-primary" ng-click="addSpecItem(section, newSpecItem)"> <span class="glyphicon glyphicon-ok" title="Add item"></span></button>
-                                                        <button type="button" class="btn" ng-click="dotObject.isVisibleAddNewItem=false"> <span class="glyphicon glyphicon-remove" title="Cancel (hide this input control)"></span></button>
+                                                        <button type="button" class="btn" ng-click="dotObject.isVisibleAddNewSpecItem=false"> <span class="glyphicon glyphicon-remove" title="Cancel (hide this input control)"></span></button>
                                                     </span>
                                                 </div>
                                             </div>
@@ -150,21 +149,33 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!--rename section-->
+                                <div ng-if="selectedSection.name == section.name">
+                                    <div class="input-group">
+                                        <input ng-model="newSection.name" type="text" class="form-control" my-focus="dotObject.isFocusOnRenameSection" ng-keypress2="addItemOnEnter($event)" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-primary" ng-click="renameSection(section, newSection)"> <span class="glyphicon glyphicon-ok" title="Add item"></span></button>
+                                            <button type="button" class="btn" ng-click="selectedSection.name=null"> <span class="glyphicon glyphicon-remove" title="Cancel (hide this input control)"></span></button>
+                                        </span>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
 
                         <div ng-show="!dotObject.isVisibleAddNewSection">
-                            <a ng-click="initAddSectionMode()">Add new spec group</a>
+                            <a ng-click="initAddModeForSection()">Add new spec group</a>
                         </div>
 
-                        <!--add new specItem section-->
+                        <!--add new section-->
                         <div ng-show="dotObject.isVisibleAddNewSection">
-                            <div>Name:</div>
+                            <div>Spec group name:</div>
                             <div class="input-group">
-                                <input ng-model="newSectionName" type="text" class="form-control" my-focus="dotObject.isFocusOnAddSection" ng-keypress="addSectionOnEnter(section, $event)" />
+                                <input ng-model="newSection.name" type="text" class="form-control" my-focus="dotObject.isFocusOnAddSection" ng-keypress="addSectionOnEnter(newSection, $event)" />
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-primary" ng-click="addSection(newSectionName)"> <span class="glyphicon glyphicon-ok" title="Add item"></span></button>
+                                    <button type="button" class="btn btn-primary" ng-click="addSection(newSection)"> <span class="glyphicon glyphicon-ok" title="Add item"></span></button>
                                     <button type="button" class="btn" ng-click="dotObject.isVisibleAddNewSection=false"> <span class="glyphicon glyphicon-remove" title="Cancel (hide this input control)"></span></button>
                                 </span>
                             </div>
