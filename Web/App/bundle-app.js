@@ -6355,7 +6355,7 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
             templateUrl: 'App/views/techSpecs.html',
             title: 'Customers'
         })
-        .when('/ums/create', {
+        .when('/techspecs/create', {
             controller: 'techSpecController',
             templateUrl: 'App/views/techSpec.html',
             title: 'Create TechSpec'
@@ -8004,7 +8004,7 @@ app.controller('techSpecsController', ['$scope', '$rootScope', '$route', '$locat
     };
 
     $scope.create = function () {
-        $location.path('/techSpecs/create');
+        $location.path('/techspecs/create');
     }
 
     $scope.refresh = function () {
@@ -8055,6 +8055,13 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
     }
     else { // create mode
         $scope.pageTitle = 'Add new techSpec';
+
+        // init techspec
+        $scope.techSpec.sections = [];
+        $scope.techSpec.sections.push({ name: 'Specificatii generale' });
+
+        // set first section as expanded
+        $scope.dotObject.expandedSectionName = $scope.techSpec.sections[0].name;
     }
 
     function init() {
@@ -8065,8 +8072,9 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
         techSpecService.getById($route.current.params.id).then(function (data) {
             $scope.techSpec = data;
 
-            // set first section as expanded
-            $scope.dotObject.expandedSectionName = $scope.techSpec.sections[0].name;
+            // set first section as expanded (if exists)
+            if ($scope.techSpec.sections[0])
+                $scope.dotObject.expandedSectionName = $scope.techSpec.sections[0].name;
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -8095,6 +8103,9 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
         $scope.techSpec.sections.push(newSection);
 
         $scope.dotObject.isVisibleAddNewSection = false;
+
+        // expand this section
+        $scope.dotObject.expandedSectionName = newSection.name;
     }
 
     $scope.addSectionOnEnter = function (newSection, e) {
@@ -8136,6 +8147,14 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
 
         //close 'rename' section
         $scope.selectedSection.name = null;
+    };
+
+    $scope.renameSectionOnEnter = function (section, newSection, e) {
+        if (e.which == 13) { //enter key
+            e.preventDefault();
+            e.stopPropagation();
+            $scope.renameSection(section, newSection);
+        };
     };
 
     // ---------------- Delete Section ------------------
@@ -8210,6 +8229,9 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
         section.specItems.push(newSpecItem);
 
         $scope.dotObject.isVisibleAddNewSpecItem = false;
+
+        // expand this specItem
+        $scope.dotObject.expandedSpecItemName = newSpecItem.name;
     }
 
     $scope.addSpecItemOnEnter = function (section, newSpecItem, e) {
@@ -8252,6 +8274,14 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
 
         //close 'rename' section
         $scope.selectedSpecItem.name = null;
+    };
+
+    $scope.renameSpecItemOnEnter = function (section, specItem, newSpecItem, e) {
+        if (e.which == 13) { //enter key
+            e.preventDefault();
+            e.stopPropagation();
+            $scope.renameSpecItem(section, specItem, newSpecItem);
+        };
     };
 
     // ---------------- Delete SpecItem -----------------

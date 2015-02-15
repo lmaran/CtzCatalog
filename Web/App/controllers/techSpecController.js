@@ -19,6 +19,13 @@
     }
     else { // create mode
         $scope.pageTitle = 'Add new techSpec';
+
+        // init techspec
+        $scope.techSpec.sections = [];
+        $scope.techSpec.sections.push({ name: 'Specificatii generale' });
+
+        // set first section as expanded
+        $scope.dotObject.expandedSectionName = $scope.techSpec.sections[0].name;
     }
 
     function init() {
@@ -29,8 +36,9 @@
         techSpecService.getById($route.current.params.id).then(function (data) {
             $scope.techSpec = data;
 
-            // set first section as expanded
-            $scope.dotObject.expandedSectionName = $scope.techSpec.sections[0].name;
+            // set first section as expanded (if exists)
+            if ($scope.techSpec.sections[0])
+                $scope.dotObject.expandedSectionName = $scope.techSpec.sections[0].name;
         })
         .catch(function (err) {
             alert(JSON.stringify(err, null, 4));
@@ -59,6 +67,9 @@
         $scope.techSpec.sections.push(newSection);
 
         $scope.dotObject.isVisibleAddNewSection = false;
+
+        // expand this section
+        $scope.dotObject.expandedSectionName = newSection.name;
     }
 
     $scope.addSectionOnEnter = function (newSection, e) {
@@ -100,6 +111,14 @@
 
         //close 'rename' section
         $scope.selectedSection.name = null;
+    };
+
+    $scope.renameSectionOnEnter = function (section, newSection, e) {
+        if (e.which == 13) { //enter key
+            e.preventDefault();
+            e.stopPropagation();
+            $scope.renameSection(section, newSection);
+        };
     };
 
     // ---------------- Delete Section ------------------
@@ -174,6 +193,9 @@
         section.specItems.push(newSpecItem);
 
         $scope.dotObject.isVisibleAddNewSpecItem = false;
+
+        // expand this specItem
+        $scope.dotObject.expandedSpecItemName = newSpecItem.name;
     }
 
     $scope.addSpecItemOnEnter = function (section, newSpecItem, e) {
@@ -216,6 +238,14 @@
 
         //close 'rename' section
         $scope.selectedSpecItem.name = null;
+    };
+
+    $scope.renameSpecItemOnEnter = function (section, specItem, newSpecItem, e) {
+        if (e.which == 13) { //enter key
+            e.preventDefault();
+            e.stopPropagation();
+            $scope.renameSpecItem(section, specItem, newSpecItem);
+        };
     };
 
     // ---------------- Delete SpecItem -----------------

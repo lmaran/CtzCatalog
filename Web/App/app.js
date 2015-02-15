@@ -158,7 +158,7 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
             templateUrl: 'App/views/techSpecs.html',
             title: 'Customers'
         })
-        .when('/ums/create', {
+        .when('/techspecs/create', {
             controller: 'techSpecController',
             templateUrl: 'App/views/techSpec.html',
             title: 'Create TechSpec'
