@@ -27,7 +27,7 @@
             //alert(JSON.stringify($scope.customer));
             customerService.create($scope.customer)
                 .then(function (data) {
-                    $location.path('/customers');
+                    $location.path('/admin/customers');
                     //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
@@ -45,7 +45,7 @@
             //alert(JSON.stringify($scope.customer));
             customerService.update($scope.customer)
                 .then(function (data) {
-                    $location.path('/customers');
+                    $location.path('/admin/customers');
                     //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {

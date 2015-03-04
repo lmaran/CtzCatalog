@@ -43,7 +43,7 @@
 
             optionSetService.create($scope.optionSet)
                 .then(function (data) {
-                    $location.path('/optionsets');
+                    $location.path('/admin/optionsets');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -62,7 +62,7 @@
 
             optionSetService.update($scope.optionSet)
                 .then(function (data) {
-                    $location.path('/optionsets');
+                    $location.path('/admin/optionsets');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));

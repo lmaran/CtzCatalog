@@ -104,7 +104,7 @@
             // save product
             productService.create($scope.product)
                 .then(function (data) {
-                    $location.path('/products');
+                    $location.path('/admin/products');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -146,7 +146,7 @@
             // save product
             productService.update($scope.product)
                 .then(function (data) {
-                    $location.path('/products');
+                    $location.path('/admin/products');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));

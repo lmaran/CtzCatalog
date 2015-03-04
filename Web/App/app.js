@@ -20,24 +20,25 @@ var app = angular.module('ctzCatalog', [
 app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$tooltipProvider', function ($routeProvider, $locationProvider, $translateProvider, $tooltipProvider) {
     
     $routeProvider
-        .when('/',
+
+        .when('/admin',
             {
                 controller: 'homeController',
                 templateUrl: 'App/views/home.html'
             })
 
         // *** pickOrders ***
-        .when('/pickOrders', {
+        .when('/admin/pickOrders', {
             controller: 'pickOrdersController',
             templateUrl: 'App/views/pickOrders.html',
             title: 'Pick Orders'
         })
-        .when('/pickOrders/create', {
+        .when('/admin/pickOrders/create', {
             controller: 'pickOrderController',
             templateUrl: 'App/views/pickOrder.html',
             title: 'Create PickOrder'
         })
-        .when('/pickOrders/:id', {
+        .when('/admin/pickOrders/:id', {
             controller: 'pickOrderController',
             templateUrl: 'App/views/pickOrder.html',
             title: 'Edit PickOrder',
@@ -45,17 +46,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** products ***
-        .when('/products', {
+        .when('/admin/products', {
             controller: 'productsController',
             templateUrl: 'App/views/products.html',
             title: 'Products'
         })
-        .when('/products/create', {
+        .when('/admin/products/create', {
             controller: 'productController',
             templateUrl: 'App/views/product.html',
             title: 'Create Product'
         })
-        .when('/products/:id', {
+        .when('/admin/products/:id', {
             controller: 'productController',
             templateUrl: 'App/views/product.html',
             title: 'Edit Product',
@@ -63,17 +64,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** customers ***
-        .when('/customers', {
+        .when('/admin/customers', {
             controller: 'customersController',
             templateUrl: 'App/views/customers.html',
             title: 'Customers'
         })
-        .when('/customers/create', {
+        .when('/admin/customers/create', {
             controller: 'customerController',
             templateUrl: 'App/views/customer.html',
             title: 'Create Customer'
         })
-        .when('/customers/:id', {
+        .when('/admin/customers/:id', {
             controller: 'customerController',
             templateUrl: 'App/views/customer.html',
             title: 'Edit Customer',
@@ -81,17 +82,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** optionSets ***
-        .when('/optionsets', {
+        .when('/admin/optionsets', {
             controller: 'optionSetsController',
             templateUrl: 'App/views/optionSets.html',
             title: 'OptionSets'
         })
-        .when('/optionsets/create', {
+        .when('/admin/optionsets/create', {
             controller: 'optionSetController',
             templateUrl: 'App/views/optionSet.html',
             title: 'Create OptionSet'
         })
-        .when('/optionsets/:id', {
+        .when('/admin/optionsets/:id', {
             controller: 'optionSetController',
             templateUrl: 'App/views/optionSet.html',
             title: 'Edit OptionSet',
@@ -99,17 +100,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** attributes ***
-        .when('/attributes', {
+        .when('/admin/attributes', {
             controller: 'attributesController',
             templateUrl: 'App/views/attributes.html',
             title: 'Attributes'
         })
-        .when('/attributes/create', {
+        .when('/admin/attributes/create', {
             controller: 'attributeController',
             templateUrl: 'App/views/attribute.html',
             title: 'Create Attribute'
         })
-        .when('/attributes/:id', {
+        .when('/admin/attributes/:id', {
             controller: 'attributeController',
             templateUrl: 'App/views/attribute.html',
             title: 'Edit Attribute',
@@ -117,17 +118,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** attributeSets ***
-        .when('/attributesets', {
+        .when('/admin/attributesets', {
             controller: 'attributeSetsController',
             templateUrl: 'App/views/attributeSets.html',
             title: 'AttributeSets'
         })
-        .when('/attributesets/create', {
+        .when('/admin/attributesets/create', {
             controller: 'attributeSetController',
             templateUrl: 'App/views/attributeSet.html',
             title: 'Create AttributeSet'
         })
-        .when('/attributesets/:id', {
+        .when('/admin/attributesets/:id', {
             controller: 'attributeSetController',
             templateUrl: 'App/views/attributeSet.html',
             title: 'Edit AttributeSet',
@@ -135,17 +136,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** ums ***
-        .when('/ums', {
+        .when('/admin/ums', {
             controller: 'umsController',
             templateUrl: 'App/views/ums.html',
             title: 'Customers'
         })
-        .when('/ums/create', {
+        .when('/admin/ums/create', {
             controller: 'umController',
             templateUrl: 'App/views/um.html',
             title: 'Create UM'
         })
-        .when('/ums/:id', {
+        .when('/admin/ums/:id', {
             controller: 'umController',
             templateUrl: 'App/views/um.html',
             title: 'Edit UM',
@@ -153,24 +154,24 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** techSpecs ***
-        .when('/techspecs', {
+        .when('/admin/techspecs', {
             controller: 'techSpecsController',
             templateUrl: 'App/views/techSpecs.html',
             title: 'Customers'
         })
-        .when('/techspecs/create', {
+        .when('/admin/techspecs/create', {
             controller: 'techSpecController',
             templateUrl: 'App/views/techSpec.html',
             title: 'Create TechSpec'
         })
-        .when('/techspecs/:id', {
+        .when('/admin/techspecs/:id', {
             controller: 'techSpecController',
             templateUrl: 'App/views/techSpec.html',
             title: 'Edit TechSpec',
             isEditMode: true
         })
 
-        .otherwise({ redirectTo: '/' });
+        .otherwise({ redirectTo: '/admin' });
 
     // use the HTML5 History API - http://scotch.io/quick-tips/js/angular/pretty-urls-in-angularjs-removing-the-hashtag
     $locationProvider.html5Mode(true);

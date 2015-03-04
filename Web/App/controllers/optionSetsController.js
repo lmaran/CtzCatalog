@@ -25,7 +25,7 @@
     };
 
     $scope.create = function () {
-        $location.path('/optionsets/create');
+        $location.path('/admin/optionsets/create');
     }
 
     $scope.refresh = function () {

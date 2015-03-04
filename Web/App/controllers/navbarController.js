@@ -2,28 +2,28 @@
 
     $scope.menu = [{
         'title': 'Pick Orders',
-        'link': '/pickOrders'
+        'link': '/admin/pickOrders'
     }, {
         'title': 'Products',
-        'link': '/products'
+        'link': '/admin/products'
     }, {
         'title': 'Customers',
-        'link': '/customers'
+        'link': '/admin/customers'
     }, {
     //    'title': 'OptionSets',
     //    'link': '/optionsets'
     //}, {
         'title': 'Attributes',
-        'link': '/attributes'
+        'link': '/admin/attributes'
     }, {
         'title': 'AttributeSets',
-        'link': '/attributesets'
+        'link': '/admin/attributesets'
     }, {
         'title': 'UMs',
-        'link': '/ums'
+        'link': '/admin/ums'
     }, {
         'title': 'TechSpecs',
-        'link': '/techspecs'
+        'link': '/admin/techspecs'
     }];
 
     // http://stackoverflow.com/a/18562339
@@ -31,6 +31,7 @@
         return route === $location.path();
     };
 
+    // http://camelcas.es/articles/detect-media-queries-in-javascript.html
     var windowIsLarge = function () {
         return getComputedStyle(document.body, ':after').getPropertyValue('content').replace(/"/g, '') == 'large'; // FF and IE add double quotes around the value
     };
@@ -38,30 +39,18 @@
     $rootScope.wrapperClass = "";
     $rootScope.contentHeaderClass = "";
     $rootScope.openSidebarBtnClass = "";
-    $scope.toggleSidebarBtnClass = "";
-
-    //$scope.closeSidebar = function () {
-    //    $rootScope.wrapperClass = "inactive";
-    //    $rootScope.contentHeaderClass = "inactive";
-    //    $rootScope.openSidebarBtnClass = "active";
-    //};
-
-    //$scope.openSidebar = function () {
-    //    $rootScope.wrapperClass = "active";
-    //    $rootScope.contentHeaderClass = "active";
-    //    $rootScope.openSidebarBtnClass = "inactive";
-    //};
+    $rootScope.toggleSidebarBtnClass = "";
 
     function closeSidebar() {
         $rootScope.wrapperClass = "inactive";
         $rootScope.contentHeaderClass = "fullScreen";
-        $scope.toggleSidebarBtnClass = "outsideBar";
+        $rootScope.toggleSidebarBtnClass = "outsideBar";
     }
 
     function openNavbar() {
         $rootScope.wrapperClass = "active";
         $rootScope.contentHeaderClass = "partialScreen";
-        $scope.toggleSidebarBtnClass = "insideBar";
+        $rootScope.toggleSidebarBtnClass = "insideBar";
     }
 
     $scope.toggleSidebar = function () {
@@ -82,6 +71,12 @@
 
     $scope.changeLanguage = function (langKey) {
         $translate.use(langKey);
+    };
+
+    $scope.closeSideberIfSmall = function () {
+        if (!windowIsLarge()) {
+            closeSidebar();
+        };
     };
 
 }]);

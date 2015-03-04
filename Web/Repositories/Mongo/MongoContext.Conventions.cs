@@ -19,6 +19,7 @@ namespace Web.Repositories.Mongo
             ConventionPack pack = new ConventionPack();
             pack.Add(new IgnoreIfNullConvention(true)); // ignore nullable MongoDB fields
             pack.Add(new IgnoreExtraElementsConvention(true)); // ignore MongoDB fields which do dot have corresponding C# properties; otherwise we get an error at deserialization
+            pack.Add(new CamelCaseElementNameConvention()); // keep data as camelCase in MongoDB
 
             ConventionRegistry.Register("Ignore null properties and extra elements", pack, type => true);
 

@@ -35,30 +35,43 @@
             </div>
         </div>
 
-        <!--embedded products-->
+        <!--related products-->
         <div class="form-group">
-            <label class="col-md-2 control-label">Products</label>
+            <label class="col-md-2 control-label">Related products</label>
             <div class="col-md-10">
                 <div class="panel panel-default">
 
                     <div class="panel-heading">
-                        <a ng-click="showRelatedProductsAside()">Add products</a>
+                        <a ng-click="showRelatedProductsAside()">Add product</a>
                     </div>
 
-                    <div class="panel-body" style="max-height:200px; overflow-y:auto; padding:0;">
-                        <table class="table table-responsive table-hover table-condensed borderless" style="margin-bottom:0">
+                    <div class="panel-body">
+                        <table class="table table-responsive table-hover table-condensed borderless">
+                            <thead>
+                                <tr>
+                                    <th>Cant.</th>
+                                    <th>UM</th>
+                                    <th>Categorie</th>
+                                    <th>Tip</th>
+                                    <th>Cod</th>
+                                    <th>Denumire</th>
+                                     <th>Culoare</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
                             <tbody>
-                                <tr data-ng-repeat="product in product.relatedProducts | filter:search">
-                                    <td>
+                                <tr ng-repeat="orderLine in pickOrder.orderLines">
+                                    <!--<td>
                                         <img ng-click="showModal(product)" ng-src="{{getPrimaryThumbImageUrl(product.images)}}" width="40" />
-                                    </td>
-                                    <td>{{ product.attributeSetName }}</td>
-                                    <td>{{ product.code }}</td>
-                                    <td>
-                                        <a target="_blank" ng-href="/products/{{product.id}}">{{product.name}}</a>
-                                        <!--<span ng-if="product.description" class="glyphicon glyphicon-info-sign" data-placement="top" data-trigger="hover" html="true" data-content="{{product.attributes}}" bs-popover></span>-->
-                                        <i class="glyphicon glyphicon-info-sign" ng-if="product.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{product.description}}"></i>
-                                    </td>
+                                    </td>-->
+                                    <td>{{ orderLine.quantity }}</td>
+                                    <td>{{ orderLine.uom }}</td>
+                                    <td>{{ orderLine.product.category }}</td>
+                                    <td>{{ orderLine.product.type }}</td>
+                                    <td>{{ orderLine.product.code }}</td>
+                                    <td>{{ orderLine.product.name }} <strong>{{orderLine.product.series}}</strong></td>
+                                    <td>{{ orderLine.product.color1 }} {{ orderLine.product.color2 }}</td>
+
 
                                     <td>
                                         <a ng-click="deleteRelatedProduct(product)">delete</a>
@@ -72,7 +85,7 @@
 
             </div>
         </div>
-        <!--end embedded products-->
+        <!--end related products-->
 
 
         <div class="form-group">

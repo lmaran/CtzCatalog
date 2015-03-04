@@ -25,7 +25,7 @@
     };
 
     $scope.create = function () {
-        $location.path('/customers/create');
+        $location.path('/admin/customers/create');
     }
 
     $scope.refresh = function () {

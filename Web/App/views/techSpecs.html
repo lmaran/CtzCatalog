@@ -35,7 +35,7 @@
             <tbody>
                 <tr data-ng-repeat="techSpec in techSpecs | filter:search">
                     <td>
-                        <a ng-href="/techspecs/{{techSpec.id}}">{{techSpec.name}}</a>
+                        <a ng-href="/admin/techspecs/{{techSpec.id}}">{{techSpec.name}}</a>
                         <i class="glyphicon glyphicon-info-sign" ng-if="techSpec.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{techSpec.description}}"></i>
                     </td>
                     <td>

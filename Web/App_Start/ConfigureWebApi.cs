@@ -32,6 +32,7 @@ namespace Web
 
             // Convention-based routing
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
+            config.Routes.MapHttpRoute("Admin", "admin/{*anything}", new { controller = "Admin" });
             config.Routes.MapHttpRoute("Home", "{*anything}", new { controller = "Home" });
 
             DependencyConfig.Register(config);

@@ -35,7 +35,7 @@
             <tbody>
                 <tr data-ng-repeat="optionSet in optionSets | filter:search">
                     <td>
-                        <a ng-href="/optionsets/{{optionSet.optionSetId}}">{{optionSet.name}}</a>
+                        <a ng-href="/admin/optionsets/{{optionSet.optionSetId}}">{{optionSet.name}}</a>
                         <i class="glyphicon glyphicon-info-sign" ng-if="optionSet.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{optionSet.description}}"></i>
                     </td>
                     <!--<td >{{ optionSet.description }}</td>-->

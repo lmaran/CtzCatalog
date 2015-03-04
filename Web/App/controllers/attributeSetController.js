@@ -84,7 +84,7 @@
             //alert(JSON.stringify($scope.attributeSet, null, 4));
             attributeSetService.create($scope.attributeSet)
                 .then(function (data) {
-                    $location.path('/attributesets');
+                    $location.path('/admin/attributesets');
                     //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
@@ -101,7 +101,7 @@
         if (form.$valid) {
             attributeSetService.update($scope.attributeSet)
                 .then(function (data) {
-                    $location.path('/attributesets');
+                    $location.path('/admin/attributesets');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));

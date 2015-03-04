@@ -25,7 +25,7 @@
     };
 
     $scope.create = function () {
-        $location.path('/attributes/create');
+        $location.path('/admin/attributes/create');
     }
 
     $scope.refresh = function () {

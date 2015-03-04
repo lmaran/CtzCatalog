@@ -37,7 +37,7 @@
             <tbody>
                 <tr data-ng-repeat="attribute in attributes | filter:search">
                     <td>
-                        <a ng-href="/attributes/{{attribute.id}}">{{attribute.name}}</a>
+                        <a ng-href="/admin/attributes/{{attribute.id}}">{{attribute.name}}</a>
                         <i class="glyphicon glyphicon-info-sign" ng-if="attribute.description" bs-tooltip data-animation="am-fade-and-scale" data-title="{{attribute.description}}"></i>
                     </td>
                     <td>{{ attribute.type }}</td>

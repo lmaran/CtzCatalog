@@ -59,6 +59,9 @@
         $scope.selectedSpecItem.name = null;
         $scope.dotObject.isVisibleAddNewSection = true;
         $scope.dotObject.isVisibleAddNewSpecItem = false;
+
+        // collapse any expanded section
+        $scope.dotObject.expandedSectionName = null;
     }
 
     $scope.addSection = function (newSection) {
@@ -185,6 +188,9 @@
         $scope.selectedSpecItem.name = null;
         $scope.dotObject.isVisibleAddNewSection = false;
         $scope.dotObject.isVisibleAddNewSpecItem = true;
+
+        // collapse any expanded specItem
+        $scope.dotObject.expandedSpecItemName = null;
     }
 
     $scope.addSpecItem = function (section, newSpecItem) {
@@ -288,7 +294,7 @@
         orderChanged: function (event) { },
         dragStart: function (event) {
             // collapse any expanded accordion items
-            $scope.dotObject.expandedItemName = null;
+            $scope.dotObject.expandedSpecItemName = null;
         }
         //containment: '#board'
     };
@@ -312,7 +318,7 @@
 
             techSpecService.create($scope.techSpec)
                 .then(function (data) {
-                    $location.path('/techspecs');
+                    $location.path('/admin/techspecs');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -331,7 +337,7 @@
 
             techSpecService.update($scope.techSpec)
                 .then(function (data) {
-                    $location.path('/techspecs');
+                    $location.path('/admin/techspecs');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));

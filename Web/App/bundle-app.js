@@ -6217,24 +6217,25 @@ var app = angular.module('ctzCatalog', [
 app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$tooltipProvider', function ($routeProvider, $locationProvider, $translateProvider, $tooltipProvider) {
     
     $routeProvider
-        .when('/',
+
+        .when('/admin',
             {
                 controller: 'homeController',
                 templateUrl: 'App/views/home.html'
             })
 
         // *** pickOrders ***
-        .when('/pickOrders', {
+        .when('/admin/pickOrders', {
             controller: 'pickOrdersController',
             templateUrl: 'App/views/pickOrders.html',
             title: 'Pick Orders'
         })
-        .when('/pickOrders/create', {
+        .when('/admin/pickOrders/create', {
             controller: 'pickOrderController',
             templateUrl: 'App/views/pickOrder.html',
             title: 'Create PickOrder'
         })
-        .when('/pickOrders/:id', {
+        .when('/admin/pickOrders/:id', {
             controller: 'pickOrderController',
             templateUrl: 'App/views/pickOrder.html',
             title: 'Edit PickOrder',
@@ -6242,17 +6243,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** products ***
-        .when('/products', {
+        .when('/admin/products', {
             controller: 'productsController',
             templateUrl: 'App/views/products.html',
             title: 'Products'
         })
-        .when('/products/create', {
+        .when('/admin/products/create', {
             controller: 'productController',
             templateUrl: 'App/views/product.html',
             title: 'Create Product'
         })
-        .when('/products/:id', {
+        .when('/admin/products/:id', {
             controller: 'productController',
             templateUrl: 'App/views/product.html',
             title: 'Edit Product',
@@ -6260,17 +6261,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** customers ***
-        .when('/customers', {
+        .when('/admin/customers', {
             controller: 'customersController',
             templateUrl: 'App/views/customers.html',
             title: 'Customers'
         })
-        .when('/customers/create', {
+        .when('/admin/customers/create', {
             controller: 'customerController',
             templateUrl: 'App/views/customer.html',
             title: 'Create Customer'
         })
-        .when('/customers/:id', {
+        .when('/admin/customers/:id', {
             controller: 'customerController',
             templateUrl: 'App/views/customer.html',
             title: 'Edit Customer',
@@ -6278,17 +6279,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** optionSets ***
-        .when('/optionsets', {
+        .when('/admin/optionsets', {
             controller: 'optionSetsController',
             templateUrl: 'App/views/optionSets.html',
             title: 'OptionSets'
         })
-        .when('/optionsets/create', {
+        .when('/admin/optionsets/create', {
             controller: 'optionSetController',
             templateUrl: 'App/views/optionSet.html',
             title: 'Create OptionSet'
         })
-        .when('/optionsets/:id', {
+        .when('/admin/optionsets/:id', {
             controller: 'optionSetController',
             templateUrl: 'App/views/optionSet.html',
             title: 'Edit OptionSet',
@@ -6296,17 +6297,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** attributes ***
-        .when('/attributes', {
+        .when('/admin/attributes', {
             controller: 'attributesController',
             templateUrl: 'App/views/attributes.html',
             title: 'Attributes'
         })
-        .when('/attributes/create', {
+        .when('/admin/attributes/create', {
             controller: 'attributeController',
             templateUrl: 'App/views/attribute.html',
             title: 'Create Attribute'
         })
-        .when('/attributes/:id', {
+        .when('/admin/attributes/:id', {
             controller: 'attributeController',
             templateUrl: 'App/views/attribute.html',
             title: 'Edit Attribute',
@@ -6314,17 +6315,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** attributeSets ***
-        .when('/attributesets', {
+        .when('/admin/attributesets', {
             controller: 'attributeSetsController',
             templateUrl: 'App/views/attributeSets.html',
             title: 'AttributeSets'
         })
-        .when('/attributesets/create', {
+        .when('/admin/attributesets/create', {
             controller: 'attributeSetController',
             templateUrl: 'App/views/attributeSet.html',
             title: 'Create AttributeSet'
         })
-        .when('/attributesets/:id', {
+        .when('/admin/attributesets/:id', {
             controller: 'attributeSetController',
             templateUrl: 'App/views/attributeSet.html',
             title: 'Edit AttributeSet',
@@ -6332,17 +6333,17 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** ums ***
-        .when('/ums', {
+        .when('/admin/ums', {
             controller: 'umsController',
             templateUrl: 'App/views/ums.html',
             title: 'Customers'
         })
-        .when('/ums/create', {
+        .when('/admin/ums/create', {
             controller: 'umController',
             templateUrl: 'App/views/um.html',
             title: 'Create UM'
         })
-        .when('/ums/:id', {
+        .when('/admin/ums/:id', {
             controller: 'umController',
             templateUrl: 'App/views/um.html',
             title: 'Edit UM',
@@ -6350,24 +6351,24 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', '$toolt
         })
 
         // *** techSpecs ***
-        .when('/techspecs', {
+        .when('/admin/techspecs', {
             controller: 'techSpecsController',
             templateUrl: 'App/views/techSpecs.html',
             title: 'Customers'
         })
-        .when('/techspecs/create', {
+        .when('/admin/techspecs/create', {
             controller: 'techSpecController',
             templateUrl: 'App/views/techSpec.html',
             title: 'Create TechSpec'
         })
-        .when('/techspecs/:id', {
+        .when('/admin/techspecs/:id', {
             controller: 'techSpecController',
             templateUrl: 'App/views/techSpec.html',
             title: 'Edit TechSpec',
             isEditMode: true
         })
 
-        .otherwise({ redirectTo: '/' });
+        .otherwise({ redirectTo: '/admin' });
 
     // use the HTML5 History API - http://scotch.io/quick-tips/js/angular/pretty-urls-in-angularjs-removing-the-hashtag
     $locationProvider.html5Mode(true);
@@ -6425,28 +6426,28 @@ app.controller('navbarController', ['$scope', '$rootScope', '$location', '$trans
 
     $scope.menu = [{
         'title': 'Pick Orders',
-        'link': '/pickOrders'
+        'link': '/admin/pickOrders'
     }, {
         'title': 'Products',
-        'link': '/products'
+        'link': '/admin/products'
     }, {
         'title': 'Customers',
-        'link': '/customers'
+        'link': '/admin/customers'
     }, {
     //    'title': 'OptionSets',
     //    'link': '/optionsets'
     //}, {
         'title': 'Attributes',
-        'link': '/attributes'
+        'link': '/admin/attributes'
     }, {
         'title': 'AttributeSets',
-        'link': '/attributesets'
+        'link': '/admin/attributesets'
     }, {
         'title': 'UMs',
-        'link': '/ums'
+        'link': '/admin/ums'
     }, {
         'title': 'TechSpecs',
-        'link': '/techspecs'
+        'link': '/admin/techspecs'
     }];
 
     // http://stackoverflow.com/a/18562339
@@ -6454,6 +6455,7 @@ app.controller('navbarController', ['$scope', '$rootScope', '$location', '$trans
         return route === $location.path();
     };
 
+    // http://camelcas.es/articles/detect-media-queries-in-javascript.html
     var windowIsLarge = function () {
         return getComputedStyle(document.body, ':after').getPropertyValue('content').replace(/"/g, '') == 'large'; // FF and IE add double quotes around the value
     };
@@ -6461,30 +6463,18 @@ app.controller('navbarController', ['$scope', '$rootScope', '$location', '$trans
     $rootScope.wrapperClass = "";
     $rootScope.contentHeaderClass = "";
     $rootScope.openSidebarBtnClass = "";
-    $scope.toggleSidebarBtnClass = "";
-
-    //$scope.closeSidebar = function () {
-    //    $rootScope.wrapperClass = "inactive";
-    //    $rootScope.contentHeaderClass = "inactive";
-    //    $rootScope.openSidebarBtnClass = "active";
-    //};
-
-    //$scope.openSidebar = function () {
-    //    $rootScope.wrapperClass = "active";
-    //    $rootScope.contentHeaderClass = "active";
-    //    $rootScope.openSidebarBtnClass = "inactive";
-    //};
+    $rootScope.toggleSidebarBtnClass = "";
 
     function closeSidebar() {
         $rootScope.wrapperClass = "inactive";
         $rootScope.contentHeaderClass = "fullScreen";
-        $scope.toggleSidebarBtnClass = "outsideBar";
+        $rootScope.toggleSidebarBtnClass = "outsideBar";
     }
 
     function openNavbar() {
         $rootScope.wrapperClass = "active";
         $rootScope.contentHeaderClass = "partialScreen";
-        $scope.toggleSidebarBtnClass = "insideBar";
+        $rootScope.toggleSidebarBtnClass = "insideBar";
     }
 
     $scope.toggleSidebar = function () {
@@ -6505,6 +6495,12 @@ app.controller('navbarController', ['$scope', '$rootScope', '$location', '$trans
 
     $scope.changeLanguage = function (langKey) {
         $translate.use(langKey);
+    };
+
+    $scope.closeSideberIfSmall = function () {
+        if (!windowIsLarge()) {
+            closeSidebar();
+        };
     };
 
 }]);
@@ -6536,7 +6532,7 @@ app.controller('pickOrdersController', ['$scope', '$location', 'pickOrderService
     };
 
     $scope.create = function () {
-        $location.path('/pickOrders/create');
+        $location.path('/admin/pickOrders/create');
     }
 
     $scope.refresh = function () {
@@ -6618,7 +6614,7 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
 
             pickOrderService.create($scope.pickOrder)
                 .then(function (data) {
-                    $location.path('/pickOrders');
+                    $location.path('/admin/pickOrders');
                     //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
@@ -6636,7 +6632,7 @@ app.controller('pickOrderController', ['$scope', '$window', '$route', 'pickOrder
 
             pickOrderService.update($scope.pickOrder)
                 .then(function (data) {
-                    $location.path('/pickOrders');
+                    $location.path('/admin/pickOrders');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -6681,7 +6677,7 @@ app.controller('productsController', ['$scope', '$location', 'productService', '
     };
 
     $scope.create = function () {
-        $location.path('/products/create');
+        $location.path('/admin/products/create');
     }
 
     $scope.refresh = function () {
@@ -6831,7 +6827,7 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
             // save product
             productService.create($scope.product)
                 .then(function (data) {
-                    $location.path('/products');
+                    $location.path('/admin/products');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -6873,7 +6869,7 @@ app.controller('productController', ['$scope', '$window', '$route', 'productServ
             // save product
             productService.update($scope.product)
                 .then(function (data) {
-                    $location.path('/products');
+                    $location.path('/admin/products');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -7157,7 +7153,7 @@ app.controller('customersController', ['$scope', '$location', 'customerService',
     };
 
     $scope.create = function () {
-        $location.path('/customers/create');
+        $location.path('/admin/customers/create');
     }
 
     $scope.refresh = function () {
@@ -7204,7 +7200,7 @@ app.controller('customerController', ['$scope', '$window', '$route', 'customerSe
             //alert(JSON.stringify($scope.customer));
             customerService.create($scope.customer)
                 .then(function (data) {
-                    $location.path('/customers');
+                    $location.path('/admin/customers');
                     //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
@@ -7222,7 +7218,7 @@ app.controller('customerController', ['$scope', '$window', '$route', 'customerSe
             //alert(JSON.stringify($scope.customer));
             customerService.update($scope.customer)
                 .then(function (data) {
-                    $location.path('/customers');
+                    $location.path('/admin/customers');
                     //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
@@ -7269,7 +7265,7 @@ app.controller('optionSetsController', ['$scope', '$rootScope', '$route', '$loca
     };
 
     $scope.create = function () {
-        $location.path('/optionsets/create');
+        $location.path('/admin/optionsets/create');
     }
 
     $scope.refresh = function () {
@@ -7359,7 +7355,7 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
 
             optionSetService.create($scope.optionSet)
                 .then(function (data) {
-                    $location.path('/optionsets');
+                    $location.path('/admin/optionsets');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -7378,7 +7374,7 @@ app.controller('optionSetController', ['$scope', '$window', '$route', 'optionSet
 
             optionSetService.update($scope.optionSet)
                 .then(function (data) {
-                    $location.path('/optionsets');
+                    $location.path('/admin/optionsets');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -7533,7 +7529,7 @@ app.controller('attributesController', ['$scope', '$rootScope', '$route', '$loca
     };
 
     $scope.create = function () {
-        $location.path('/attributes/create');
+        $location.path('/admin/attributes/create');
     }
 
     $scope.refresh = function () {
@@ -7607,7 +7603,7 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
         if (form.$valid) {
             attributeService.create($scope.attribute)
                 .then(function (data) {
-                    $location.path('/attributes');
+                    $location.path('/admin/attributes');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -7639,7 +7635,7 @@ app.controller('attributeController', ['$scope', '$window', '$route', 'attribute
 
             attributeService.update($scope.attribute)
                 .then(function (data) {
-                    $location.path('/attributes');
+                    $location.path('/admin/attributes');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -7689,7 +7685,7 @@ app.controller('attributeSetsController', ['$scope', '$rootScope', '$route', '$l
     };
 
     $scope.create = function () {
-        $location.path('/attributesets/create');
+        $location.path('/admin/attributesets/create');
     }
 
     $scope.refresh = function () {
@@ -7805,7 +7801,7 @@ app.controller('attributeSetController', ['$scope', '$window', '$route', 'attrib
             //alert(JSON.stringify($scope.attributeSet, null, 4));
             attributeSetService.create($scope.attributeSet)
                 .then(function (data) {
-                    $location.path('/attributesets');
+                    $location.path('/admin/attributesets');
                     //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
@@ -7822,7 +7818,7 @@ app.controller('attributeSetController', ['$scope', '$window', '$route', 'attrib
         if (form.$valid) {
             attributeSetService.update($scope.attributeSet)
                 .then(function (data) {
-                    $location.path('/attributesets');
+                    $location.path('/admin/attributesets');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -7959,7 +7955,7 @@ app.controller('umsController', ['$scope', '$location', 'umService', 'dialogServ
     };
 
     $scope.create = function () {
-        $location.path('/ums/create');
+        $location.path('/admin/ums/create');
     }
 
     $scope.refresh = function () {
@@ -8004,7 +8000,7 @@ app.controller('techSpecsController', ['$scope', '$rootScope', '$route', '$locat
     };
 
     $scope.create = function () {
-        $location.path('/techspecs/create');
+        $location.path('/admin/techspecs/create');
     }
 
     $scope.refresh = function () {
@@ -8095,6 +8091,9 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
         $scope.selectedSpecItem.name = null;
         $scope.dotObject.isVisibleAddNewSection = true;
         $scope.dotObject.isVisibleAddNewSpecItem = false;
+
+        // collapse any expanded section
+        $scope.dotObject.expandedSectionName = null;
     }
 
     $scope.addSection = function (newSection) {
@@ -8221,6 +8220,9 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
         $scope.selectedSpecItem.name = null;
         $scope.dotObject.isVisibleAddNewSection = false;
         $scope.dotObject.isVisibleAddNewSpecItem = true;
+
+        // collapse any expanded specItem
+        $scope.dotObject.expandedSpecItemName = null;
     }
 
     $scope.addSpecItem = function (section, newSpecItem) {
@@ -8324,7 +8326,7 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
         orderChanged: function (event) { },
         dragStart: function (event) {
             // collapse any expanded accordion items
-            $scope.dotObject.expandedItemName = null;
+            $scope.dotObject.expandedSpecItemName = null;
         }
         //containment: '#board'
     };
@@ -8348,7 +8350,7 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
 
             techSpecService.create($scope.techSpec)
                 .then(function (data) {
-                    $location.path('/techspecs');
+                    $location.path('/admin/techspecs');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -8367,7 +8369,7 @@ app.controller('techSpecController', ['$scope', '$window', '$route', 'techSpecSe
 
             techSpecService.update($scope.techSpec)
                 .then(function (data) {
-                    $location.path('/techspecs');
+                    $location.path('/admin/techspecs');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));

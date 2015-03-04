@@ -1,10 +1,10 @@
 ﻿<!--toggle sidebar button (position:fixed) -->
-<a id="toggle-sidebar-btn" class="btn btn-default" ng-click="toggleSidebar()" ng-class="toggleSidebarBtnClass">
+<!--<a id="toggle-sidebar-btn" class="btn btn-default" ng-click="toggleSidebar()" ng-class="toggleSidebarBtnClass">
     <i class="glyphicon glyphicon-chevron-left"></i>
-</a>
+</a>-->
 
 <div id="sidebar-brand">
-    <a href="#">Cortizo Catalog</a>
+    <a href="/" target="_self">Cortizo Catalog</a> <!--https://groups.google.com/forum/#!topic/angular/basidvjscRk-->
 </div>
 
 
@@ -36,7 +36,7 @@
     
 
     <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
-        <a ng-href=" {{item.link}}">{{'Menu.' + item.title | translate}}</a>
+        <a ng-click="closeSideberIfSmall()" ng-href=" {{item.link}} ">{{'Menu.' + item.title | translate}}</a>
     </li>
 
 </ul>

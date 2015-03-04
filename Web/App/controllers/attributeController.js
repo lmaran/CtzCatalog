@@ -42,7 +42,7 @@
         if (form.$valid) {
             attributeService.create($scope.attribute)
                 .then(function (data) {
-                    $location.path('/attributes');
+                    $location.path('/admin/attributes');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));
@@ -74,7 +74,7 @@
 
             attributeService.update($scope.attribute)
                 .then(function (data) {
-                    $location.path('/attributes');
+                    $location.path('/admin/attributes');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));

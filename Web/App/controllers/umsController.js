@@ -25,7 +25,7 @@
     };
 
     $scope.create = function () {
-        $location.path('/ums/create');
+        $location.path('/admin/ums/create');
     }
 
     $scope.refresh = function () {

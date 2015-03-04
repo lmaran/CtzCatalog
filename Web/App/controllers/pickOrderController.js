@@ -66,7 +66,7 @@
 
             pickOrderService.create($scope.pickOrder)
                 .then(function (data) {
-                    $location.path('/pickOrders');
+                    $location.path('/admin/pickOrders');
                     //Logger.info("Widget created successfully");
                 })
                 .catch(function (err) {
@@ -84,7 +84,7 @@
 
             pickOrderService.update($scope.pickOrder)
                 .then(function (data) {
-                    $location.path('/pickOrders');
+                    $location.path('/admin/pickOrders');
                 })
                 .catch(function (err) {
                     alert(JSON.stringify(err.data, null, 4));

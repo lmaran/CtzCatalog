@@ -24,7 +24,7 @@
     };
 
     $scope.create = function () {
-        $location.path('/pickOrders/create');
+        $location.path('/admin/pickOrders/create');
     }
 
     $scope.refresh = function () {
